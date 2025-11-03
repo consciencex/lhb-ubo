@@ -917,7 +917,7 @@
                 .attr('width', '100%')
                 .attr('height', height)
                 .attr('viewBox', [0, 0, width, height])
-                .attr('style', 'max-width: 100%; height: auto; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);');
+                .attr('style', 'max-width: 100%; height: auto; background: #ffffff; border: 1px solid #e5e7eb;');
             
             const g = svg.append('g');
             
@@ -935,15 +935,16 @@
             
             svg.append('defs').selectAll('marker').data(['arrow']).join('marker')
                 .attr('id', 'arrow').attr('viewBox', '0 -5 10 10').attr('refX', 25).attr('refY', 0)
-                .attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
-                .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#64748b');
+                .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
+                .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#6b7280');
             
             const link = g.append('g').selectAll('line').data(graphData.edges).join('line')
-                .attr('stroke', '#64748b').attr('stroke-opacity', 0.6)
+                .attr('stroke', '#6b7280').attr('stroke-opacity', 0.7)
                 .attr('marker-end', 'url(#arrow)').attr('stroke-width', d => linkWidthScale(d.percent));
             
             const linkLabel = g.append('g').selectAll('text').data(graphData.edges).join('text')
-                .attr('fill', '#94a3b8').attr('font-size', '11px').attr('text-anchor', 'middle').attr('dy', -5)
+                .attr('fill', '#374151').attr('font-size', '10px').attr('font-weight', '600')
+                .attr('text-anchor', 'middle').attr('dy', -5)
                 .text(d => `${d.percent.toFixed(1)}%`);
             
             const node = g.append('g').selectAll('circle').data(graphData.nodes).join('circle')
@@ -957,13 +958,13 @@
                     .on('end', e => { if (!e.active) simulation.alphaTarget(0); e.subject.fx = null; e.subject.fy = null; }));
             
             const nodeLabel = g.append('g').selectAll('text').data(graphData.nodes).join('text')
-                .attr('fill', '#e2e8f0').attr('font-size', '11px').attr('font-weight', '500')
+                .attr('fill', '#1f2937').attr('font-size', '11px').attr('font-weight', '600')
                 .attr('text-anchor', 'middle').attr('dy', d => nodeScale(d.capital) + 18).text(d => d.name);
             
-            const tooltip = d3.select('body').append('div').style('position', 'absolute').style('background', 'rgba(15,23,42,0.95)')
+            const tooltip = d3.select('body').append('div').style('position', 'absolute').style('background', 'rgba(255,255,255,0.98)')
                 .style('border', '2px solid #3b82f6').style('border-radius', '8px').style('padding', '12px')
-                .style('color', '#e2e8f0').style('font-size', '13px').style('pointer-events', 'none')
-                .style('opacity', 0).style('max-width', '320px').style('box-shadow', '0 10px 25px rgba(0,0,0,0.5)').style('z-index', 10000);
+                .style('color', '#1f2937').style('font-size', '13px').style('pointer-events', 'none')
+                .style('opacity', 0).style('max-width', '320px').style('box-shadow', '0 4px 12px rgba(0,0,0,0.15)').style('z-index', 10000);
             
             node.on('mouseover', (e, d) => {
                 tooltip.html(`<div style="font-weight:600;color:#60a5fa;margin-bottom:8px;font-size:14px;">${d.full_name}</div>
