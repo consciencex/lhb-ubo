@@ -8,10 +8,10 @@ from typing import Dict, Any
 def generate_mock_ubo_data() -> Dict[str, Any]:
     """Generate realistic mock data for UBO network visualization testing.
     
-    Scenario: DEMO BANK PUBLIC COMPANY LIMITED
-    - 3 Tiers of shareholding
+    Enhanced Scenario: DEMO BANK PUBLIC COMPANY LIMITED
+    - 3 Tiers of shareholding with MORE nodes per layer
     - Mix of companies and individuals
-    - Multiple UBO candidates (≥15%)
+    - Only 2 UBO candidates (≥15%): William Anderson and Sophia Chen
     - Various capital sizes for node visualization
     - Various shareholding percentages for edge visualization
     """
@@ -35,19 +35,19 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
         'analysis_summary': {
             'method_used': 'Method 1 (Shareholding ≥15%)',
             'max_level_reached': 3,
-            'total_companies_checked': 12,
+            'total_companies_checked': 20,
             'risk_level': 'Low',
             'compliance_status': 'Compliant'
         },
         'ubo_results': {
-            'total_candidates': 8,
-            'final_ubos': 3,
+            'total_candidates': 12,
+            'final_ubos': 2,  # Only 2 UBOs
             'ubo_details': [
                 {
                     'name': 'WILLIAM ANDERSON',
                     'method': 'Method 1',
-                    'total_percentage': 28.50,
-                    'paths': 2,
+                    'total_percentage': 32.45,
+                    'paths': 4,
                     'nationality': 'American',
                     'is_director': True,
                     'ubo_status': 'YES'
@@ -55,19 +55,10 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 {
                     'name': 'SOPHIA CHEN',
                     'method': 'Method 1',
-                    'total_percentage': 18.75,
-                    'paths': 3,
+                    'total_percentage': 22.18,
+                    'paths': 5,
                     'nationality': 'Singaporean',
                     'is_director': False,
-                    'ubo_status': 'YES'
-                },
-                {
-                    'name': 'JAMES TANAKA',
-                    'method': 'Method 1',
-                    'total_percentage': 15.20,
-                    'paths': 1,
-                    'nationality': 'Japanese',
-                    'is_director': True,
                     'ubo_status': 'YES'
                 }
             ]
@@ -75,8 +66,8 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
         'ubos': [
             {
                 'name': 'WILLIAM ANDERSON',
-                'total_percentage': 28.50,
-                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_B', 'COMP_D']],
+                'total_percentage': 32.45,
+                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_B'], ['XXXXXXXX', 'COMP_C', 'COMP_G'], ['XXXXXXXX', 'COMP_D', 'COMP_J']],
                 'method': 1,
                 'nationality': 'American',
                 'is_director': True,
@@ -85,28 +76,29 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
             },
             {
                 'name': 'SOPHIA CHEN',
-                'total_percentage': 18.75,
-                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_C'], ['XXXXXXXX', 'COMP_E']],
+                'total_percentage': 22.18,
+                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_B', 'COMP_H'], ['XXXXXXXX', 'COMP_C'], ['XXXXXXXX', 'COMP_E', 'COMP_K'], ['XXXXXXXX', 'COMP_F', 'COMP_L']],
                 'method': 1,
                 'nationality': 'Singaporean',
                 'is_director': False,
                 'identification_method': 'Method 1',
                 'ubo_status': 'YES'
             },
+            # Non-UBOs (< 15%)
             {
                 'name': 'JAMES TANAKA',
-                'total_percentage': 15.20,
-                'paths': [['XXXXXXXX', 'COMP_B']],
+                'total_percentage': 11.80,
+                'paths': [['XXXXXXXX', 'COMP_B'], ['XXXXXXXX', 'COMP_D']],
                 'method': 1,
                 'nationality': 'Japanese',
                 'is_director': True,
                 'identification_method': 'Method 1',
-                'ubo_status': 'YES'
+                'ubo_status': 'NO'
             },
             {
                 'name': 'EMILY RODRIGUEZ',
-                'total_percentage': 8.50,
-                'paths': [['XXXXXXXX', 'COMP_C', 'COMP_F']],
+                'total_percentage': 9.35,
+                'paths': [['XXXXXXXX', 'COMP_E', 'COMP_K']],
                 'method': 1,
                 'nationality': 'Spanish',
                 'is_director': False,
@@ -114,17 +106,18 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'ubo_status': 'NO'
             },
             {
-                'name': 'DAVID KIM',
-                'total_percentage': 6.30,
-                'paths': [['XXXXXXXX', 'COMP_D']],
+                'name': 'MICHAEL BROWN',
+                'total_percentage': 8.70,
+                'paths': [['XXXXXXXX']],
                 'method': 1,
-                'nationality': 'Korean',
+                'nationality': 'British',
                 'is_director': False,
                 'identification_method': 'Method 1',
                 'ubo_status': 'NO'
             }
         ],
         'hierarchy_data': {
+            # Level 0: Main Company
             'XXXXXXXX': {
                 'name_en': 'DEMO BANK PUBLIC COMPANY LIMITED',
                 'name_th': '',
@@ -132,18 +125,17 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'level': 0,
                 'parent_percentage': 100.0,
                 'shareholders': [
+                    # Layer 1 - 6 shareholders (mix of companies and individuals)
                     {
                         'name': 'GLOBAL INVESTMENT CORPORATION',
                         'display_name': 'GLOBAL INVESTMENT CORPORATION',
                         'shareholder_type': 'company',
                         'regis_id': 'COMP_A',
                         'regis_id_held_by': 'COMP_A',
-                        'percent': 35.50,
-                        'direct_percent': 35.50,
-                        'effective_percentage': 35.50,
+                        'percent': 22.50,
+                        'direct_percent': 22.50,
+                        'effective_percentage': 22.50,
                         'type_label': 'Company',
-                        'ubo_path': [{'entity_id': 'COMP_A', 'entity_name': 'GLOBAL INVESTMENT CORPORATION', 'share_percent': 35.50}],
-                        'ubo_factors': [35.50],
                         'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
                     },
                     {
@@ -152,12 +144,10 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'shareholder_type': 'company',
                         'regis_id': 'COMP_B',
                         'regis_id_held_by': 'COMP_B',
-                        'percent': 28.75,
-                        'direct_percent': 28.75,
-                        'effective_percentage': 28.75,
+                        'percent': 18.75,
+                        'direct_percent': 18.75,
+                        'effective_percentage': 18.75,
                         'type_label': 'Company',
-                        'ubo_path': [{'entity_id': 'COMP_B', 'entity_name': 'ASIA PACIFIC HOLDINGS LTD', 'share_percent': 28.75}],
-                        'ubo_factors': [28.75],
                         'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
                     },
                     {
@@ -166,12 +156,46 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'shareholder_type': 'company',
                         'regis_id': 'COMP_C',
                         'regis_id_held_by': 'COMP_C',
-                        'percent': 18.20,
-                        'direct_percent': 18.20,
-                        'effective_percentage': 18.20,
+                        'percent': 16.30,
+                        'direct_percent': 16.30,
+                        'effective_percentage': 16.30,
                         'type_label': 'Company',
-                        'ubo_path': [{'entity_id': 'COMP_C', 'entity_name': 'EUROPEAN FINANCIAL GROUP', 'share_percent': 18.20}],
-                        'ubo_factors': [18.20],
+                        'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
+                    },
+                    {
+                        'name': 'NORTH AMERICAN FUND',
+                        'display_name': 'NORTH AMERICAN FUND',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_D',
+                        'regis_id_held_by': 'COMP_D',
+                        'percent': 14.60,
+                        'direct_percent': 14.60,
+                        'effective_percentage': 14.60,
+                        'type_label': 'Company',
+                        'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
+                    },
+                    {
+                        'name': 'SOUTHEAST ASIA CAPITAL',
+                        'display_name': 'SOUTHEAST ASIA CAPITAL',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_E',
+                        'regis_id_held_by': 'COMP_E',
+                        'percent': 12.80,
+                        'direct_percent': 12.80,
+                        'effective_percentage': 12.80,
+                        'type_label': 'Company',
+                        'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
+                    },
+                    {
+                        'name': 'MIDDLE EAST INVESTMENT GROUP',
+                        'display_name': 'MIDDLE EAST INVESTMENT GROUP',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_F',
+                        'regis_id_held_by': 'COMP_F',
+                        'percent': 6.35,
+                        'direct_percent': 6.35,
+                        'effective_percentage': 6.35,
+                        'type_label': 'Company',
                         'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
                     },
                     {
@@ -181,48 +205,12 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'lastname': 'BROWN',
                         'shareholder_type': 'personal',
                         'regis_id': '',
-                        'percent': 12.50,
-                        'direct_percent': 12.50,
-                        'effective_percentage': 12.50,
+                        'percent': 8.70,
+                        'direct_percent': 8.70,
+                        'effective_percentage': 8.70,
                         'nationality': 'British',
-                        'directorship': 'YES',
-                        'type_label': 'Individual',
-                        'ubo_path': [{'entity_id': 'MICHAEL BROWN', 'entity_name': 'MICHAEL BROWN', 'share_percent': 12.50}],
-                        'ubo_factors': [12.50],
-                        'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
-                    },
-                    {
-                        'name': 'EMMA WILSON',
-                        'display_name': 'EMMA WILSON',
-                        'firstname': 'EMMA',
-                        'lastname': 'WILSON',
-                        'shareholder_type': 'personal',
-                        'regis_id': '',
-                        'percent': 3.80,
-                        'direct_percent': 3.80,
-                        'effective_percentage': 3.80,
-                        'nationality': 'Australian',
                         'directorship': 'NO',
                         'type_label': 'Individual',
-                        'ubo_path': [{'entity_id': 'EMMA WILSON', 'entity_name': 'EMMA WILSON', 'share_percent': 3.80}],
-                        'ubo_factors': [3.80],
-                        'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
-                    },
-                    {
-                        'name': 'OLIVIA MARTIN',
-                        'display_name': 'OLIVIA MARTIN',
-                        'firstname': 'OLIVIA',
-                        'lastname': 'MARTIN',
-                        'shareholder_type': 'personal',
-                        'regis_id': '',
-                        'percent': 1.25,
-                        'direct_percent': 1.25,
-                        'effective_percentage': 1.25,
-                        'nationality': 'Canadian',
-                        'directorship': 'NO',
-                        'type_label': 'Individual',
-                        'ubo_path': [{'entity_id': 'OLIVIA MARTIN', 'entity_name': 'OLIVIA MARTIN', 'share_percent': 1.25}],
-                        'ubo_factors': [1.25],
                         'company_name': 'DEMO BANK PUBLIC COMPANY LIMITED'
                     }
                 ],
@@ -232,19 +220,21 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'business_type': 'Banking and Financial Services',
                 'business_type_en': 'Banking and Financial Services'
             },
+            
+            # Level 1: COMP_A - 5 shareholders
             'COMP_A': {
                 'name_en': 'GLOBAL INVESTMENT CORPORATION',
                 'display_name': 'GLOBAL INVESTMENT CORPORATION',
                 'level': 1,
-                'parent_percentage': 35.50,
+                'parent_percentage': 22.50,
                 'shareholders': [
                     {
                         'name': 'WILLIAM ANDERSON',
                         'display_name': 'WILLIAM ANDERSON',
                         'shareholder_type': 'personal',
-                        'percent': 45.00,
-                        'direct_percent': 45.00,
-                        'effective_percentage': 15.975,
+                        'percent': 38.20,
+                        'direct_percent': 38.20,
+                        'effective_percentage': 8.595,
                         'nationality': 'American',
                         'directorship': 'YES',
                         'type_label': 'Individual',
@@ -254,9 +244,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'SOPHIA CHEN',
                         'display_name': 'SOPHIA CHEN',
                         'shareholder_type': 'personal',
-                        'percent': 32.00,
-                        'direct_percent': 32.00,
-                        'effective_percentage': 11.36,
+                        'percent': 28.40,
+                        'direct_percent': 28.40,
+                        'effective_percentage': 6.39,
                         'nationality': 'Singaporean',
                         'type_label': 'Individual',
                         'company_name': 'GLOBAL INVESTMENT CORPORATION'
@@ -265,12 +255,34 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'VENTURE CAPITAL PARTNERS',
                         'display_name': 'VENTURE CAPITAL PARTNERS',
                         'shareholder_type': 'company',
-                        'regis_id': 'COMP_E',
-                        'regis_id_held_by': 'COMP_E',
-                        'percent': 23.00,
-                        'direct_percent': 23.00,
-                        'effective_percentage': 8.165,
+                        'regis_id': 'COMP_G',
+                        'regis_id_held_by': 'COMP_G',
+                        'percent': 18.50,
+                        'direct_percent': 18.50,
+                        'effective_percentage': 4.16,
                         'type_label': 'Company',
+                        'company_name': 'GLOBAL INVESTMENT CORPORATION'
+                    },
+                    {
+                        'name': 'DAVID LEE',
+                        'display_name': 'DAVID LEE',
+                        'shareholder_type': 'personal',
+                        'percent': 9.90,
+                        'direct_percent': 9.90,
+                        'effective_percentage': 2.23,
+                        'nationality': 'Australian',
+                        'type_label': 'Individual',
+                        'company_name': 'GLOBAL INVESTMENT CORPORATION'
+                    },
+                    {
+                        'name': 'OLIVIA MARTIN',
+                        'display_name': 'OLIVIA MARTIN',
+                        'shareholder_type': 'personal',
+                        'percent': 5.00,
+                        'direct_percent': 5.00,
+                        'effective_percentage': 1.125,
+                        'nationality': 'Canadian',
+                        'type_label': 'Individual',
                         'company_name': 'GLOBAL INVESTMENT CORPORATION'
                     }
                 ],
@@ -278,45 +290,80 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'capital': '8,500,000,000',
                 'business_type_en': 'Investment and Holdings'
             },
+            
+            # Level 1: COMP_B - 6 shareholders
             'COMP_B': {
                 'name_en': 'ASIA PACIFIC HOLDINGS LTD',
                 'display_name': 'ASIA PACIFIC HOLDINGS LTD',
                 'level': 1,
-                'parent_percentage': 28.75,
+                'parent_percentage': 18.75,
                 'shareholders': [
+                    {
+                        'name': 'WILLIAM ANDERSON',
+                        'display_name': 'WILLIAM ANDERSON',
+                        'shareholder_type': 'personal',
+                        'percent': 42.10,
+                        'direct_percent': 42.10,
+                        'effective_percentage': 7.894,
+                        'nationality': 'American',
+                        'type_label': 'Individual',
+                        'company_name': 'ASIA PACIFIC HOLDINGS LTD'
+                    },
                     {
                         'name': 'JAMES TANAKA',
                         'display_name': 'JAMES TANAKA',
                         'shareholder_type': 'personal',
-                        'percent': 52.87,
-                        'direct_percent': 52.87,
-                        'effective_percentage': 15.20,
+                        'percent': 32.50,
+                        'direct_percent': 32.50,
+                        'effective_percentage': 6.094,
                         'nationality': 'Japanese',
                         'directorship': 'YES',
                         'type_label': 'Individual',
                         'company_name': 'ASIA PACIFIC HOLDINGS LTD'
                     },
                     {
-                        'name': 'WILLIAM ANDERSON',
-                        'display_name': 'WILLIAM ANDERSON',
+                        'name': 'STRATEGIC HOLDINGS INC',
+                        'display_name': 'STRATEGIC HOLDINGS INC',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_H',
+                        'regis_id_held_by': 'COMP_H',
+                        'percent': 14.20,
+                        'direct_percent': 14.20,
+                        'effective_percentage': 2.66,
+                        'type_label': 'Company',
+                        'company_name': 'ASIA PACIFIC HOLDINGS LTD'
+                    },
+                    {
+                        'name': 'LUCAS BERGMANN',
+                        'display_name': 'LUCAS BERGMANN',
                         'shareholder_type': 'personal',
-                        'percent': 35.00,
-                        'direct_percent': 35.00,
-                        'effective_percentage': 10.0625,
-                        'nationality': 'American',
+                        'percent': 6.80,
+                        'direct_percent': 6.80,
+                        'effective_percentage': 1.275,
+                        'nationality': 'German',
                         'type_label': 'Individual',
                         'company_name': 'ASIA PACIFIC HOLDINGS LTD'
                     },
                     {
-                        'name': 'STRATEGIC INVESTMENTS INC',
-                        'display_name': 'STRATEGIC INVESTMENTS INC',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_D',
-                        'regis_id_held_by': 'COMP_D',
-                        'percent': 12.13,
-                        'direct_percent': 12.13,
-                        'effective_percentage': 3.487,
-                        'type_label': 'Company',
+                        'name': 'EMMA WILSON',
+                        'display_name': 'EMMA WILSON',
+                        'shareholder_type': 'personal',
+                        'percent': 2.90,
+                        'direct_percent': 2.90,
+                        'effective_percentage': 0.544,
+                        'nationality': 'Australian',
+                        'type_label': 'Individual',
+                        'company_name': 'ASIA PACIFIC HOLDINGS LTD'
+                    },
+                    {
+                        'name': 'CHEN WEI',
+                        'display_name': 'CHEN WEI',
+                        'shareholder_type': 'personal',
+                        'percent': 1.50,
+                        'direct_percent': 1.50,
+                        'effective_percentage': 0.281,
+                        'nationality': 'Chinese',
+                        'type_label': 'Individual',
                         'company_name': 'ASIA PACIFIC HOLDINGS LTD'
                     }
                 ],
@@ -324,43 +371,66 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'capital': '12,000,000,000',
                 'business_type_en': 'Investment and Holdings'
             },
+            
+            # Level 1: COMP_C - 5 shareholders
             'COMP_C': {
                 'name_en': 'EUROPEAN FINANCIAL GROUP',
                 'display_name': 'EUROPEAN FINANCIAL GROUP',
                 'level': 1,
-                'parent_percentage': 18.20,
+                'parent_percentage': 16.30,
                 'shareholders': [
                     {
                         'name': 'SOPHIA CHEN',
                         'display_name': 'SOPHIA CHEN',
                         'shareholder_type': 'personal',
-                        'percent': 40.66,
-                        'direct_percent': 40.66,
-                        'effective_percentage': 7.40,
+                        'percent': 35.80,
+                        'direct_percent': 35.80,
+                        'effective_percentage': 5.835,
                         'nationality': 'Singaporean',
                         'type_label': 'Individual',
                         'company_name': 'EUROPEAN FINANCIAL GROUP'
                     },
                     {
-                        'name': 'INTERNATIONAL EQUITY FUND',
-                        'display_name': 'INTERNATIONAL EQUITY FUND',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_F',
-                        'regis_id_held_by': 'COMP_F',
-                        'percent': 46.70,
-                        'direct_percent': 46.70,
-                        'effective_percentage': 8.50,
-                        'type_label': 'Company',
+                        'name': 'WILLIAM ANDERSON',
+                        'display_name': 'WILLIAM ANDERSON',
+                        'shareholder_type': 'personal',
+                        'percent': 28.60,
+                        'direct_percent': 28.60,
+                        'effective_percentage': 4.662,
+                        'nationality': 'American',
+                        'type_label': 'Individual',
                         'company_name': 'EUROPEAN FINANCIAL GROUP'
                     },
                     {
-                        'name': 'LUCAS BERGMANN',
-                        'display_name': 'LUCAS BERGMANN',
+                        'name': 'PIERRE DUBOIS',
+                        'display_name': 'PIERRE DUBOIS',
                         'shareholder_type': 'personal',
-                        'percent': 12.64,
-                        'direct_percent': 12.64,
-                        'effective_percentage': 2.30,
-                        'nationality': 'German',
+                        'percent': 22.40,
+                        'direct_percent': 22.40,
+                        'effective_percentage': 3.651,
+                        'nationality': 'French',
+                        'type_label': 'Individual',
+                        'company_name': 'EUROPEAN FINANCIAL GROUP'
+                    },
+                    {
+                        'name': 'MARIA GARCIA',
+                        'display_name': 'MARIA GARCIA',
+                        'shareholder_type': 'personal',
+                        'percent': 8.70,
+                        'direct_percent': 8.70,
+                        'effective_percentage': 1.418,
+                        'nationality': 'Spanish',
+                        'type_label': 'Individual',
+                        'company_name': 'EUROPEAN FINANCIAL GROUP'
+                    },
+                    {
+                        'name': 'ALEXANDER PETROV',
+                        'display_name': 'ALEXANDER PETROV',
+                        'shareholder_type': 'personal',
+                        'percent': 4.50,
+                        'direct_percent': 4.50,
+                        'effective_percentage': 0.734,
+                        'nationality': 'Russian',
                         'type_label': 'Individual',
                         'company_name': 'EUROPEAN FINANCIAL GROUP'
                     }
@@ -369,53 +439,185 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'capital': '6,750,000,000',
                 'business_type_en': 'Financial Services'
             },
+            
+            # Level 1: COMP_D - 4 shareholders
             'COMP_D': {
-                'name_en': 'STRATEGIC INVESTMENTS INC',
-                'display_name': 'STRATEGIC INVESTMENTS INC',
+                'name_en': 'NORTH AMERICAN FUND',
+                'display_name': 'NORTH AMERICAN FUND',
+                'level': 1,
+                'parent_percentage': 14.60,
+                'shareholders': [
+                    {
+                        'name': 'JAMES TANAKA',
+                        'display_name': 'JAMES TANAKA',
+                        'shareholder_type': 'personal',
+                        'percent': 39.10,
+                        'direct_percent': 39.10,
+                        'effective_percentage': 5.709,
+                        'nationality': 'Japanese',
+                        'type_label': 'Individual',
+                        'company_name': 'NORTH AMERICAN FUND'
+                    },
+                    {
+                        'name': 'PRIVATE EQUITY VENTURES',
+                        'display_name': 'PRIVATE EQUITY VENTURES',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_J',
+                        'regis_id_held_by': 'COMP_J',
+                        'percent': 31.20,
+                        'direct_percent': 31.20,
+                        'effective_percentage': 4.555,
+                        'type_label': 'Company',
+                        'company_name': 'NORTH AMERICAN FUND'
+                    },
+                    {
+                        'name': 'SARAH JOHNSON',
+                        'display_name': 'SARAH JOHNSON',
+                        'shareholder_type': 'personal',
+                        'percent': 19.70,
+                        'direct_percent': 19.70,
+                        'effective_percentage': 2.876,
+                        'nationality': 'Canadian',
+                        'type_label': 'Individual',
+                        'company_name': 'NORTH AMERICAN FUND'
+                    },
+                    {
+                        'name': 'ROBERT MILLER',
+                        'display_name': 'ROBERT MILLER',
+                        'shareholder_type': 'personal',
+                        'percent': 10.00,
+                        'direct_percent': 10.00,
+                        'effective_percentage': 1.46,
+                        'nationality': 'American',
+                        'type_label': 'Individual',
+                        'company_name': 'NORTH AMERICAN FUND'
+                    }
+                ],
+                'company_id': 'COMP_D',
+                'capital': '9,200,000,000',
+                'business_type_en': 'Investment Fund'
+            },
+            
+            # Level 1: COMP_E - 4 shareholders
+            'COMP_E': {
+                'name_en': 'SOUTHEAST ASIA CAPITAL',
+                'display_name': 'SOUTHEAST ASIA CAPITAL',
+                'level': 1,
+                'parent_percentage': 12.80,
+                'shareholders': [
+                    {
+                        'name': 'EMERGING MARKETS FUND',
+                        'display_name': 'EMERGING MARKETS FUND',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_K',
+                        'regis_id_held_by': 'COMP_K',
+                        'percent': 52.30,
+                        'direct_percent': 52.30,
+                        'effective_percentage': 6.694,
+                        'type_label': 'Company',
+                        'company_name': 'SOUTHEAST ASIA CAPITAL'
+                    },
+                    {
+                        'name': 'MUHAMMAD RAHMAN',
+                        'display_name': 'MUHAMMAD RAHMAN',
+                        'shareholder_type': 'personal',
+                        'percent': 28.10,
+                        'direct_percent': 28.10,
+                        'effective_percentage': 3.597,
+                        'nationality': 'Malaysian',
+                        'type_label': 'Individual',
+                        'company_name': 'SOUTHEAST ASIA CAPITAL'
+                    },
+                    {
+                        'name': 'NGUYEN VAN THANH',
+                        'display_name': 'NGUYEN VAN THANH',
+                        'shareholder_type': 'personal',
+                        'percent': 12.40,
+                        'direct_percent': 12.40,
+                        'effective_percentage': 1.587,
+                        'nationality': 'Vietnamese',
+                        'type_label': 'Individual',
+                        'company_name': 'SOUTHEAST ASIA CAPITAL'
+                    },
+                    {
+                        'name': 'ARJUN PATEL',
+                        'display_name': 'ARJUN PATEL',
+                        'shareholder_type': 'personal',
+                        'percent': 7.20,
+                        'direct_percent': 7.20,
+                        'effective_percentage': 0.922,
+                        'nationality': 'Indian',
+                        'type_label': 'Individual',
+                        'company_name': 'SOUTHEAST ASIA CAPITAL'
+                    }
+                ],
+                'company_id': 'COMP_E',
+                'capital': '7,100,000,000',
+                'business_type_en': 'Investment and Holdings'
+            },
+            
+            # Level 1: COMP_F - 3 shareholders
+            'COMP_F': {
+                'name_en': 'MIDDLE EAST INVESTMENT GROUP',
+                'display_name': 'MIDDLE EAST INVESTMENT GROUP',
+                'level': 1,
+                'parent_percentage': 6.35,
+                'shareholders': [
+                    {
+                        'name': 'INTERNATIONAL EQUITY FUND',
+                        'display_name': 'INTERNATIONAL EQUITY FUND',
+                        'shareholder_type': 'company',
+                        'regis_id': 'COMP_L',
+                        'regis_id_held_by': 'COMP_L',
+                        'percent': 64.20,
+                        'direct_percent': 64.20,
+                        'effective_percentage': 4.077,
+                        'type_label': 'Company',
+                        'company_name': 'MIDDLE EAST INVESTMENT GROUP'
+                    },
+                    {
+                        'name': 'AHMED AL-SAYED',
+                        'display_name': 'AHMED AL-SAYED',
+                        'shareholder_type': 'personal',
+                        'percent': 23.50,
+                        'direct_percent': 23.50,
+                        'effective_percentage': 1.492,
+                        'nationality': 'UAE',
+                        'type_label': 'Individual',
+                        'company_name': 'MIDDLE EAST INVESTMENT GROUP'
+                    },
+                    {
+                        'name': 'FATIMA HASSAN',
+                        'display_name': 'FATIMA HASSAN',
+                        'shareholder_type': 'personal',
+                        'percent': 12.30,
+                        'direct_percent': 12.30,
+                        'effective_percentage': 0.781,
+                        'nationality': 'Saudi Arabian',
+                        'type_label': 'Individual',
+                        'company_name': 'MIDDLE EAST INVESTMENT GROUP'
+                    }
+                ],
+                'company_id': 'COMP_F',
+                'capital': '4,800,000,000',
+                'business_type_en': 'Investment Services'
+            },
+            
+            # Level 2: COMP_G - 4 shareholders
+            'COMP_G': {
+                'name_en': 'VENTURE CAPITAL PARTNERS',
+                'display_name': 'VENTURE CAPITAL PARTNERS',
                 'level': 2,
-                'parent_percentage': 3.487,
+                'parent_percentage': 4.16,
                 'shareholders': [
                     {
                         'name': 'WILLIAM ANDERSON',
                         'display_name': 'WILLIAM ANDERSON',
                         'shareholder_type': 'personal',
-                        'percent': 72.00,
-                        'direct_percent': 72.00,
-                        'effective_percentage': 2.51,
+                        'percent': 76.20,
+                        'direct_percent': 76.20,
+                        'effective_percentage': 3.170,
                         'nationality': 'American',
-                        'type_label': 'Individual',
-                        'company_name': 'STRATEGIC INVESTMENTS INC'
-                    },
-                    {
-                        'name': 'DAVID KIM',
-                        'display_name': 'DAVID KIM',
-                        'shareholder_type': 'personal',
-                        'percent': 28.00,
-                        'direct_percent': 28.00,
-                        'effective_percentage': 0.98,
-                        'nationality': 'Korean',
-                        'type_label': 'Individual',
-                        'company_name': 'STRATEGIC INVESTMENTS INC'
-                    }
-                ],
-                'company_id': 'COMP_D',
-                'capital': '2,100,000,000',
-                'business_type_en': 'Investment Services'
-            },
-            'COMP_E': {
-                'name_en': 'VENTURE CAPITAL PARTNERS',
-                'display_name': 'VENTURE CAPITAL PARTNERS',
-                'level': 2,
-                'parent_percentage': 8.165,
-                'shareholders': [
-                    {
-                        'name': 'SOPHIA CHEN',
-                        'display_name': 'SOPHIA CHEN',
-                        'shareholder_type': 'personal',
-                        'percent': 85.00,
-                        'direct_percent': 85.00,
-                        'effective_percentage': 6.94,
-                        'nationality': 'Singaporean',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
                     },
@@ -423,38 +625,244 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'ALEXANDER NOVAK',
                         'display_name': 'ALEXANDER NOVAK',
                         'shareholder_type': 'personal',
-                        'percent': 15.00,
-                        'direct_percent': 15.00,
-                        'effective_percentage': 1.22,
+                        'percent': 15.30,
+                        'direct_percent': 15.30,
+                        'effective_percentage': 0.636,
                         'nationality': 'Russian',
+                        'type_label': 'Individual',
+                        'company_name': 'VENTURE CAPITAL PARTNERS'
+                    },
+                    {
+                        'name': 'THOMAS ANDERSON',
+                        'display_name': 'THOMAS ANDERSON',
+                        'shareholder_type': 'personal',
+                        'percent': 5.90,
+                        'direct_percent': 5.90,
+                        'effective_percentage': 0.245,
+                        'nationality': 'Swedish',
+                        'type_label': 'Individual',
+                        'company_name': 'VENTURE CAPITAL PARTNERS'
+                    },
+                    {
+                        'name': 'LISA MULLER',
+                        'display_name': 'LISA MULLER',
+                        'shareholder_type': 'personal',
+                        'percent': 2.60,
+                        'direct_percent': 2.60,
+                        'effective_percentage': 0.108,
+                        'nationality': 'German',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
                     }
                 ],
-                'company_id': 'COMP_E',
+                'company_id': 'COMP_G',
                 'capital': '3,200,000,000',
                 'business_type_en': 'Venture Capital'
             },
-            'COMP_F': {
-                'name_en': 'INTERNATIONAL EQUITY FUND',
-                'display_name': 'INTERNATIONAL EQUITY FUND',
+            
+            # Level 2: COMP_H - 3 shareholders
+            'COMP_H': {
+                'name_en': 'STRATEGIC HOLDINGS INC',
+                'display_name': 'STRATEGIC HOLDINGS INC',
                 'level': 2,
-                'parent_percentage': 8.50,
+                'parent_percentage': 2.66,
                 'shareholders': [
+                    {
+                        'name': 'SOPHIA CHEN',
+                        'display_name': 'SOPHIA CHEN',
+                        'shareholder_type': 'personal',
+                        'percent': 68.40,
+                        'direct_percent': 68.40,
+                        'effective_percentage': 1.819,
+                        'nationality': 'Singaporean',
+                        'type_label': 'Individual',
+                        'company_name': 'STRATEGIC HOLDINGS INC'
+                    },
+                    {
+                        'name': 'KEVIN WONG',
+                        'display_name': 'KEVIN WONG',
+                        'shareholder_type': 'personal',
+                        'percent': 21.30,
+                        'direct_percent': 21.30,
+                        'effective_percentage': 0.567,
+                        'nationality': 'Hong Kong',
+                        'type_label': 'Individual',
+                        'company_name': 'STRATEGIC HOLDINGS INC'
+                    },
+                    {
+                        'name': 'YUKI YAMAMOTO',
+                        'display_name': 'YUKI YAMAMOTO',
+                        'shareholder_type': 'personal',
+                        'percent': 10.30,
+                        'direct_percent': 10.30,
+                        'effective_percentage': 0.274,
+                        'nationality': 'Japanese',
+                        'type_label': 'Individual',
+                        'company_name': 'STRATEGIC HOLDINGS INC'
+                    }
+                ],
+                'company_id': 'COMP_H',
+                'capital': '2,600,000,000',
+                'business_type_en': 'Investment Holdings'
+            },
+            
+            # Level 2: COMP_J - 3 shareholders
+            'COMP_J': {
+                'name_en': 'PRIVATE EQUITY VENTURES',
+                'display_name': 'PRIVATE EQUITY VENTURES',
+                'level': 2,
+                'parent_percentage': 4.555,
+                'shareholders': [
+                    {
+                        'name': 'WILLIAM ANDERSON',
+                        'display_name': 'WILLIAM ANDERSON',
+                        'shareholder_type': 'personal',
+                        'percent': 82.50,
+                        'direct_percent': 82.50,
+                        'effective_percentage': 3.758,
+                        'nationality': 'American',
+                        'type_label': 'Individual',
+                        'company_name': 'PRIVATE EQUITY VENTURES'
+                    },
+                    {
+                        'name': 'JENNIFER SMITH',
+                        'display_name': 'JENNIFER SMITH',
+                        'shareholder_type': 'personal',
+                        'percent': 12.10,
+                        'direct_percent': 12.10,
+                        'effective_percentage': 0.551,
+                        'nationality': 'American',
+                        'type_label': 'Individual',
+                        'company_name': 'PRIVATE EQUITY VENTURES'
+                    },
+                    {
+                        'name': 'DANIEL PARK',
+                        'display_name': 'DANIEL PARK',
+                        'shareholder_type': 'personal',
+                        'percent': 5.40,
+                        'direct_percent': 5.40,
+                        'effective_percentage': 0.246,
+                        'nationality': 'Korean',
+                        'type_label': 'Individual',
+                        'company_name': 'PRIVATE EQUITY VENTURES'
+                    }
+                ],
+                'company_id': 'COMP_J',
+                'capital': '5,400,000,000',
+                'business_type_en': 'Private Equity'
+            },
+            
+            # Level 2: COMP_K - 4 shareholders
+            'COMP_K': {
+                'name_en': 'EMERGING MARKETS FUND',
+                'display_name': 'EMERGING MARKETS FUND',
+                'level': 2,
+                'parent_percentage': 6.694,
+                'shareholders': [
+                    {
+                        'name': 'SOPHIA CHEN',
+                        'display_name': 'SOPHIA CHEN',
+                        'shareholder_type': 'personal',
+                        'percent': 58.70,
+                        'direct_percent': 58.70,
+                        'effective_percentage': 3.929,
+                        'nationality': 'Singaporean',
+                        'type_label': 'Individual',
+                        'company_name': 'EMERGING MARKETS FUND'
+                    },
                     {
                         'name': 'EMILY RODRIGUEZ',
                         'display_name': 'EMILY RODRIGUEZ',
                         'shareholder_type': 'personal',
-                        'percent': 100.00,
-                        'direct_percent': 100.00,
-                        'effective_percentage': 8.50,
+                        'percent': 25.80,
+                        'direct_percent': 25.80,
+                        'effective_percentage': 1.727,
                         'nationality': 'Spanish',
+                        'type_label': 'Individual',
+                        'company_name': 'EMERGING MARKETS FUND'
+                    },
+                    {
+                        'name': 'RAJESH KUMAR',
+                        'display_name': 'RAJESH KUMAR',
+                        'shareholder_type': 'personal',
+                        'percent': 10.20,
+                        'direct_percent': 10.20,
+                        'effective_percentage': 0.683,
+                        'nationality': 'Indian',
+                        'type_label': 'Individual',
+                        'company_name': 'EMERGING MARKETS FUND'
+                    },
+                    {
+                        'name': 'CARLOS SILVA',
+                        'display_name': 'CARLOS SILVA',
+                        'shareholder_type': 'personal',
+                        'percent': 5.30,
+                        'direct_percent': 5.30,
+                        'effective_percentage': 0.355,
+                        'nationality': 'Brazilian',
+                        'type_label': 'Individual',
+                        'company_name': 'EMERGING MARKETS FUND'
+                    }
+                ],
+                'company_id': 'COMP_K',
+                'capital': '4,200,000,000',
+                'business_type_en': 'Investment Fund'
+            },
+            
+            # Level 2: COMP_L - 4 shareholders
+            'COMP_L': {
+                'name_en': 'INTERNATIONAL EQUITY FUND',
+                'display_name': 'INTERNATIONAL EQUITY FUND',
+                'level': 2,
+                'parent_percentage': 4.077,
+                'shareholders': [
+                    {
+                        'name': 'SOPHIA CHEN',
+                        'display_name': 'SOPHIA CHEN',
+                        'shareholder_type': 'personal',
+                        'percent': 92.10,
+                        'direct_percent': 92.10,
+                        'effective_percentage': 3.755,
+                        'nationality': 'Singaporean',
+                        'type_label': 'Individual',
+                        'company_name': 'INTERNATIONAL EQUITY FUND'
+                    },
+                    {
+                        'name': 'GIOVANNI ROSSI',
+                        'display_name': 'GIOVANNI ROSSI',
+                        'shareholder_type': 'personal',
+                        'percent': 4.60,
+                        'direct_percent': 4.60,
+                        'effective_percentage': 0.188,
+                        'nationality': 'Italian',
+                        'type_label': 'Individual',
+                        'company_name': 'INTERNATIONAL EQUITY FUND'
+                    },
+                    {
+                        'name': 'ANNA KOWALSKI',
+                        'display_name': 'ANNA KOWALSKI',
+                        'shareholder_type': 'personal',
+                        'percent': 2.10,
+                        'direct_percent': 2.10,
+                        'effective_percentage': 0.086,
+                        'nationality': 'Polish',
+                        'type_label': 'Individual',
+                        'company_name': 'INTERNATIONAL EQUITY FUND'
+                    },
+                    {
+                        'name': 'LARS NIELSEN',
+                        'display_name': 'LARS NIELSEN',
+                        'shareholder_type': 'personal',
+                        'percent': 1.20,
+                        'direct_percent': 1.20,
+                        'effective_percentage': 0.049,
+                        'nationality': 'Danish',
                         'type_label': 'Individual',
                         'company_name': 'INTERNATIONAL EQUITY FUND'
                     }
                 ],
-                'company_id': 'COMP_F',
-                'capital': '4,500,000,000',
+                'company_id': 'COMP_L',
+                'capital': '3,900,000,000',
                 'business_type_en': 'Investment Fund'
             }
         },
@@ -462,7 +870,7 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
             'method_1_check': {
                 'checked': True,
                 'found_ubo': True,
-                'companies_checked': 12,
+                'companies_checked': 20,
                 'max_level_reached': 3
             },
             'method_2_check': {
@@ -473,4 +881,3 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
     }
     
     return mock_data
-
