@@ -96,25 +96,36 @@ python3 enhanced_app.py
 
 ตั้งค่า Environment Variables ใน Vercel Dashboard:
 
-1. ไปที่ **Vercel Dashboard** → **Project** → **Settings** → **Environment Variables**
-2. เพิ่ม variables ต่อไปนี้:
+#### ขั้นตอนการตั้งค่า:
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `ENLITE_API_KEY` | Enlite API Key | - | ✅ **Yes** |
-| `ENLITE_API_URL` | Enlite API Base URL | `https://xignal-uat.bol.co.th` | Optional |
-| `ENLITE_API_TIMEOUT` | API Timeout (seconds) | `60` | Optional |
+1. **ไปที่ Vercel Dashboard**
+   - Login: [https://vercel.com](https://vercel.com)
+   - เลือก Project: `lhb-ubo`
 
-**ตัวอย่าง:**
-```
-ENLITE_API_KEY = HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV
-ENLITE_API_URL = https://xignal-uat.bol.co.th
-ENLITE_API_TIMEOUT = 60
-```
+2. **ไปที่ Settings → Environment Variables**
+   - คลิกแท็บ **"Settings"**
+   - คลิก **"Environment Variables"** ในเมนูด้านซ้าย
 
-**หมายเหตุ:** 
-- สำหรับ **Production** - ใช้ Production API key (ถ้ามี)
-- สำหรับ **Local Development** - ใช้ default values ใน code (ไม่ต้องตั้งค่า)
+3. **เพิ่ม Variables:**
+   - คลิก **"Add New"**
+   - เพิ่ม variables ตามตารางด้านล่าง
+   - เลือก Environment: **Production** ✅ (และ Preview, Development ถ้าต้องการ)
+   - คลิก **"Save"**
+
+#### Variables ที่ต้องตั้งค่า:
+
+| Variable | Value | Environment | Required |
+|----------|-------|-------------|----------|
+| `ENLITE_API_KEY` | `HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV` | ✅ Production<br>✅ Preview | ✅ **Yes** |
+| `ENLITE_API_URL` | `https://xignal-uat.bol.co.th` | ✅ Production<br>✅ Preview | Optional |
+| `ENLITE_API_TIMEOUT` | `60` | ✅ Production<br>✅ Preview | Optional |
+
+#### หลังตั้งค่า:
+
+- ✅ **Redeploy** deployment ปัจจุบัน
+- หรือรอ auto-deploy จาก commit ใหม่
+
+**ดูคู่มือละเอียด:** `VERCEL_ENV_SETUP.md`
 
 ---
 
