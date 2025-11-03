@@ -21,7 +21,8 @@
 UBO/
 ├── final_ubo_system.py      # Core UBO analysis logic
 ├── enhanced_app.py           # Main Flask application
-├── vercel_app.py             # Vercel entry point
+├── api/
+│   └── index.py              # Vercel serverless function
 ├── templates/
 │   └── enhanced_index.html   # Frontend UI
 ├── requirements.txt          # Python dependencies
