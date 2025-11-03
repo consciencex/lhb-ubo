@@ -928,21 +928,21 @@
             // More pronounced line thickness difference: 10% = 2.5px, 20% = 5px, 50% = 12.5px
             const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1.5, 18]);
             
-            // Balanced forces for smooth dragging and good distribution
+            // Smooth forces for easy dragging with good distribution
             const simulation = d3.forceSimulation(graphData.nodes)
                 .force('link', d3.forceLink(graphData.edges).id(d => d.id)
                     .distance(d => 200 - (d.percent * 0.6)) // More dynamic distance based on %
-                    .strength(0.7)) // Slightly weaker link force for more flexibility
-                .force('charge', d3.forceManyBody().strength(-1300).distanceMax(500)) // Moderate repulsion for smooth dragging
-                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.03)) // Very gentle centering
+                    .strength(0.4)) // Much weaker link force for smooth dragging
+                .force('charge', d3.forceManyBody().strength(-900).distanceMax(500)) // Lower repulsion for smooth movement
+                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.02)) // Even gentler centering
                 .force('collision', d3.forceCollide()
                     .radius(d => nodeScale(d.capital) + 50) // Large collision radius
-                    .strength(1)) // Moderate collision prevention
-                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.4 : 0.015)) // Pull main company strongly to center
-                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.4 : 0.015))
-                .force('radial', d3.forceRadial(d => d.level * 180, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.3)) // Radial distribution by level
+                    .strength(0.8)) // Lower collision prevention for smoother drag
+                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.3 : 0.01)) // Gentler pull to center
+                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.3 : 0.01))
+                .force('radial', d3.forceRadial(d => d.level * 180, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.2)) // Gentler radial distribution
                 .alphaDecay(0.02) // Slower cooling for better settling
-                .velocityDecay(0.3); // More friction for stability
+                .velocityDecay(0.2); // Less friction for smoother movement
             
             // Fixed-size arrow marker (doesn't scale with line thickness)
             svg.append('defs').selectAll('marker').data(['arrow']).join('marker')
