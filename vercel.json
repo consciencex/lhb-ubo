@@ -3,7 +3,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "vercel_app.py"
+      "dest": "app.py"
     }
   ],
   "regions": ["sin1"]
