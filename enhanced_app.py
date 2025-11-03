@@ -269,72 +269,13 @@ def analyze_company():
 
 @app.route('/api/export_excel', methods=['POST'])
 def export_excel():
-    """Export analysis results to Excel."""
-    try:
-        data = request.get_json()
-        results = data.get('results', [])
-        
-        if not results:
-            return jsonify({'error': 'No data available for export'}), 400
-        
-        # Build DataFrame for Excel export
-        import pandas as pd
-        
-        excel_data = []
-        for result in results:
-            if 'error' in result:
-                continue
-                
-            company_info = result.get('company_info', {})
-            analysis_summary = result.get('analysis_summary', {})
-            ubo_results = result.get('ubo_results', {})
-            
-            # Company-level summary
-            base_row = {
-                'Company ID': company_info.get('id', ''),
-                'Company Name': company_info.get('name', ''),
-                'Check Date': company_info.get('check_date', ''),
-                'Method Used': analysis_summary.get('method_used', ''),
-                'Max Level': analysis_summary.get('max_level_reached', ''),
-                'Companies Checked': analysis_summary.get('total_companies_checked', ''),
-                'Risk Level': analysis_summary.get('risk_level', ''),
-                'Compliance Status': analysis_summary.get('compliance_status', ''),
-                'Total UBO Candidates': ubo_results.get('total_candidates', ''),
-                'Final UBOs': ubo_results.get('final_ubos', '')
-            }
-            
-            # Detailed UBO information
-            ubo_details = ubo_results.get('ubo_details', [])
-            if ubo_details:
-                for ubo in ubo_details:
-                    row = base_row.copy()
-                    row.update({
-                        'UBO Name': ubo.get('name', ''),
-                        'UBO Method': ubo.get('method', ''),
-                        'UBO Percentage': ubo.get('total_percentage', ''),
-                        'UBO Paths': len(ubo.get('paths', [])),
-                        'Is Director': ubo.get('is_director', False),
-                        'Position': ubo.get('position', '')
-                    })
-                    excel_data.append(row)
-            else:
-                excel_data.append(base_row)
-        
-        # Write Excel output
-        df = pd.DataFrame(excel_data)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        excel_filename = f"enhanced_ubo_analysis_{timestamp}.xlsx"
-        
-        df.to_excel(excel_filename, index=False, engine='openpyxl')
-        
-        return jsonify({
-            'success': True,
-            'filename': excel_filename
-        })
-        
-    except Exception as e:
-        logger.error(f"Error exporting to Excel: {e}")
-        return jsonify({'error': f'Failed to export: {str(e)}'}), 500
+    """Export analysis results to Excel (disabled - use JSON export instead)."""
+    # Excel export disabled to reduce deployment size
+    # pandas and openpyxl dependencies are too large (>250MB)
+    return jsonify({
+        'error': 'Excel export is disabled to reduce deployment size. Please use JSON export endpoint instead.',
+        'message': 'Use /api/analyze endpoint to get JSON data'
+    }), 501
 
 @app.route('/api/download/<filename>')
 def download_file(filename):
