@@ -331,18 +331,20 @@ def export_excel():
         writer.writerow(headers)
         writer.writerows(csv_data)
         
-        # Save to file
+        # Return CSV data directly (no file writing for Vercel)
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         csv_filename = f"ubo_analysis_{timestamp}.csv"
+        csv_content = output.getvalue()
         
-        with open(csv_filename, 'w', encoding='utf-8-sig') as f:  # utf-8-sig for Excel compatibility
-            f.write(output.getvalue())
+        # Return as downloadable response
+        from io import BytesIO
+        from flask import make_response
         
-        return jsonify({
-            'success': True,
-            'filename': csv_filename,
-            'message': 'CSV export successful (Excel-compatible)'
-        })
+        response = make_response(csv_content)
+        response.headers['Content-Type'] = 'text/csv; charset=utf-8-sig'
+        response.headers['Content-Disposition'] = f'attachment; filename={csv_filename}'
+        
+        return response
         
     except Exception as e:
         logger.error(f"Error exporting to CSV: {e}")
@@ -350,15 +352,11 @@ def export_excel():
 
 @app.route('/api/download/<filename>')
 def download_file(filename):
-    """Download generated files."""
-    try:
-        if os.path.exists(filename):
-            return send_file(filename, as_attachment=True)
-        else:
-            return jsonify({'error': 'File not found'}), 404
-    except Exception as e:
-        logger.error(f"Error downloading file {filename}: {e}")
-        return jsonify({'error': f'Download failed: {str(e)}'}), 500
+    """Download endpoint (disabled for serverless - use direct export instead)."""
+    return jsonify({
+        'error': 'File download not available in serverless environment',
+        'message': 'Use CSV export button to download data directly'
+    }), 501
 
 @app.route('/api/status')
 def system_status():
