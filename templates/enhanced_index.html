@@ -925,21 +925,31 @@
             
             const maxCapital = d3.max(graphData.nodes, d => d.capital) || 1;
             const nodeScale = d3.scaleSqrt().domain([0, maxCapital]).range([10, 45]);
-            const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1, 10]);
+            // More pronounced line thickness difference: 10% = 2.5px, 20% = 5px, 50% = 12.5px
+            const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1.5, 18]);
             
-            // Create stronger forces for better node separation
+            // Enhanced forces for better distribution and no overlap
             const simulation = d3.forceSimulation(graphData.nodes)
-                .force('link', d3.forceLink(graphData.edges).id(d => d.id).distance(d => 180 - (d.percent * 0.5))) // Increased distance
-                .force('charge', d3.forceManyBody().strength(-1200)) // Stronger repulsion
-                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.05)) // Gentle centering
-                .force('collision', d3.forceCollide().radius(d => nodeScale(d.capital) + 35).strength(1)) // Increased collision radius
-                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.3 : 0.02)) // Pull main company to center
-                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.3 : 0.02)); // Pull main company to center
+                .force('link', d3.forceLink(graphData.edges).id(d => d.id)
+                    .distance(d => 200 - (d.percent * 0.6)) // More dynamic distance based on %
+                    .strength(0.7)) // Slightly weaker link force for more flexibility
+                .force('charge', d3.forceManyBody().strength(-1800).distanceMax(500)) // Much stronger repulsion
+                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.03)) // Very gentle centering
+                .force('collision', d3.forceCollide()
+                    .radius(d => nodeScale(d.capital) + 50) // Large collision radius
+                    .strength(1.2)) // Strong collision prevention
+                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.4 : 0.015)) // Pull main company strongly to center
+                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.4 : 0.015))
+                .force('radial', d3.forceRadial(d => d.level * 180, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.3)) // Radial distribution by level
+                .alphaDecay(0.02) // Slower cooling for better settling
+                .velocityDecay(0.3); // More friction for stability
             
+            // Fixed-size arrow marker (doesn't scale with line thickness)
             svg.append('defs').selectAll('marker').data(['arrow']).join('marker')
-                .attr('id', 'arrow').attr('viewBox', '0 -5 10 10').attr('refX', 25).attr('refY', 0)
-                .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
-                .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#6b7280');
+                .attr('id', 'arrow').attr('viewBox', '0 -4 10 8').attr('refX', 28).attr('refY', 0)
+                .attr('markerWidth', 4).attr('markerHeight', 4).attr('orient', 'auto')
+                .attr('markerUnits', 'userSpaceOnUse') // Fixed size regardless of stroke width
+                .append('path').attr('d', 'M0,-3L10,0L0,3').attr('fill', '#6b7280');
             
             const link = g.append('g').selectAll('line').data(graphData.edges).join('line')
                 .attr('stroke', '#6b7280').attr('stroke-opacity', 0.7)
