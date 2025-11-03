@@ -366,14 +366,19 @@ class FinalUBOAnalyzer:
                     # Calculate Effective Percentage
                     effective_percentage = (current_percentage / 100.0) * direct_percentage
                     
-                    shareholder_name_raw = f"{sh_data.get('firstname', '')} {sh_data.get('lastname', '')}".strip()
                     shareholder_type = sh_data.get('shareholder_type', 'personal')
                     regis_id_held_by = sh_data.get('regis_id_held_by', '')
+                    
+                    # ✅ สำหรับบริษัท ใช้ companyName หรือ companyNameFull จาก API
                     if shareholder_type == 'company':
-                        fallback_label = f"Company {regis_id_held_by}" if regis_id_held_by else "Corporate Shareholder"
+                        company_name_full = sh_data.get('companyNameFull', '').strip()
+                        company_name = sh_data.get('companyName', '').strip()
+                        shareholder_name_raw = company_name_full or company_name or f"{sh_data.get('firstname', '')} {sh_data.get('lastname', '')}".strip()
+                        # ใช้ชื่อภาษาอังกฤษจาก API (ไม่ต้อง sanitize)
+                        shareholder_name = self._sanitize_label(shareholder_name_raw, fallback=f"Company {regis_id_held_by}" if regis_id_held_by else "Corporate Shareholder")
                     else:
-                        fallback_label = "Individual Shareholder"
-                    shareholder_name = self._sanitize_label(shareholder_name_raw, fallback=fallback_label)
+                        shareholder_name_raw = f"{sh_data.get('firstname', '')} {sh_data.get('lastname', '')}".strip()
+                        shareholder_name = self._sanitize_label(shareholder_name_raw, fallback="Individual Shareholder")
                     
                     # Build shareholder object
                     sanitized_nationality = self._sanitize_label(sh_data.get('nationality', ''), fallback='')
