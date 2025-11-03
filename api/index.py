@@ -189,20 +189,6 @@ def analyze():
         }), 500
 
 
-# Vercel serverless handler
-# Vercel will automatically detect and use this handler
-def handler(request):
-    """Vercel serverless handler."""
-    from werkzeug.wrappers import Response
-    
-    with app.request_context(request.environ):
-        try:
-            rv = app.full_dispatch_request()
-        except Exception as e:
-            rv = app.handle_exception(e)
-        return Response(
-            rv.get_data(),
-            status=rv.status_code,
-            headers=dict(rv.headers)
-        )
+# Vercel will automatically detect and use the 'app' variable
+# No need for custom handler - Vercel Python runtime handles it automatically
 
