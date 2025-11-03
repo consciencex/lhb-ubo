@@ -29,10 +29,19 @@ Thumbs.db
 # Logs
 *.log
 
-# Reports and output files
+# Reports and output files (generated - don't commit)
 enhanced_ubo_report_*.json
+ubo_report_*.json
+test_report_*.json
+mock_ubo_report_*.json
+calculation_verification.json
+correct_ubo_test_result.json
+test_interactive_result.json
+test_result.json
+test_*.json
 *.xlsx
 ubo_analysis_*.xlsx
+enhanced_ubo_analysis_*.xlsx
 
 # Environment variables
 .env
@@ -50,4 +59,7 @@ htmlcov/
 *.tmp
 *.bak
 *~
+
+# Old/Deprecated files (kept in git history but not needed)
+# Test files are in .gitignore by pattern above
 
