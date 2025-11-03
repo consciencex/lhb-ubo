@@ -10,9 +10,13 @@ import sys
 from datetime import datetime
 import logging
 from typing import Any, Dict, Optional, Set
+import networkx as nx
 
 # Import Final UBO System
 from final_ubo_system import analyze_company_ubo
+
+# Import Mock Data Generator
+from mock_data_generator import generate_mock_ubo_data
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
