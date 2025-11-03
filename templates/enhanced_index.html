@@ -703,6 +703,11 @@
                         return `<li>Path ${entryIdx + 1}: ${pathNames || 'N/A'} → direct ${directText} | UBO ${expression} ⇒ ${effectiveText}</li>`;
                     }).join('');
                     
+                    // ✅ แสดง UBO Effect ในการ์ดหลัก
+                    const percentDisplay = directShare !== effectiveShare 
+                        ? `${directShare}% <span class="text-muted small">(UBO Effect: ${effectiveShare}%)</span>`
+                        : `${directShare}%`;
+                    
                     html += `
                         <div class="col-md-6 mb-2">
                             <div class="shareholder-item ${typeClass}">
@@ -711,7 +716,7 @@
                                         <div class="shareholder-name">
                                             <i class="${typeIcon}"></i> ${sh.label}
                                         </div>
-                                        <div class="shareholder-percentage">${directShare}%</div>
+                                        <div class="shareholder-percentage">${percentDisplay}</div>
                                         <div class="shareholder-type">${typeText}</div>
                                     </div>
                                     <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}" aria-expanded="false" aria-controls="${detailId}">
