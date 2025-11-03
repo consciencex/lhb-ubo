@@ -636,7 +636,11 @@
         entry.type = entry.type === 'company' || sh.shareholder_type === 'company' ? 'company' : 'personal';
         const directContribution = parseFloat(sh.direct_percent ?? sh.percent ?? 0) || 0;
         const effectiveContribution = parseFloat(sh.effective_percentage || sh.effective || sh.percent || 0) || 0;
-        entry.direct += directContribution;
+        // ✅ FIX: ใช้ direct % จาก API ตรงๆ ไม่บวก (เอาค่าแรกหรือค่าสูงสุด)
+        if (entry.entries.length === 0) {
+            entry.direct = directContribution;
+        }
+        // Effective ยังคงบวกเพื่อ UBO calculation
         entry.effective += effectiveContribution;
         entry.entries.push({
             direct: directContribution,
