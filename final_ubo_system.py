@@ -259,6 +259,7 @@ class FinalUBOAnalyzer:
         self.visited_companies = set()  # Track visited companies to avoid loops
         self.total_companies_checked = 0
         self.max_level_reached = 0
+        self.corporate_shareholders_in_queue = {}  # Track corporate shareholders: {regis_id: (name, effective_%, path)}
     
     def _sanitize_label(self, text: Optional[str], fallback: str = "") -> str:
         """Return an ASCII-safe label, falling back when necessary."""
@@ -447,6 +448,16 @@ class FinalUBOAnalyzer:
                             }]
                             new_task = (regis_id_held_by, effective_percentage, current_level + 1, new_task_path)
                             processing_queue.append(new_task)
+                            
+                            # ✅ Track corporate shareholders ที่เพิ่มเข้า queue
+                            if regis_id_held_by not in self.corporate_shareholders_in_queue:
+                                self.corporate_shareholders_in_queue[regis_id_held_by] = []
+                            self.corporate_shareholders_in_queue[regis_id_held_by].append({
+                                'name': shareholder_name,
+                                'effective_percent': effective_percentage,
+                                'path': shareholder_path
+                            })
+                            
                             logger.info(f"Added corporate shareholder {regis_id_held_by} to queue for level {current_level + 1}")
                         else:
                             # If no regis_id_held_by, still try to process as corporate
@@ -455,6 +466,9 @@ class FinalUBOAnalyzer:
                 except (ValueError, TypeError) as e:
                     logger.warning(f"Error parsing shareholder data: {e}")
                     continue
+        
+        # ✅ เช็ค Corporate UBO: บริษัทที่อยู่ใน queue แต่ไม่ได้ถูก process (API fail หรือ foreign company)
+        self._identify_corporate_ubos()
         
         # Final Calculation
         final_ubos = self._identify_final_ubos()
@@ -479,6 +493,28 @@ class FinalUBOAnalyzer:
             check_date=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )
     
+    def _identify_corporate_ubos(self):
+        """Identify corporate UBOs - companies with >=15% that were not drilled down."""
+        for company_id, entries in self.corporate_shareholders_in_queue.items():
+            # ถ้าบริษัทนี้ไม่ได้ถูก visit (API fail หรือ foreign company หรือ max level)
+            if company_id not in self.visited_companies:
+                for entry in entries:
+                    if entry['effective_percent'] >= self.threshold_15:
+                        company_name = entry['name']
+                        if company_name not in self.ubo_results:
+                            self.ubo_results[company_name] = UBOCandidate(
+                                name=company_name,
+                                total_percentage=entry['effective_percent'],
+                                paths=[[step.get('entity_id') for step in entry['path']]],
+                                method=1,
+                                nationality='Corporate Entity',
+                                is_director=False
+                            )
+                            logger.info(f"Corporate UBO identified: {company_name} with {entry['effective_percent']:.2f}% (not drilled down)")
+                        else:
+                            self.ubo_results[company_name].total_percentage += entry['effective_percent']
+                            self.ubo_results[company_name].paths.append([step.get('entity_id') for step in entry['path']])
+    
     def _identify_final_ubos(self) -> List[UBOCandidate]:
         """Filter UBO candidates using Method 1 (≥15% shareholding)."""
         final_ubos = []
@@ -486,7 +522,7 @@ class FinalUBOAnalyzer:
         # Filter for individuals where the total accumulated percentage is >= 15.0
         for candidate in self.ubo_results.values():
             if candidate.total_percentage >= self.threshold_15:
-                candidate.name = self._sanitize_label(candidate.name, fallback="Individual Shareholder")
+                candidate.name = self._sanitize_label(candidate.name, fallback="Shareholder")
                 final_ubos.append(candidate)
                 logger.info(f"UBO identified (Method 1): {candidate.name} with {candidate.total_percentage:.2f}%")
         
