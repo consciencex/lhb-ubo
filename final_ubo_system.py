@@ -10,6 +10,7 @@ from datetime import datetime
 import logging
 from collections import deque
 import json
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -102,7 +103,8 @@ class FinalEnliteAPIClient:
             url = f"{self.base_url}/enlitews/companyData"
             logger.info(f"Making API request to: {url} for {registration_id}")
             
-            response = self.session.post(url, data=soap_body, timeout=60)
+            timeout = int(os.getenv('ENLITE_API_TIMEOUT', '60'))
+            response = self.session.post(url, data=soap_body, timeout=timeout)
             logger.info(f"Response status: {response.status_code}")
             
             if response.status_code == 200:
@@ -525,8 +527,12 @@ class FinalUBOAnalyzer:
         else:
             return 'HIGH', 'NON_COMPLIANT'
 
-# Global instances
-api_client = FinalEnliteAPIClient("HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV")
+# Global instances - Load from environment variables
+ENLITE_API_KEY = os.getenv('ENLITE_API_KEY', 'HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV')
+ENLITE_API_URL = os.getenv('ENLITE_API_URL', 'https://xignal-uat.bol.co.th')
+ENLITE_API_TIMEOUT = int(os.getenv('ENLITE_API_TIMEOUT', '60'))
+
+api_client = FinalEnliteAPIClient(ENLITE_API_KEY, ENLITE_API_URL)
 ubo_analyzer = FinalUBOAnalyzer()
 
 def analyze_company_ubo(registration_id: str) -> UBOAnalysisResult:

@@ -31,7 +31,6 @@ UBO/
 ├── .gitignore                # Git ignore rules
 ├── README.md                 # Documentation (this file)
 └── [Reference Files]
-    ├── NC958 PRO05-2568...pdf    # Reference document
     └── Enlite BOL API.postman_collection.json
 ```
 
@@ -49,12 +48,19 @@ cd lhb-ubo
 # 2. Install dependencies
 pip3 install -r requirements.txt
 
-# 3. Run application
+# 3. (Optional) Set environment variables for custom API settings
+export ENLITE_API_KEY="your-api-key-here"
+export ENLITE_API_URL="https://xignal-uat.bol.co.th"
+export ENLITE_API_TIMEOUT="60"
+
+# 4. Run application
 python3 enhanced_app.py
 
-# 4. Open browser
+# 5. Open browser
 # http://localhost:4444
 ```
+
+**หมายเหตุ:** สำหรับ local development, default values จะถูกใช้ถ้าไม่ตั้งค่า environment variables
 
 ### Vercel Deployment
 
@@ -87,11 +93,29 @@ python3 enhanced_app.py
 **Build Command:** (empty)  
 **Output Directory:** (empty)
 
-### Environment Variables (Optional)
+### Environment Variables (Required)
 
-ถ้ามี API keys หรือ sensitive data:
-- `API_KEY` = `your-api-key`
-- `API_TIMEOUT` = `60`
+ตั้งค่า Environment Variables ใน Vercel Dashboard:
+
+1. ไปที่ **Vercel Dashboard** → **Project** → **Settings** → **Environment Variables**
+2. เพิ่ม variables ต่อไปนี้:
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `ENLITE_API_KEY` | Enlite API Key | - | ✅ **Yes** |
+| `ENLITE_API_URL` | Enlite API Base URL | `https://xignal-uat.bol.co.th` | Optional |
+| `ENLITE_API_TIMEOUT` | API Timeout (seconds) | `60` | Optional |
+
+**ตัวอย่าง:**
+```
+ENLITE_API_KEY = HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV
+ENLITE_API_URL = https://xignal-uat.bol.co.th
+ENLITE_API_TIMEOUT = 60
+```
+
+**หมายเหตุ:** 
+- สำหรับ **Production** - ใช้ Production API key (ถ้ามี)
+- สำหรับ **Local Development** - ใช้ default values ใน code (ไม่ต้องตั้งค่า)
 
 ---
 
