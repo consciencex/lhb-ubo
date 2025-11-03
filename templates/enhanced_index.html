@@ -928,16 +928,16 @@
             // More pronounced line thickness difference: 10% = 2.5px, 20% = 5px, 50% = 12.5px
             const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1.5, 18]);
             
-            // Enhanced forces for better distribution and no overlap
+            // Balanced forces for smooth dragging and good distribution
             const simulation = d3.forceSimulation(graphData.nodes)
                 .force('link', d3.forceLink(graphData.edges).id(d => d.id)
                     .distance(d => 200 - (d.percent * 0.6)) // More dynamic distance based on %
                     .strength(0.7)) // Slightly weaker link force for more flexibility
-                .force('charge', d3.forceManyBody().strength(-1800).distanceMax(500)) // Much stronger repulsion
+                .force('charge', d3.forceManyBody().strength(-1300).distanceMax(500)) // Moderate repulsion for smooth dragging
                 .force('center', d3.forceCenter(width / 2, height / 2).strength(0.03)) // Very gentle centering
                 .force('collision', d3.forceCollide()
                     .radius(d => nodeScale(d.capital) + 50) // Large collision radius
-                    .strength(1.2)) // Strong collision prevention
+                    .strength(1)) // Moderate collision prevention
                 .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.4 : 0.015)) // Pull main company strongly to center
                 .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.4 : 0.015))
                 .force('radial', d3.forceRadial(d => d.level * 180, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.3)) // Radial distribution by level
