@@ -1,20 +1,12 @@
 {
   "version": 2,
   "functions": {
-    "api/index.py": {
-      "maxDuration": 60,
-      "memory": 3008
-    },
     "vercel_app.py": {
       "maxDuration": 60,
       "memory": 3008
     }
   },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
-    },
     {
       "source": "/(.*)",
       "destination": "/vercel_app.py"
