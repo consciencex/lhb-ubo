@@ -269,13 +269,84 @@ def analyze_company():
 
 @app.route('/api/export_excel', methods=['POST'])
 def export_excel():
-    """Export analysis results to Excel (disabled - use JSON export instead)."""
-    # Excel export disabled to reduce deployment size
-    # pandas and openpyxl dependencies are too large (>250MB)
-    return jsonify({
-        'error': 'Excel export is disabled to reduce deployment size. Please use JSON export endpoint instead.',
-        'message': 'Use /api/analyze endpoint to get JSON data'
-    }), 501
+    """Export analysis results to CSV (Excel-compatible format)."""
+    try:
+        data = request.get_json()
+        results = data.get('results', [])
+        
+        if not results:
+            return jsonify({'error': 'No data available for export'}), 400
+        
+        # Build CSV data (no pandas needed)
+        import csv
+        import io
+        
+        csv_data = []
+        headers = ['Company ID', 'Company Name', 'Check Date', 'Method Used', 'Max Level', 
+                   'Companies Checked', 'Risk Level', 'Compliance Status', 'Total UBO Candidates', 
+                   'Final UBOs', 'UBO Name', 'UBO Method', 'UBO Percentage', 'UBO Paths', 
+                   'Is Director', 'Position']
+        
+        for result in results:
+            if 'error' in result:
+                continue
+                
+            company_info = result.get('company_info', {})
+            analysis_summary = result.get('analysis_summary', {})
+            ubo_results = result.get('ubo_results', {})
+            
+            # Base row
+            base_row = [
+                company_info.get('id', ''),
+                company_info.get('name', ''),
+                company_info.get('check_date', ''),
+                analysis_summary.get('method_used', ''),
+                analysis_summary.get('max_level_reached', ''),
+                analysis_summary.get('total_companies_checked', ''),
+                analysis_summary.get('risk_level', ''),
+                analysis_summary.get('compliance_status', ''),
+                ubo_results.get('total_candidates', ''),
+                ubo_results.get('final_ubos', '')
+            ]
+            
+            # UBO details
+            ubo_details = ubo_results.get('ubo_details', [])
+            if ubo_details:
+                for ubo in ubo_details:
+                    row = base_row + [
+                        ubo.get('name', ''),
+                        ubo.get('method', ''),
+                        ubo.get('total_percentage', ''),
+                        len(ubo.get('paths', [])),
+                        ubo.get('is_director', False),
+                        ubo.get('position', '')
+                    ]
+                    csv_data.append(row)
+            else:
+                csv_data.append(base_row + ['', '', '', '', '', ''])
+        
+        # Create CSV in memory
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow(headers)
+        writer.writerows(csv_data)
+        
+        # Save to file
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        csv_filename = f"ubo_analysis_{timestamp}.csv"
+        
+        with open(csv_filename, 'w', encoding='utf-8-sig') as f:  # utf-8-sig for Excel compatibility
+            f.write(output.getvalue())
+        
+        return jsonify({
+            'success': True,
+            'filename': csv_filename,
+            'message': 'CSV export successful (Excel-compatible)'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error exporting to CSV: {e}")
+        return jsonify({'error': f'Failed to export: {str(e)}'}), 500
 
 @app.route('/api/download/<filename>')
 def download_file(filename):
