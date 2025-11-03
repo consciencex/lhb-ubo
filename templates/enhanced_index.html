@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBO Analysis System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px;
+            padding: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-analyze {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .results-section {
+            margin-top: 30px;
+        }
+        
+        .level-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .level-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        .level-content {
+            padding: 20px;
+        }
+        
+        .shareholder-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .shareholder-item.personal {
+            border-left-color: #28a745;
+        }
+        
+        .shareholder-item.company {
+            border-left-color: #007bff;
+        }
+
+        .hierarchy-tree-container {
+            width: 100%;
+            min-height: 420px;
+            overflow-x: auto;
+            padding: 10px;
+            background: #f8fbff;
+            border-radius: 12px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .hierarchy-tree-container svg {
+            font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+        }
+
+        .tree-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 0.9em;
+            color: #425466;
+        }
+
+        .tree-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(17, 24, 39, 0.25);
+            display: inline-block;
+        }
+
+        .legend-swatch.company {
+            background: #1f77b4;
+        }
+
+        .legend-swatch.personal {
+            background: #4CAF50;
+        }
+
+        .legend-swatch.ubo {
+            background: #EF4444;
+            border-color: #991B1B;
+        }
+
+        .accordion.level-accordion .accordion-button {
+            background: linear-gradient(45deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion.level-accordion .accordion-button.collapsed {
+            background: #f8fafc;
+            color: #374151;
+        }
+
+        .accordion.level-accordion .accordion-button:focus {
+            box-shadow: none;
+            border-color: rgba(102,126,234,0.4);
+        }
+
+        .level-badge {
+            background: rgba(59,130,246,0.12);
+            color: #1d4ed8;
+            border-radius: 999px;
+            padding: 3px 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .shareholder-body {
+            background: #f9fafb;
+        }
+        
+        .shareholder-name {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .shareholder-percentage {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #4C51BF;
+        }
+        
+        .shareholder-type {
+            font-size: 0.8em;
+            color: #6b7280;
+        }
+
+        .shareholder-item .btn {
+            min-width: 120px;
+            font-size: 0.78em;
+        }
+
+        .shareholder-ubo-detail {
+            background: #f4f7ff;
+            border-radius: 10px;
+            border: 1px solid rgba(99,102,241,0.25);
+            font-size: 0.85em;
+            color: #334155;
+        }
+        
+        .ubo-section {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .ubo-item {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: #667eea;
+        }
+        
+        .summary-stats {
+            background: #e8f4fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-search"></i> LH Bank UBO Analysis System</h1>
+                <p>Ultimate Beneficial Owner (UBO) verification dashboard</p>
+            </div>
+            
+            <!-- Input Section -->
+            <div class="input-section">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="registrationId" class="form-label">
+                            <i class="fas fa-building"></i> Company Registration ID
+                        </label>
+                        <input type="text" class="form-control" id="registrationId" 
+                               placeholder="e.g., 0107548000234" value="0107548000234">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-analyze w-100" onclick="analyzeUBO()">
+                            <i class="fas fa-play"></i> Analyze UBO
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Analyzing...</span>
+                </div>
+                <p class="mt-3">Analyzing UBO data...</p>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="results" class="results-section" style="display: none;">
+                <!-- Company Info -->
+                <div class="level-card">
+                    <div class="level-header">
+                        <i class="fas fa-building"></i> Main Company Information
+                    </div>
+                    <div class="level-content" id="companyInfo">
+                        <!-- Company info will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Summary Stats -->
+                <div class="summary-stats">
+                    <div class="row" id="summaryStats">
+                        <!-- Summary stats will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- UBO Results -->
+                <div class="ubo-section" id="uboSection">
+                    <h3><i class="fas fa-crown"></i> UBO Analysis Results</h3>
+                    <div id="uboResults">
+                        <!-- UBO results will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Hierarchy Tree -->
+                <div class="level-card">
+                    <div class="level-header">
+                        <i class="fas fa-sitemap"></i> Shareholding Structure
+                    </div>
+                    <div class="level-content">
+                        <h5 class="text-secondary fw-semibold mb-3">Shareholding Tree</h5>
+                        <div id="hierarchyTree" class="hierarchy-tree-container"></div>
+                        <div class="tree-legend">
+                            <span><span class="legend-swatch company"></span> Company</span>
+                            <span><span class="legend-swatch personal"></span> Individual</span>
+                            <span><span class="legend-swatch ubo"></span> UBO ≥ 15%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shareholder Levels -->
+                <div class="level-card">
+                    <div class="level-header">
+                        <i class="fas fa-layer-group"></i> Shareholder Details by Level
+                    </div>
+                    <div class="level-content">
+                        <div class="accordion level-accordion" id="levelAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingLevel1">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level1Collapse" aria-expanded="false" aria-controls="level1Collapse">
+                                        <span><i class="fas fa-layer-group me-2"></i> Level 1 - Direct Shareholders</span>
+                                        <span class="level-badge" id="level1Badge">0</span>
+                                    </button>
+                                </h2>
+                                <div id="level1Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel1" data-bs-parent="#levelAccordion">
+                                    <div class="accordion-body shareholder-body" id="level1Content"></div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingLevel2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level2Collapse" aria-expanded="false" aria-controls="level2Collapse">
+                                        <span><i class="fas fa-layer-group me-2"></i> Level 2 - Indirect Shareholders</span>
+                                        <span class="level-badge" id="level2Badge">0</span>
+                                    </button>
+                                </h2>
+                                <div id="level2Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel2" data-bs-parent="#levelAccordion">
+                                    <div class="accordion-body shareholder-body" id="level2Content"></div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingLevel3">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level3Collapse" aria-expanded="false" aria-controls="level3Collapse">
+                                        <span><i class="fas fa-layer-group me-2"></i> Level 3 - Third-tier Shareholders</span>
+                                        <span class="level-badge" id="level3Badge">0</span>
+                                    </button>
+                                </h2>
+                                <div id="level3Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel3" data-bs-parent="#levelAccordion">
+                                    <div class="accordion-body shareholder-body" id="level3Content"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function analyzeUBO() {
+            const registrationId = document.getElementById('registrationId').value.trim();
+            
+            if (!registrationId) {
+                alert('Please enter a company registration ID.');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ registration_id: registrationId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result.data);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Connection error: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+            }
+        }
+        
+        function displayResults(data) {
+            // Display company info
+            displayCompanyInfo(data.company_info);
+            
+            // Display summary stats
+            displaySummaryStats(data);
+            
+            // Display level details
+            displayLevelDetails(data.hierarchy_data);
+            
+            // Display UBO results
+            displayUBOResults(data.ubos);
+            
+            // Display hierarchy tree
+            renderHierarchyTree(data.tree_structure);
+        }
+
+        function formatNameWithId(name, regisId) {
+            const cleanName = (name || '').trim();
+            const cleanId = (regisId || '').trim();
+            if (cleanId) {
+                if (cleanName) {
+                    return cleanName.includes(cleanId) ? cleanName : `${cleanName} (${cleanId})`;
+                }
+                return cleanId;
+            }
+            return cleanName || 'Unknown';
+        }
+        
+        function displayCompanyInfo(companyInfo) {
+            const html = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Company Name:</strong> ${companyInfo.display_name || companyInfo.name_en || 'Unknown'}</p>
+                        <p><strong>Business Type:</strong> ${companyInfo.business_type || 'Unknown'}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Registration ID:</strong> ${companyInfo.regis_id || 'Unknown'}</p>
+                        <p><strong>Status:</strong> ${companyInfo.status || 'Unknown'}</p>
+                        <p><strong>Registered Capital:</strong> ${companyInfo.capital || 'Unknown'}</p>
+                        <p><strong>Registration Date:</strong> ${companyInfo.regis_date || 'Unknown'}</p>
+                        <p><strong>Analysis Time:</strong> ${companyInfo.check_date || 'Unknown'}</p>
+                    </div>
+                </div>
+            `;
+            document.getElementById('companyInfo').innerHTML = html;
+        }
+        
+        function displaySummaryStats(data) {
+            const hierarchyData = data.hierarchy_data || {};
+            const ubos = data.ubos || [];
+            
+            // Count by level
+            const levelCounts = {1: 0, 2: 0, 3: 0};
+            const typeCounts = {personal: 0, company: 0};
+            
+            Object.values(hierarchyData).forEach(company => {
+                const level = company.level || 0;
+                const shareholders = company.shareholders || [];
+                
+                // Shareholders of level 0 company are Level 1
+                // Shareholders of level 1 companies are Level 2
+                // Shareholders of level 2 companies are Level 3
+                const displayLevel = level + 1;
+                
+                if (displayLevel >= 1 && displayLevel <= 3) {
+                    levelCounts[displayLevel] += shareholders.length;
+                }
+                
+                shareholders.forEach(sh => {
+                    const type = sh.shareholder_type || 'personal';
+                    if (typeCounts[type] !== undefined) {
+                        typeCounts[type]++;
+                    }
+                });
+            });
+            
+            const uboCount = ubos.filter(ubo => ubo.total_percentage >= 15).length;
+            
+            const html = `
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">${levelCounts[1]}</div>
+                        <div class="stat-label">Level 1</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">${levelCounts[2]}</div>
+                        <div class="stat-label">Level 2</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">${levelCounts[3]}</div>
+                        <div class="stat-label">Level 3</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-item">
+                        <div class="stat-number">${uboCount}</div>
+                        <div class="stat-label">UBO (≥15%)</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('summaryStats').innerHTML = html;
+        }
+        
+        function displayLevelDetails(hierarchyData) {
+            // Group by level
+            const levelData = {1: [], 2: [], 3: []};
+            
+            Object.values(hierarchyData).forEach(company => {
+                const level = company.level || 0;
+                const shareholders = company.shareholders || [];
+                
+                // Shareholders of level 0 company are Level 1
+                // Shareholders of level 1 companies are Level 2
+                // Shareholders of level 2 companies are Level 3
+                const displayLevel = level + 1;
+                
+                if (displayLevel >= 1 && displayLevel <= 3) {
+                    const companyLabel = formatNameWithId(
+                        company.display_name || company.name_en || company.name_th || 'Not specified',
+                        company.company_id || ''
+                    );
+                    shareholders.forEach(sh => {
+                        levelData[displayLevel].push({
+                            ...sh,
+                            company_name: companyLabel
+                        });
+                    });
+                }
+            });
+            
+            const collapseConfig = {
+                1: {collapseId: 'level1Collapse', badgeId: 'level1Badge'},
+                2: {collapseId: 'level2Collapse', badgeId: 'level2Badge'},
+                3: {collapseId: 'level3Collapse', badgeId: 'level3Badge'}
+            };
+
+            let expanded = false;
+            for (let level = 1; level <= 3; level++) {
+                const aggregated = aggregateShareholders(levelData[level]);
+                displayLevelContent(level, aggregated);
+
+                const cfg = collapseConfig[level];
+                const badgeEl = document.getElementById(cfg.badgeId);
+                if (badgeEl) {
+                    badgeEl.textContent = aggregated.length;
+                }
+
+                const collapseEl = document.getElementById(cfg.collapseId);
+                const buttonEl = document.querySelector(`button[data-bs-target="#${cfg.collapseId}"]`);
+                if (!collapseEl || !buttonEl) continue;
+
+                const collapseInstance = bootstrap.Collapse.getOrCreateInstance(collapseEl, {toggle: false});
+                if (!expanded && aggregated.length > 0) {
+                    collapseInstance.show();
+                    buttonEl.classList.remove('collapsed');
+                    buttonEl.setAttribute('aria-expanded', 'true');
+                    expanded = true;
+                } else {
+                    collapseInstance.hide();
+                    buttonEl.classList.add('collapsed');
+                    buttonEl.setAttribute('aria-expanded', 'false');
+                }
+            }
+        }
+
+        function aggregateShareholders(shareholders) {
+            const itemMap = new Map();
+
+            shareholders.forEach(sh => {
+                const regis = (sh.regis_id || sh.regis_id_held_by || '').trim();
+                const baseName = sh.display_name || `${(sh.firstname || '')} ${(sh.lastname || '')}`.trim() || 'Unknown';
+                const label = formatNameWithId(baseName, regis);
+                const key = regis ? `regis:${regis}` : `name:${label.toUpperCase()}`;
+
+        if (!itemMap.has(key)) {
+            itemMap.set(key, {
+                label,
+                regisId: regis,
+                type: sh.shareholder_type || 'personal',
+                company_name: sh.company_name || 'Not specified',
+                direct: 0,
+                effective: 0,
+                entries: []
+            });
+        }
+
+        const entry = itemMap.get(key);
+        entry.type = entry.type === 'company' || sh.shareholder_type === 'company' ? 'company' : 'personal';
+        const directContribution = parseFloat(sh.direct_percent ?? sh.percent ?? 0) || 0;
+        const effectiveContribution = parseFloat(sh.effective_percentage || sh.effective || sh.percent || 0) || 0;
+        entry.direct += directContribution;
+        entry.effective += effectiveContribution;
+        entry.entries.push({
+            direct: directContribution,
+            effective: effectiveContribution,
+            factors: (sh.ubo_factors || []).map(val => parseFloat(val || 0)),
+            pathSteps: (sh.ubo_path || []).map(step => ({
+                name: step.entity_name || 'Unknown',
+                id: step.entity_id || '',
+                percent: parseFloat(step.share_percent || 0) || 0
+            })),
+            raw: sh
+        });
+            });
+
+        return Array.from(itemMap.values())
+            .sort((a, b) => b.direct - a.direct);
+        }
+        
+        function displayLevelContent(level, shareholders) {
+            const containerId = `level${level}Content`;
+            const container = document.getElementById(containerId);
+            
+            if (shareholders.length === 0) {
+                container.innerHTML = '<p class="text-muted">No shareholder data for this level.</p>';
+                return;
+            }
+            
+            // Group by company
+            const companyGroups = {};
+            shareholders.forEach(sh => {
+                const companyName = sh.company_name || 'Not specified';
+                if (!companyGroups[companyName]) {
+                    companyGroups[companyName] = [];
+                }
+                companyGroups[companyName].push(sh);
+            });
+            
+            let html = '';
+            Object.entries(companyGroups).forEach(([companyName, shs]) => {
+                html += `
+                    <div class="mb-3">
+                        <h6 class="text-primary"><i class="fas fa-building"></i> ${companyName}</h6>
+                        <div class="row">
+                `;
+                
+                shs.forEach((sh, idx) => {
+                    const directShare = parseFloat(sh.direct || 0).toFixed(2);
+                    const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
+                    const type = sh.type || 'personal';
+                    const typeClass = type === 'personal' ? 'personal' : 'company';
+                    const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
+                    const typeText = type === 'personal' ? 'Individual' : 'Company';
+                    const detailId = `shareholderDetail-${level}-${companyName.replace(/[^a-zA-Z0-9]/g, '')}-${idx}`;
+                    const detailItems = (sh.entries || []).map((entry, entryIdx) => {
+                        const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
+                        const expression = factorTexts.length ? factorTexts.join(' × ') : '—';
+                        const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
+                        const directText = `${(entry.direct || 0).toFixed(4)}%`;
+                        const effectiveText = `${(entry.effective || 0).toFixed(4)}%`;
+                        return `<li>Path ${entryIdx + 1}: ${pathNames || 'N/A'} → direct ${directText} | UBO ${expression} ⇒ ${effectiveText}</li>`;
+                    }).join('');
+                    
+                    html += `
+                        <div class="col-md-6 mb-2">
+                            <div class="shareholder-item ${typeClass}">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="shareholder-name">
+                                            <i class="${typeIcon}"></i> ${sh.label}
+                                        </div>
+                                        <div class="shareholder-percentage">${directShare}%</div>
+                                        <div class="shareholder-type">${typeText}</div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}" aria-expanded="false" aria-controls="${detailId}">
+                                        View UBO Calc
+                                    </button>
+                                </div>
+                                <div class="collapse mt-2" id="${detailId}">
+                                    <div class="card card-body shareholder-ubo-detail">
+                                            <p class="mb-2"><strong>Direct share:</strong> ${directShare}%</p>
+                                            <p class="mb-2"><strong>Effective holding (UBO):</strong> ${effectiveShare}%</p>
+                                            <p class="mb-2 text-muted">Derived from ${sh.entries.length} path(s)</p>
+                                            <ul class="mb-0 ps-3 small text-secondary">${detailItems || '<li>No detailed path data.</li>'}</ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function displayUBOResults(ubos) {
+            const container = document.getElementById('uboResults');
+            
+            if (!ubos || ubos.length === 0) {
+                container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
+                return;
+            }
+            
+            // Sort by percentage
+            const sortedUbos = ubos.sort((a, b) => b.total_percentage - a.total_percentage);
+            const qualifiedUbos = sortedUbos.filter(ubo => ubo.total_percentage >= 15);
+            
+            if (qualifiedUbos.length === 0) {
+                container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
+                return;
+            }
+            
+            let html = '';
+            qualifiedUbos.forEach((ubo, index) => {
+                const percentage = parseFloat(ubo.total_percentage).toFixed(2);
+                html += `
+                    <div class="ubo-item">
+                        <h5><i class="fas fa-crown"></i> UBO #${index + 1}</h5>
+                        <p><strong>Name:</strong> ${ubo.name || 'Unknown'}</p>
+                        <p><strong>Shareholding:</strong> ${percentage}%</p>
+                        <p><strong>Identification Method:</strong> ${ubo.identification_method || 'Method 1'}</p>
+                        <p><strong>Nationality:</strong> ${ubo.nationality || 'Unknown'}</p>
+                        <p><strong>Director:</strong> ${ubo.is_director ? 'Yes' : 'No'}</p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function truncateLabel(label, max = 26) {
+            if (!label) return '';
+            return label.length > max ? label.slice(0, max - 3) + '...' : label;
+        }
+
+        function renderHierarchyTree(treeData) {
+            const container = d3.select('#hierarchyTree');
+            container.selectAll('*').remove();
+
+            if (!treeData || Object.keys(treeData).length === 0) {
+                container.append('p')
+                    .attr('class', 'text-muted')
+                    .text('No hierarchy data available.');
+                return;
+            }
+
+            const root = d3.hierarchy(treeData, d => d.children || []);
+            const dx = 70;
+            const dy = 280;
+            const treeLayout = d3.tree().nodeSize([dx, dy]).separation((a, b) => (a.parent === b.parent ? 1.6 : 2.4));
+            const BOX_WIDTH = 240;
+            const BOX_HEIGHT = 78;
+            treeLayout(root);
+
+            let x0 = Infinity;
+            let x1 = -Infinity;
+            root.each(d => {
+                if (d.x > x1) x1 = d.x;
+                if (d.x < x0) x0 = d.x;
+            });
+
+            const width = Math.max(1024, (root.height + 1) * dy + BOX_WIDTH * 2.5);
+            const height = x1 - x0 + dx * 2.5;
+
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('viewBox', [0, x0 - dx * 1.5, width, height])
+                .attr('style', 'max-width: 100%; height: auto; font: 12px "Inter", sans-serif;');
+
+            const g = svg.append('g').attr('transform', 'translate(200,0)');
+
+            g.append('g')
+                .attr('fill', 'none')
+                .attr('stroke', '#CBD5F0')
+                .attr('stroke-width', 1.6)
+                .attr('stroke-linecap', 'round')
+                .selectAll('path')
+                .data(root.links())
+                .join('path')
+                .attr('d', d => {
+                    const sourceX = d.source.x;
+                    const sourceY = d.source.y + BOX_WIDTH / 2;
+                    const targetX = d.target.x;
+                    const targetY = d.target.y - BOX_WIDTH / 2;
+                    const midY = (sourceY + targetY) / 2;
+                    return `M${sourceY},${sourceX}C${midY},${sourceX} ${midY},${targetX} ${targetY},${targetX}`;
+                });
+
+            const node = g.append('g')
+                .selectAll('g')
+                .data(root.descendants())
+                .join('g')
+                .attr('transform', d => `translate(${d.y},${d.x})`);
+
+            node.append('rect')
+                .attr('x', -(BOX_WIDTH / 2))
+                .attr('y', -(BOX_HEIGHT / 2))
+                .attr('width', BOX_WIDTH)
+                .attr('height', BOX_HEIGHT)
+                .attr('rx', 12)
+                .attr('fill', d => {
+                    if (d.data.isUbo) return '#EF4444';
+                    return d.data.type === 'company' ? '#1f77b4' : '#4CAF50';
+                })
+                .attr('fill-opacity', d => (d.data.isUbo ? 0.95 : 0.85))
+                .attr('stroke', d => d.data.isUbo ? '#991B1B' : 'rgba(17,24,39,0.28)')
+                .attr('stroke-width', d => d.data.isUbo ? 2.2 : 1.2)
+                .attr('filter', 'drop-shadow(0px 1px 2px rgba(15, 23, 42, 0.12))');
+
+            node.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', -6)
+                .attr('fill', '#F8FAFC')
+                .attr('font-weight', 600)
+                .attr('font-size', '10px')
+                .text(d => truncateLabel(d.data.name || 'Unknown', 32));
+
+            node.append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', 12)
+                .attr('fill', '#E0ECFF')
+                .attr('font-size', '10px')
+                .text(d => {
+                    const direct = parseFloat(d.data.direct_percent || 0);
+                    return `Share: ${direct.toFixed(2)}%`;
+                });
+
+            node.append('title')
+                .text(d => {
+                    const direct = parseFloat(d.data.direct_percent || 0);
+                    const effective = parseFloat(d.data.effective_percent || direct);
+                    const typeText = d.data.type ? d.data.type.toUpperCase() : 'UNKNOWN';
+                    const uboText = d.data.isUbo ? '\nUBO Candidate (≥15%)' : '';
+                    return `${d.data.name || 'Unknown'}\nType: ${typeText}\nDirect Share: ${direct.toFixed(4)}%\nEffective Holding: ${effective.toFixed(4)}%${uboText}`;
+                });
+        }
+        
+        // Auto-focus on input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('registrationId').focus();
+        });
+    </script>
+</body>
+</html>

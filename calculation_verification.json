@@ -1,0 +1,21 @@
+{
+  "company_id": "0105543093348",
+  "verification_date": "2025-10-28 11:40:59",
+  "total_companies_checked": 7,
+  "max_level_reached": 2,
+  "hierarchy_verification": {
+    "companies_analyzed": 7,
+    "percentage_calculation_errors": 0,
+    "total_percentage_verification": true
+  },
+  "ubo_calculation_verification": {
+    "candidates_found": 39,
+    "final_ubos_found": 2,
+    "calculation_accuracy": true
+  },
+  "compliance_verification": {
+    "method_1_applied": false,
+    "method_3_applied": false,
+    "overall_status": "UNKNOWN"
+  }
+}

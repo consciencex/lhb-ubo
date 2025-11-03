@@ -1,0 +1,1686 @@
+{
+  "registration_id": "0107548000234",
+  "company_name": "à¸à¸£à¸´à¸©à¸±à¸ à¸à¸à¸²à¸à¸²à¸£à¹à¸¥à¸à¸à¹ à¹à¸­à¸à¸à¹ à¹à¸®à¹à¸²à¸ªà¹ à¸à¸³à¸à¸±à¸ (à¸¡à¸«à¸²à¸à¸)",
+  "total_companies_checked": 7,
+  "max_level_reached": 2,
+  "ubos_found": 0,
+  "level_summary": {
+    "0": 1,
+    "1": 1,
+    "2": 5
+  },
+  "hierarchy": {
+    "0107548000234": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¸à¸à¸²à¸à¸²à¸£à¹à¸¥à¸à¸à¹ à¹à¸­à¸à¸à¹ à¹à¸®à¹à¸²à¸ªà¹ à¸à¸³à¸à¸±à¸ (à¸¡à¸«à¸²à¸à¸)",
+      "name_en": "LAND AND HOUSES BANK PUBLIC COMPANY LIMITED",
+      "level": 0,
+      "parent_percentage": 100.0,
+      "shareholders": [
+        {
+          "name": "บริษัท 0107552000081",
+          "firstname": "บริษัท 0107552000081",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 19999999000,
+          "percent": 100.0,
+          "shareholder_type": "company",
+          "regis_id": "0107552000081",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 100.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "CVLGOII NVOEPAVWRWU",
+          "firstname": "CVLGOII",
+          "lastname": "NVOEPAVWRWU",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "FGPVDAELO REWRIIAV",
+          "firstname": "FGPVDAELO",
+          "lastname": "REWRIIAV",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "HAEOSVUAWP UVOUWUAIILVTWU",
+          "firstname": "HAEOSVUAWP",
+          "lastname": "UVOUWUAIILVTWU",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "JWRRVOV PVOJEU",
+          "firstname": "JWRRVOV",
+          "lastname": "PVOJEU",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "LVNWCV JSWPNIJ",
+          "firstname": "LVNWCV",
+          "lastname": "JSWPNIJ",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "NVUAGLVCV PEOKNVSV",
+          "firstname": "NVUAGLVCV",
+          "lastname": "PEOKNVSV",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "OVUUAVTVU DIOHAVNGJCV",
+          "firstname": "OVUUAVTVU",
+          "lastname": "DIOHAVNGJCV",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "RGPVUUWFV UIILVPAVUOEPPVJAGO",
+          "firstname": "RGPVUUWFV",
+          "lastname": "UIILVPAVUOEPPVJAGO",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "RVMWJV MVOIJWC",
+          "firstname": "RVMWJV",
+          "lastname": "MVOIJWC",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "RWTVJVLO RWOEO",
+          "firstname": "RWTVJVLO",
+          "lastname": "RWOEO",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "TELVNWU HAVLEIORGJ",
+          "firstname": "TELVNWU",
+          "lastname": "HAVLEIORGJ",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "UAVTWOVO RVIOKRVATVOK",
+          "firstname": "UAVTWOVO",
+          "lastname": "RVIOKRVATVOK",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "UWCVLVU SEIUPAVOWU",
+          "firstname": "UWCVLVU",
+          "lastname": "SEIUPAVOWU",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "VPWHAVFV MIUWFVTVO",
+          "firstname": "VPWHAVFV",
+          "lastname": "MIUWFVTVO",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "VUHAVLIIFV ULIITWU",
+          "firstname": "VUHAVLIIFV",
+          "lastname": "ULIITWU",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "XWHAWVO VNELOPEEOHAVW",
+          "firstname": "XWHAWVO",
+          "lastname": "VNELOPEEOHAVW",
+          "nationality": "Thai",
+          "share_amount": 840,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "YES",
+          "director_update_date": "19 Mar 2024",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        },
+        {
+          "name": "à¸à¸à¸£à¸à¸à¸ à¸¡à¸¸à¸à¸à¸à¸²à¸ à¹à¸à¸à¹à¸¢à¸",
+          "firstname": "à¸à¸à¸£à¸à¸à¸ à¸¡à¸¸à¸à¸à¸à¸²à¸ à¹à¸à¸à¹à¸¢à¸",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "OVPELO",
+          "lastname": "RGOUAELOHAWUHAVLEIO"
+        },
+        {
+          "title": "",
+          "firstname": "PLVCWU",
+          "lastname": "RVTVUUVOVOEOC"
+        },
+        {
+          "title": "",
+          "firstname": "PWHAVW",
+          "lastname": "CGRCIIJGSHAVW"
+        },
+        {
+          "title": "",
+          "firstname": "PWPAED",
+          "lastname": "XILVPAEOK"
+        },
+        {
+          "title": "",
+          "firstname": "QWG",
+          "lastname": "FV-SWOK"
+        },
+        {
+          "title": "",
+          "firstname": "RAWA,",
+          "lastname": "MWWOK-BGA"
+        },
+        {
+          "title": "",
+          "firstname": "RGPLWFV",
+          "lastname": "JGVOCVHAVJGPU"
+        },
+        {
+          "title": "",
+          "firstname": "RWLWHAVW",
+          "lastname": "RENDGURWLW"
+        },
+        {
+          "title": "",
+          "firstname": "SII",
+          "lastname": "FG-HAEG"
+        },
+        {
+          "title": "",
+          "firstname": "SWVE",
+          "lastname": "HAIO-TIO"
+        },
+        {
+          "title": "",
+          "firstname": "XWHAWVO",
+          "lastname": "VNELOPEEOHAVW"
+        }
+      ],
+      "path": [],
+      "company_id": "0107548000234",
+      "status": "Active",
+      "capital": "20,000,000,000",
+      "regis_date": "29 Mar 2005",
+      "address": {
+        "address_no": "1",
+        "moo": "",
+        "building_en": "Q House Lumpini",
+        "building_th": "à¸à¸´à¸§à¹à¸®à¹à¸²à¸ªà¹ à¸¥à¸¸à¸¡à¸à¸´à¸à¸µ",
+        "floor": "à¸à¸µ, 1, 5, 6, 10, 20, 26, 27, 31, 32",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "",
+        "road_th": "",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "THUNG MAHA MEK",
+        "district": "Sathorn",
+        "province": "Bangkok",
+        "postcode": "10120",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸(à¸¡à¸«à¸²à¸à¸)"
+    },
+    "0107552000081": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¹à¸­à¸¥ à¹à¸­à¸ à¹à¸à¹à¸à¸à¸à¹à¹à¸à¸µà¸¢à¸¥ à¸à¸£à¸¸à¹à¸ à¸à¸³à¸à¸±à¸ (à¸¡à¸«à¸²à¸à¸)",
+      "name_en": "L H FINANCIAL GROUP PUBLIC COMPANY LIMITED",
+      "level": 1,
+      "parent_percentage": 100.0,
+      "shareholders": [
+        {
+          "name": "บริษัท HD00071701",
+          "firstname": "บริษัท HD00071701",
+          "lastname": "",
+          "nationality": "Chinese Taipei",
+          "share_amount": 9873011919,
+          "percent": 46.61,
+          "shareholder_type": "company",
+          "regis_id": "HD00071701",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 46.61,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "บริษัท 0107535000249",
+          "firstname": "บริษัท 0107535000249",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 4634761967,
+          "percent": 21.88,
+          "shareholder_type": "company",
+          "regis_id": "0107535000249",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 21.88,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "บริษัท 0107536000579",
+          "firstname": "บริษัท 0107536000579",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 2910199375,
+          "percent": 13.74,
+          "shareholder_type": "company",
+          "regis_id": "0107536000579",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 13.74,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "RVNLILOK NVOEEOPES",
+          "firstname": "RVNLILOK",
+          "lastname": "NVOEEOPES",
+          "nationality": "Thai",
+          "share_amount": 418740200,
+          "percent": 1.98,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 1.98,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "Wiroj Ungphaiboon",
+          "firstname": "Wiroj",
+          "lastname": "Ungphaiboon",
+          "nationality": "Thai",
+          "share_amount": 153726134,
+          "percent": 0.73,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.73,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "VOGPAEOK VRRVXVDAEJAWO",
+          "firstname": "VOGPAEOK",
+          "lastname": "VRRVXVDAEJAWO",
+          "nationality": "Thai",
+          "share_amount": 97986233,
+          "percent": 0.46,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.46,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "PGOUWP UIMVPVWDGS",
+          "firstname": "PGOUWP",
+          "lastname": "UIMVPVWDGS",
+          "nationality": "Thai",
+          "share_amount": 85193700,
+          "percent": 0.4,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.4,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "บริษัท 0105530067785",
+          "firstname": "บริษัท 0105530067785",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 65700000,
+          "percent": 0.31,
+          "shareholder_type": "company",
+          "regis_id": "0105530067785",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.31,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "บริษัท 0105543093348",
+          "firstname": "บริษัท 0105543093348",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 57212567,
+          "percent": 0.27,
+          "shareholder_type": "company",
+          "regis_id": "0105543093348",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.27,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        },
+        {
+          "name": "OVOUVTVU CIURVJGOHAVWPAVU",
+          "firstname": "OVOUVTVU",
+          "lastname": "CIURVJGOHAVWPAVU",
+          "nationality": "Thai",
+          "share_amount": 50000000,
+          "percent": 0.24,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.24,
+          "path": [
+            "0107548000234",
+            "0107552000081"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "JAGOVTGU",
+          "lastname": "UAGNPENJGS"
+        },
+        {
+          "title": "",
+          "firstname": "OVPELO",
+          "lastname": "RGOUAELOHAWUHAVLEIO"
+        },
+        {
+          "title": "",
+          "firstname": "PLVCWU",
+          "lastname": "RVTVUUVOVOEOC"
+        },
+        {
+          "title": "",
+          "firstname": "PWHAVW",
+          "lastname": "CGRCIIJGSHAVW"
+        },
+        {
+          "title": "",
+          "firstname": "PWPAED",
+          "lastname": "XILVPAEOK"
+        },
+        {
+          "title": "",
+          "firstname": "RAWA,",
+          "lastname": "MWWOK-BGA"
+        },
+        {
+          "title": "",
+          "firstname": "RGPLWFV",
+          "lastname": "JGVOCVHAVJGPU"
+        },
+        {
+          "title": "",
+          "firstname": "SII",
+          "lastname": "FG-HAEG"
+        },
+        {
+          "title": "",
+          "firstname": "TG,",
+          "lastname": "JGE-HAWO"
+        },
+        {
+          "title": "",
+          "firstname": "XELVPES",
+          "lastname": "REHVUWFVOGLVJ"
+        },
+        {
+          "title": "",
+          "firstname": "XWHAWVO",
+          "lastname": "VNELOPEEOHAVW"
+        }
+      ],
+      "path": [
+        "0107548000234"
+      ],
+      "company_id": "0107552000081",
+      "status": "Active",
+      "capital": "21,183,660,594",
+      "regis_date": "22 Apr 2009",
+      "address": {
+        "address_no": "1",
+        "moo": "",
+        "building_en": "Q House Lumpini",
+        "building_th": "à¸à¸´à¸§.à¹à¸®à¹à¸²à¸ªà¹ à¸¥à¸¸à¸¡à¸à¸´à¸à¸µ",
+        "floor": "5",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "Sathon Tai",
+        "road_th": "à¸ªà¸²à¸à¸£à¹à¸à¹",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "THUNG MAHA MEK",
+        "district": "Sathorn",
+        "province": "Bangkok",
+        "postcode": "10120",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸(à¸¡à¸«à¸²à¸à¸)"
+    },
+    "HD00071701": {
+      "name_th": "",
+      "name_en": "",
+      "level": 2,
+      "parent_percentage": 46.61,
+      "shareholders": [],
+      "directors": [],
+      "path": [
+        "0107548000234",
+        "0107552000081"
+      ],
+      "company_id": "HD00071701",
+      "status": "",
+      "capital": "",
+      "regis_date": "",
+      "address": {},
+      "business_type": ""
+    },
+    "0107535000249": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¹à¸¥à¸à¸à¹à¹à¸­à¸à¸à¹à¹à¸®à¹à¸²à¸ªà¹ à¸à¸³à¸à¸±à¸ (à¸¡à¸«à¸²à¸à¸)",
+      "name_en": "LAND AND HOUSES PUBLIC COMPANY LIMITED",
+      "level": 2,
+      "parent_percentage": 21.88,
+      "shareholders": [
+        {
+          "name": "VOVOU VRVXVDAEJAWO",
+          "firstname": "VOVOU",
+          "lastname": "VRVXVDAEJAWO",
+          "nationality": "Thai",
+          "share_amount": 2894883427,
+          "percent": 24.23,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 5.301524,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท 0105543093348",
+          "firstname": "บริษัท 0105543093348",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 730600090,
+          "percent": 6.11,
+          "shareholder_type": "company",
+          "regis_id": "0105543093348",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 1.336868,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00085916",
+          "firstname": "บริษัท HD00085916",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 725135140,
+          "percent": 6.07,
+          "shareholder_type": "company",
+          "regis_id": "HD00085916",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 1.328116,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท 0105530022731",
+          "firstname": "บริษัท 0105530022731",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 677000069,
+          "percent": 5.67,
+          "shareholder_type": "company",
+          "regis_id": "0105530022731",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 1.2405959999999998,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00037759",
+          "firstname": "บริษัท HD00037759",
+          "lastname": "",
+          "nationality": "American",
+          "share_amount": 380344180,
+          "percent": 3.18,
+          "shareholder_type": "company",
+          "regis_id": "HD00037759",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.6957840000000001,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00069486",
+          "firstname": "บริษัท HD00069486",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 211334873,
+          "percent": 1.77,
+          "shareholder_type": "company",
+          "regis_id": "HD00069486",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.38727599999999995,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท 0107545000314",
+          "firstname": "บริษัท 0107545000314",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 101955000,
+          "percent": 0.85,
+          "shareholder_type": "company",
+          "regis_id": "0107545000314",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.18597999999999998,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00018686",
+          "firstname": "บริษัท HD00018686",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 100002000,
+          "percent": 0.84,
+          "shareholder_type": "company",
+          "regis_id": "HD00018686",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.18379199999999998,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00069192",
+          "firstname": "บริษัท HD00069192",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 87713400,
+          "percent": 0.73,
+          "shareholder_type": "company",
+          "regis_id": "HD00069192",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.15972399999999998,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "VCWRELO UAVOVOGO-OVLVPEES",
+          "firstname": "VCWRELO",
+          "lastname": "UAVOVOGO-OVLVPEES",
+          "nationality": "Thai",
+          "share_amount": 83333106,
+          "percent": 0.7,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.15316,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "บริษัท HD00093792",
+          "firstname": "บริษัท HD00093792",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 80155300,
+          "percent": 0.67,
+          "shareholder_type": "company",
+          "regis_id": "HD00093792",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.146596,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        },
+        {
+          "name": "JWUUWPES UGVOUEOK",
+          "firstname": "JWUUWPES",
+          "lastname": "UGVOUEOK",
+          "nationality": "Thai",
+          "share_amount": 73100000,
+          "percent": 0.61,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.13346799999999998,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107535000249"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "DGOCWU",
+          "lastname": "PWUVJRWU"
+        },
+        {
+          "title": "",
+          "firstname": "HAEJHAVW",
+          "lastname": "TVSWUTVLVOKJEEO"
+        },
+        {
+          "title": "",
+          "firstname": "JSGVFNVW",
+          "lastname": "CIXVAVRUWO"
+        },
+        {
+          "title": "",
+          "firstname": "OVOUVTVU",
+          "lastname": "PWPVUTEOKJVRIN"
+        },
+        {
+          "title": "",
+          "firstname": "OVPELO",
+          "lastname": "RGOUAELOHAWUHAVLEIO"
+        },
+        {
+          "title": "",
+          "firstname": "PWPAED",
+          "lastname": "XILVPAEOK"
+        },
+        {
+          "title": "",
+          "firstname": "TVUHAVLWO",
+          "lastname": "JVRWOLILJ"
+        },
+        {
+          "title": "",
+          "firstname": "TWU",
+          "lastname": "UVOUWTELVTEOK"
+        },
+        {
+          "title": "",
+          "firstname": "VHAVTWO",
+          "lastname": "VRVXVDAEJWO"
+        }
+      ],
+      "path": [
+        "0107548000234",
+        "0107552000081"
+      ],
+      "company_id": "0107535000249",
+      "status": "Active",
+      "capital": "12,031,105,828",
+      "regis_date": "12 Nov 1992",
+      "address": {
+        "address_no": "1",
+        "moo": "",
+        "building_en": "Q House Lumpini",
+        "building_th": "à¸à¸´à¸§.à¹à¸®à¹à¸²à¸ªà¹ à¸¥à¸¸à¸¡à¸à¸´à¸à¸µ",
+        "floor": "37",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "Sathon Tai",
+        "road_th": "à¸ªà¸²à¸à¸£à¹à¸à¹",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "THUNG MAHA MEK",
+        "district": "Sathorn",
+        "province": "Bangkok",
+        "postcode": "10120",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸(à¸¡à¸«à¸²à¸à¸)"
+    },
+    "0107536000579": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¸à¸§à¸­à¸¥à¸´à¸à¸µà¹à¹à¸®à¹à¸²à¸ªà¹ à¸à¸³à¸à¸±à¸ (à¸¡à¸«à¸²à¸à¸)",
+      "name_en": "QUALITY HOUSES PUBLIC COMPANY LIMITED",
+      "level": 2,
+      "parent_percentage": 13.74,
+      "shareholders": [
+        {
+          "name": "บริษัท 0107535000249",
+          "firstname": "บริษัท 0107535000249",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 2675945601,
+          "percent": 24.98,
+          "shareholder_type": "company",
+          "regis_id": "0107535000249",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 3.432252,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท 0105543093348",
+          "firstname": "บริษัท 0105543093348",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 561261962,
+          "percent": 5.24,
+          "shareholder_type": "company",
+          "regis_id": "0105543093348",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.7199760000000001,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "PLWOFV UWIVOTELO",
+          "firstname": "PLWOFV",
+          "lastname": "UWIVOTELO",
+          "nationality": "Thai",
+          "share_amount": 260000000,
+          "percent": 2.43,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.33388200000000007,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "OWTIR AINXVHAWLVXVLVJELO",
+          "firstname": "OWTIR",
+          "lastname": "AINXVHAWLVXVLVJELO",
+          "nationality": "Thai",
+          "share_amount": 250000000,
+          "percent": 2.33,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.32014200000000004,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท HD00069486",
+          "firstname": "บริษัท HD00069486",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 208663166,
+          "percent": 1.95,
+          "shareholder_type": "company",
+          "regis_id": "HD00069486",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.26793,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "MWOUVOV JVOMVOVJGNOILC",
+          "firstname": "MWOUVOV",
+          "lastname": "JVOMVOVJGNOILC",
+          "nationality": "Thai",
+          "share_amount": 205000000,
+          "percent": 1.91,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.262434,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "Somsong Lapananrat",
+          "firstname": "Somsong",
+          "lastname": "Lapananrat",
+          "nationality": "Thai",
+          "share_amount": 165294700,
+          "percent": 1.54,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.211596,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "Pissacha Hemvachiravarakorn",
+          "firstname": "Pissacha",
+          "lastname": "Hemvachiravarakorn",
+          "nationality": "Thai",
+          "share_amount": 150000000,
+          "percent": 1.4,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.19236,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท 0107538000533",
+          "firstname": "บริษัท 0107538000533",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 143721600,
+          "percent": 1.34,
+          "shareholder_type": "company",
+          "regis_id": "0107538000533",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.184116,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "XWHAVW NWURGOUWRGJ",
+          "firstname": "XWHAVW",
+          "lastname": "NWURGOUWRGJ",
+          "nationality": "Thai",
+          "share_amount": 130000000,
+          "percent": 1.21,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.16625399999999999,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท HD00069192",
+          "firstname": "บริษัท HD00069192",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 90136155,
+          "percent": 0.84,
+          "shareholder_type": "company",
+          "regis_id": "HD00069192",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.11541599999999999,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "VNPELO JVOMVOVJGNOILC",
+          "firstname": "VNPELO",
+          "lastname": "JVOMVOVJGNOILC",
+          "nationality": "Thai",
+          "share_amount": 89500000,
+          "percent": 0.84,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.11541599999999999,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท HD00039767",
+          "firstname": "บริษัท HD00039767",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 89049853,
+          "percent": 0.83,
+          "shareholder_type": "company",
+          "regis_id": "HD00039767",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.11404199999999999,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท HD00085916",
+          "firstname": "บริษัท HD00085916",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 78500000,
+          "percent": 0.73,
+          "shareholder_type": "company",
+          "regis_id": "HD00085916",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.100302,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท HD00093792",
+          "firstname": "บริษัท HD00093792",
+          "lastname": "",
+          "nationality": "British/briton",
+          "share_amount": 77188284,
+          "percent": 0.72,
+          "shareholder_type": "company",
+          "regis_id": "HD00093792",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.09892799999999999,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "HAVUVTVU VLJTWJVW",
+          "firstname": "HAVUVTVU",
+          "lastname": "VLJTWJVW",
+          "nationality": "Thai",
+          "share_amount": 55555555,
+          "percent": 0.52,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.071448,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        },
+        {
+          "name": "บริษัท 0105517006433",
+          "firstname": "บริษัท 0105517006433",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 54356479,
+          "percent": 0.51,
+          "shareholder_type": "company",
+          "regis_id": "0105517006433",
+          "business_status": "Absolute Receivership",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.07007400000000001,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0107536000579"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "DEEOREN",
+          "lastname": "SILCAWLGOTEOK"
+        },
+        {
+          "title": "",
+          "firstname": "HAVSILN",
+          "lastname": "JWIUUWUVOVDGNLEEOK"
+        },
+        {
+          "title": "",
+          "firstname": "OVLEOKCIHA",
+          "lastname": "RLGJAERWU"
+        },
+        {
+          "title": "",
+          "firstname": "OVPELO",
+          "lastname": "RGOUAELOHAWUHAVLEIO"
+        },
+        {
+          "title": "",
+          "firstname": "PLVXWU",
+          "lastname": "HAEUITVUUVOVPAGO"
+        },
+        {
+          "title": "",
+          "firstname": "RGTVOOV",
+          "lastname": "DAGCCAVPLVRVLU"
+        },
+        {
+          "title": "",
+          "firstname": "UWPVTVO",
+          "lastname": "HAVFGUWNVOUV"
+        },
+        {
+          "title": "",
+          "firstname": "VCWRELO",
+          "lastname": "UAVOVOGO-OVLVPEES"
+        },
+        {
+          "title": "",
+          "firstname": "VHAVTWO",
+          "lastname": "VRVXVDAEJWO"
+        },
+        {
+          "title": "",
+          "firstname": "VPWOFV",
+          "lastname": "MVLGULVJGSHAVW"
+        },
+        {
+          "title": "",
+          "firstname": "XWSVROV",
+          "lastname": "PEEOPVUPWDGS"
+        }
+      ],
+      "path": [
+        "0107548000234",
+        "0107552000081"
+      ],
+      "company_id": "0107536000579",
+      "status": "Active",
+      "capital": "10,714,426,091",
+      "regis_date": "28 Jun 1993",
+      "address": {
+        "address_no": "1",
+        "moo": "",
+        "building_en": "Q House Lumpini",
+        "building_th": "à¸à¸´à¸§à¹à¸®à¹à¸²à¸ªà¹ à¸¥à¸¸à¸¡à¸à¸´à¸à¸µ",
+        "floor": "7",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "Sathon Tai",
+        "road_th": "à¸ªà¸²à¸à¸£à¹à¸à¹",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "THUNG MAHA MEK",
+        "district": "Sathorn",
+        "province": "Bangkok",
+        "postcode": "10120",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸(à¸¡à¸«à¸²à¸à¸)"
+    },
+    "0105530067785": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¹à¸à¸¢ à¹à¸­à¹à¸§à¸à¸±à¹à¸ à¹à¸à¸­à¸£à¹à¸§à¸´à¸ª à¸à¸³à¸à¸±à¸",
+      "name_en": "THAI AVIATION SERVICES LIMITED",
+      "level": 2,
+      "parent_percentage": 0.31,
+      "shareholders": [
+        {
+          "name": "PWUVJ WOULVTWUFVOGOU",
+          "firstname": "PWUVJ",
+          "lastname": "WOULVTWUFVOGOU",
+          "nationality": "Thai",
+          "share_amount": 11450000,
+          "percent": 38.17,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "YES",
+          "director_update_date": "06 Oct 2016",
+          "effective_percentage": 0.11832700000000002,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        },
+        {
+          "name": "PESVTVU WOULVTWUFVOGOU",
+          "firstname": "PESVTVU",
+          "lastname": "WOULVTWUFVOGOU",
+          "nationality": "Thai",
+          "share_amount": 9000000,
+          "percent": 30.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "YES",
+          "director_update_date": "06 Oct 2016",
+          "effective_percentage": 0.09300000000000001,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        },
+        {
+          "name": "PWNNVLV WOULVTWUFVOGOU",
+          "firstname": "PWNNVLV",
+          "lastname": "WOULVTWUFVOGOU",
+          "nationality": "Thai",
+          "share_amount": 9000000,
+          "percent": 30.0,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "YES",
+          "director_update_date": "06 Oct 2016",
+          "effective_percentage": 0.09300000000000001,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        },
+        {
+          "name": "RGTVOOVTVU JEITELVJGS",
+          "firstname": "RGTVOOVTVU",
+          "lastname": "JEITELVJGS",
+          "nationality": "Thai",
+          "share_amount": 470000,
+          "percent": 1.57,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "YES",
+          "director_update_date": "06 Oct 2016",
+          "effective_percentage": 0.004867,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        },
+        {
+          "name": "VOIJ RLWRVOWU",
+          "firstname": "VOIJ",
+          "lastname": "RLWRVOWU",
+          "nationality": "Thai",
+          "share_amount": 50000,
+          "percent": 0.17,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.000527,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        },
+        {
+          "name": "JLEOKRWLW DGLVOVTIHA",
+          "firstname": "JLEOKRWLW",
+          "lastname": "DGLVOVTIHA",
+          "nationality": "Thai",
+          "share_amount": 30000,
+          "percent": 0.1,
+          "shareholder_type": "personal",
+          "regis_id": "",
+          "business_status": "",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.00031,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105530067785"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "PESVTVU",
+          "lastname": "WOULVTWUFVOGOU"
+        },
+        {
+          "title": "",
+          "firstname": "PWNNVLV",
+          "lastname": "WOULVTWUFVOGOU"
+        },
+        {
+          "title": "",
+          "firstname": "PWUVJ",
+          "lastname": "WOULVTWUFVOGOU"
+        },
+        {
+          "title": "",
+          "firstname": "RGTVOOVTVU",
+          "lastname": "JEITELVJGS"
+        }
+      ],
+      "path": [
+        "0107548000234",
+        "0107552000081"
+      ],
+      "company_id": "0105530067785",
+      "status": "Active",
+      "capital": "30,000,000",
+      "regis_date": "24 Dec 1987",
+      "address": {
+        "address_no": "121/51",
+        "moo": "",
+        "building_en": "RS Tower",
+        "building_th": "à¸­à¸²à¸£à¹à¹à¸­à¸ª à¸à¸²à¸§à¹à¸§à¸­à¸£à¹",
+        "floor": "12",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "Ratchadaphisek",
+        "road_th": "à¸£à¸±à¸à¸à¸²à¸ à¸´à¹à¸©à¸",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "DIN DAENG",
+        "district": "Din Daeng",
+        "province": "Bangkok",
+        "postcode": "10400",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸"
+    },
+    "0105543093348": {
+      "name_th": "à¸à¸£à¸´à¸©à¸±à¸ à¹à¸à¸¢à¹à¸­à¹à¸à¸§à¸µà¸à¸µà¸­à¸²à¸£à¹ à¸à¸³à¸à¸±à¸",
+      "name_en": "THAI NVDR CO.,LTD.",
+      "level": 2,
+      "parent_percentage": 0.27,
+      "shareholders": [
+        {
+          "name": "บริษัท HD00002893",
+          "firstname": "บริษัท HD00002893",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 9999990,
+          "percent": 100.0,
+          "shareholder_type": "company",
+          "regis_id": "HD00002893",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.27,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105543093348"
+          ]
+        },
+        {
+          "name": "บริษัท 0105547107432",
+          "firstname": "บริษัท 0105547107432",
+          "lastname": "",
+          "nationality": "Thai",
+          "share_amount": 10,
+          "percent": 0.0,
+          "shareholder_type": "company",
+          "regis_id": "0105547107432",
+          "business_status": "Active",
+          "directorship": "",
+          "director_update_date": "",
+          "effective_percentage": 0.0,
+          "path": [
+            "0107548000234",
+            "0107552000081",
+            "0105543093348"
+          ]
+        }
+      ],
+      "directors": [
+        {
+          "title": "",
+          "firstname": "LEOKLVJ",
+          "lastname": "PAVOVPVXGCAWJGS"
+        },
+        {
+          "title": "",
+          "firstname": "PVUVLVXVRII",
+          "lastname": "RGXVLORELO"
+        }
+      ],
+      "path": [
+        "0107548000234",
+        "0107552000081"
+      ],
+      "company_id": "0105543093348",
+      "status": "Active",
+      "capital": "10,000,000",
+      "regis_date": "04 Oct 2000",
+      "address": {
+        "address_no": "93",
+        "moo": "",
+        "building_en": "",
+        "building_th": "",
+        "floor": "",
+        "soi_en": "",
+        "soi_th": "",
+        "road_en": "Ratchadaphisek",
+        "road_th": "à¸£à¸±à¸à¸à¸²à¸ à¸´à¹à¸©à¸",
+        "moo_ban_en": "",
+        "moo_ban_th": "",
+        "sub_district": "DIN DAENG",
+        "district": "Din Daeng",
+        "province": "Bangkok",
+        "postcode": "10400",
+        "room": "",
+        "room_en": ""
+      },
+      "business_type": "à¸à¸£à¸´à¸©à¸±à¸"
+    }
+  },
+  "final_ubos": []
+}
