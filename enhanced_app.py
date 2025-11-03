@@ -248,19 +248,13 @@ def analyze_company():
             logger.warning(f"Failed to prepare hierarchy tree data: {e}")
             report['tree_structure'] = None
         
-        # Persist a snapshot of the report for auditing/debugging
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        report_filename = f"enhanced_ubo_report_{registration_id}_{timestamp}.json"
-        
-        with open(report_filename, "w", encoding="utf-8") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)
-        
+        # Return report directly (no file writing for Vercel serverless)
         logger.info(f"Analysis completed for {registration_id}")
         
         return jsonify({
             'success': True,
-            'data': report,
-            'report_file': report_filename
+            'timestamp': datetime.now().isoformat(),
+            'data': report
         })
         
     except Exception as e:
