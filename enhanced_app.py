@@ -55,6 +55,106 @@ def _format_display_label(name: Optional[str], regis_id: Optional[str]) -> str:
     return label or 'Unknown'
 
 
+def build_network_graph(root_id: str, hierarchy: Dict[str, Any], ubo_names: set) -> Dict[str, Any]:
+    """Build NetworkX graph structure for interactive spider-web visualization.
+    
+    Returns:
+        Dict with 'nodes' and 'edges' for D3.js force-directed graph
+    """
+    if not hierarchy or root_id not in hierarchy:
+        return {'nodes': [], 'edges': []}
+    
+    G = nx.DiGraph()
+    visited = set()
+    
+    def add_nodes_edges(node_id: str, level: int = 0):
+        if node_id in visited or node_id not in hierarchy:
+            return
+        visited.add(node_id)
+        
+        node_data = hierarchy[node_id]
+        name = node_data.get('display_name') or node_data.get('name_en') or node_id
+        node_type = 'company' if level == 0 else 'company'
+        
+        # Parse capital (ทุนจดทะเบียน) for node size
+        capital_str = str(node_data.get('capital', '0'))
+        try:
+            capital = float(capital_str.replace(',', '').replace('฿', '').replace('THB', '').strip())
+        except:
+            capital = 0
+        
+        # Add node
+        G.add_node(node_id, 
+                   name=name[:30],  # Truncate for display
+                   full_name=name,
+                   type=node_type,
+                   level=level,
+                   capital=capital,
+                   is_ubo=name in ubo_names,
+                   regis_id=node_data.get('company_id', node_id))
+        
+        # Add edges for shareholders
+        shareholders = node_data.get('shareholders', [])
+        for sh in shareholders:
+            sh_type = sh.get('shareholder_type', 'personal')
+            sh_name = sh.get('display_name', '')
+            sh_regis_id = sh.get('regis_id', '') or sh.get('regis_id_held_by', '')
+            direct_percent = float(sh.get('direct_percent', 0) or sh.get('percent', 0))
+            
+            # Create unique child_id
+            if sh_type == 'company' and sh_regis_id:
+                child_id = sh_regis_id
+                child_node_type = 'company'
+            else:
+                child_id = f"person_{sh_name}_{node_id}"
+                child_node_type = 'personal'
+            
+            # Add child node if not exists
+            if not G.has_node(child_id):
+                G.add_node(child_id,
+                          name=sh_name[:30],
+                          full_name=sh_name,
+                          type=child_node_type,
+                          level=level + 1,
+                          capital=0,
+                          is_ubo=sh_name in ubo_names,
+                          regis_id=sh_regis_id or '')
+            
+            # Add edge (direction: parent -> child, แสดงว่า parent ถือหุ้นใน child)
+            # แต่ตามความหมายจริง คือ child ถือหุ้นใน parent
+            # ให้ใช้ child -> parent เพื่อแสดงทิศทางการถือหุ้น
+            G.add_edge(child_id, node_id, weight=direct_percent, percent=direct_percent)
+            
+            # Recursively add corporate shareholders
+            if sh_type == 'company' and sh_regis_id and sh_regis_id in hierarchy:
+                add_nodes_edges(sh_regis_id, level + 1)
+    
+    add_nodes_edges(root_id, 0)
+    
+    # Convert to JSON format for D3.js
+    nodes = []
+    for node_id, attrs in G.nodes(data=True):
+        nodes.append({
+            'id': node_id,
+            'name': attrs['name'],
+            'full_name': attrs['full_name'],
+            'type': attrs['type'],
+            'level': attrs['level'],
+            'capital': attrs['capital'],
+            'is_ubo': attrs['is_ubo'],
+            'regis_id': attrs['regis_id']
+        })
+    
+    edges = []
+    for source, target, attrs in G.edges(data=True):
+        edges.append({
+            'source': source,
+            'target': target,
+            'percent': attrs['percent']
+        })
+    
+    return {'nodes': nodes, 'edges': edges}
+
 def build_tree_structure(root_id: str, hierarchy: Dict[str, Any], ubo_names: set) -> Optional[Dict[str, Any]]:
     """Build a hierarchy tree suitable for D3 rendering."""
     if not hierarchy or root_id not in hierarchy:
@@ -236,9 +336,20 @@ def analyze_company():
                 'ubo_status': 'YES' if candidate_dict.get('total_percentage', 0) >= 15.0 else 'NO'
             })
         
-        # Build hierarchical tree structure for D3 visualisation
+        # Build network graph (NetworkX-based spider web visualization)
         try:
             ubo_name_set = _extract_ubo_name_set(report['ubos'])
+            report['network_graph'] = build_network_graph(
+                registration_id,
+                hierarchy,
+                ubo_name_set
+            )
+        except Exception as e:
+            logger.warning(f"Failed to prepare network graph: {e}")
+            report['network_graph'] = {'nodes': [], 'edges': []}
+        
+        # Build hierarchical tree structure for D3 visualisation (keep for compatibility)
+        try:
             report['tree_structure'] = build_tree_structure(
                 registration_id,
                 hierarchy,

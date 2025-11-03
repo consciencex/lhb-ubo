@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Visualization Test</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            background: #0f172a;
+            overflow: hidden;
+        }
+        
+        #network-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .node {
+            stroke: #fff;
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .node.company {
+            fill: #3b82f6;
+        }
+        
+        .node.personal {
+            fill: #10b981;
+        }
+        
+        .node.ubo {
+            fill: #ef4444;
+            stroke: #991b1b;
+            stroke-width: 3px;
+        }
+        
+        .node:hover {
+            stroke-width: 4px;
+            filter: brightness(1.2);
+        }
+        
+        .link {
+            stroke: #64748b;
+            stroke-opacity: 0.6;
+            fill: none;
+        }
+        
+        .link-label {
+            fill: #94a3b8;
+            font-size: 10px;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        
+        .node-label {
+            fill: #e2e8f0;
+            font-size: 11px;
+            text-anchor: middle;
+            pointer-events: none;
+            font-weight: 500;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e2e8f0;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            max-width: 300px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        .tooltip strong {
+            color: #60a5fa;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        
+        .tooltip .detail {
+            margin: 4px 0;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e2e8f0;
+            font-size: 12px;
+        }
+        
+        .controls button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px 0;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .controls button:hover {
+            background: #2563eb;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 15px;
+            color: #e2e8f0;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        
+        .legend-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #fff;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #60a5fa;
+            font-size: 24px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div id="network-container"></div>
+    
+    <div class="controls">
+        <div style="margin-bottom: 10px; font-weight: 600; color: #60a5fa;">Controls</div>
+        <button onclick="resetView()">Reset View</button>
+        <button onclick="toggleLabels()">Toggle Labels</button>
+    </div>
+    
+    <div class="legend">
+        <div style="margin-bottom: 10px; font-weight: 600; color: #60a5fa;">Legend</div>
+        <div class="legend-item">
+            <div class="legend-circle" style="background: #3b82f6;"></div>
+            <span>Company</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-circle" style="background: #10b981;"></div>
+            <span>Individual</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-circle" style="background: #ef4444; border-color: #991b1b;"></div>
+            <span>UBO (≥15%)</span>
+        </div>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    <div id="loading">Loading network...</div>
+    
+    <script>
+        // Sample data structure
+        const sampleData = {
+            nodes: [
+                { id: 'main', name: 'Main Company', full_name: 'LAND AND HOUSES BANK PUBLIC COMPANY LIMITED', type: 'company', level: 0, capital: 100000000000, is_ubo: false, regis_id: '0107548000234' },
+                { id: 'comp1', name: 'Company A', full_name: 'L H FINANCIAL GROUP PUBLIC COMPANY LIMITED', type: 'company', level: 1, capital: 50000000000, is_ubo: false, regis_id: '0107552000081' },
+                { id: 'comp2', name: 'Company B', full_name: 'LAND AND HOUSES PUBLIC COMPANY LIMITED', type: 'company', level: 1, capital: 30000000000, is_ubo: false, regis_id: '0107535000249' },
+                { id: 'person1', name: 'John Doe', full_name: 'John Doe', type: 'personal', level: 1, capital: 0, is_ubo: true, regis_id: '' },
+                { id: 'person2', name: 'Jane Smith', full_name: 'Jane Smith', type: 'personal', level: 2, capital: 0, is_ubo: false, regis_id: '' },
+                { id: 'person3', name: 'Bob Lee', full_name: 'Bob Lee', type: 'personal', level: 2, capital: 0, is_ubo: true, regis_id: '' }
+            ],
+            edges: [
+                { source: 'comp1', target: 'main', percent: 46.61 },
+                { source: 'comp2', target: 'main', percent: 21.88 },
+                { source: 'person1', target: 'main', percent: 24.23 },
+                { source: 'person2', target: 'comp1', percent: 35.50 },
+                { source: 'person3', target: 'comp2', percent: 80.00 }
+            ]
+        };
+        
+        renderNetworkGraph(sampleData);
+        
+        function renderNetworkGraph(data) {
+            document.getElementById('loading').style.display = 'none';
+            
+            const container = d3.select('#network-container');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            const svg = container.append('svg')
+                .attr('width', width)
+                .attr('height', height);
+            
+            // Add zoom behavior
+            const g = svg.append('g');
+            
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+            
+            svg.call(zoom);
+            
+            // Calculate node size based on capital
+            const maxCapital = d3.max(data.nodes, d => d.capital) || 1;
+            const nodeScale = d3.scaleSqrt()
+                .domain([0, maxCapital])
+                .range([8, 40]);
+            
+            // Calculate link width based on percentage
+            const linkWidthScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([1, 8]);
+            
+            // Create simulation
+            const simulation = d3.forceSimulation(data.nodes)
+                .force('link', d3.forceLink(data.edges)
+                    .id(d => d.id)
+                    .distance(d => 150 - (d.percent * 0.5)))
+                .force('charge', d3.forceManyBody().strength(-500))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(d => nodeScale(d.capital) + 10));
+            
+            // Create arrow marker
+            svg.append('defs').selectAll('marker')
+                .data(['arrow'])
+                .join('marker')
+                .attr('id', 'arrow')
+                .attr('viewBox', '0 -5 10 10')
+                .attr('refX', 20)
+                .attr('refY', 0)
+                .attr('markerWidth', 6)
+                .attr('markerHeight', 6)
+                .attr('orient', 'auto')
+                .append('path')
+                .attr('d', 'M0,-5L10,0L0,5')
+                .attr('fill', '#64748b');
+            
+            // Create links
+            const link = g.append('g')
+                .selectAll('line')
+                .data(data.edges)
+                .join('line')
+                .attr('class', 'link')
+                .attr('marker-end', 'url(#arrow)')
+                .attr('stroke-width', d => linkWidthScale(d.percent));
+            
+            // Create link labels
+            const linkLabel = g.append('g')
+                .selectAll('text')
+                .data(data.edges)
+                .join('text')
+                .attr('class', 'link-label')
+                .text(d => `${d.percent.toFixed(1)}%`);
+            
+            // Create nodes
+            const node = g.append('g')
+                .selectAll('circle')
+                .data(data.nodes)
+                .join('circle')
+                .attr('class', d => {
+                    if (d.is_ubo) return 'node ubo';
+                    return `node ${d.type}`;
+                })
+                .attr('r', d => nodeScale(d.capital))
+                .call(drag(simulation));
+            
+            // Create node labels
+            const nodeLabel = g.append('g')
+                .selectAll('text')
+                .data(data.nodes)
+                .join('text')
+                .attr('class', 'node-label')
+                .attr('dy', d => nodeScale(d.capital) + 15)
+                .text(d => d.name);
+            
+            // Tooltip
+            const tooltip = d3.select('#tooltip');
+            
+            node.on('mouseover', (event, d) => {
+                const capital = d.capital > 0 ? `฿${d.capital.toLocaleString()}` : 'N/A';
+                tooltip.html(`
+                    <strong>${d.full_name}</strong>
+                    <div class="detail"><strong>Type:</strong> ${d.type === 'personal' ? 'Individual' : 'Company'}</div>
+                    ${d.regis_id ? `<div class="detail"><strong>ID:</strong> ${d.regis_id}</div>` : ''}
+                    ${d.capital > 0 ? `<div class="detail"><strong>Capital:</strong> ${capital}</div>` : ''}
+                    ${d.is_ubo ? '<div class="detail" style="color: #ef4444;"><strong>UBO (≥15%)</strong></div>' : ''}
+                    <div class="detail"><strong>Level:</strong> ${d.level}</div>
+                `)
+                .style('left', (event.pageX + 15) + 'px')
+                .style('top', (event.pageY + 15) + 'px')
+                .classed('show', true);
+            })
+            .on('mouseout', () => {
+                tooltip.classed('show', false);
+            });
+            
+            // Update positions
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+                
+                linkLabel
+                    .attr('x', d => (d.source.x + d.target.x) / 2)
+                    .attr('y', d => (d.source.y + d.target.y) / 2);
+                
+                node
+                    .attr('cx', d => d.x)
+                    .attr('cy', d => d.y);
+                
+                nodeLabel
+                    .attr('x', d => d.x)
+                    .attr('y', d => d.y);
+            });
+            
+            // Drag behavior
+            function drag(simulation) {
+                function dragstarted(event) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    event.subject.fx = event.subject.x;
+                    event.subject.fy = event.subject.y;
+                }
+                
+                function dragged(event) {
+                    event.subject.fx = event.x;
+                    event.subject.fy = event.y;
+                }
+                
+                function dragended(event) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    event.subject.fx = null;
+                    event.subject.fy = null;
+                }
+                
+                return d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended);
+            }
+            
+            // Global functions
+            window.resetView = function() {
+                svg.transition().duration(750).call(
+                    zoom.transform,
+                    d3.zoomIdentity
+                );
+                simulation.alpha(1).restart();
+            };
+            
+            window.toggleLabels = function() {
+                const labels = g.selectAll('.node-label, .link-label');
+                const visible = labels.style('opacity') !== '0';
+                labels.transition().duration(300).style('opacity', visible ? 0 : 1);
+            };
+        }
+    </script>
+</body>
+</html>
+
