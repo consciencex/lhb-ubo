@@ -742,9 +742,12 @@
         
         function displayUBOResults(ubos) {
             const container = document.getElementById('uboResults');
+            const uboSection = document.getElementById('uboSection');
             
             if (!ubos || ubos.length === 0) {
                 container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
+                // ✅ เปลี่ยนเป็นสีเขียวเมื่อไม่มี UBO
+                uboSection.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
                 return;
             }
             
@@ -754,8 +757,13 @@
             
             if (qualifiedUbos.length === 0) {
                 container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
+                // ✅ เปลี่ยนเป็นสีเขียวเมื่อไม่มี UBO
+                uboSection.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
                 return;
             }
+            
+            // ✅ มี UBO ให้ใช้สีแดง (เดิม)
+            uboSection.style.background = 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)';
             
             let html = '';
             qualifiedUbos.forEach((ubo, index) => {
