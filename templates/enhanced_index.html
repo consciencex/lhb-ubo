@@ -454,8 +454,13 @@
             // Display UBO results
             displayUBOResults(data.ubos);
             
-            // Display hierarchy tree
-            renderHierarchyTree(data.tree_structure);
+            // Display network graph (NEW: Interactive spider-web visualization)
+            if (data.network_graph && data.network_graph.nodes && data.network_graph.nodes.length > 0) {
+                renderNetworkGraph(data.network_graph);
+            } else {
+                // Fallback to tree diagram
+                renderHierarchyTree(data.tree_structure);
+            }
         }
 
         function formatNameWithId(name, regisId) {
