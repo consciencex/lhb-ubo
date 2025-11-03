@@ -261,6 +261,43 @@ def analyze_company():
         if not registration_id:
             return jsonify({'error': 'Please provide a company registration ID'}), 400
         
+        # ✅ Mock Data Mode: If registration_id == "XXXXXXXX", use mock data
+        if registration_id == "XXXXXXXX":
+            logger.info("🎭 Using MOCK DATA for demonstration")
+            mock_report = generate_mock_ubo_data()
+            
+            # Build network graph from mock data
+            try:
+                ubo_name_set = _extract_ubo_name_set(mock_report.get('ubos', []))
+                mock_report['network_graph'] = build_network_graph(
+                    registration_id,
+                    mock_report.get('hierarchy_data', {}),
+                    ubo_name_set
+                )
+            except Exception as e:
+                logger.warning(f"Failed to build mock network graph: {e}")
+                mock_report['network_graph'] = {'nodes': [], 'edges': []}
+            
+            # Build tree structure from mock data
+            try:
+                mock_report['tree_structure'] = build_tree_structure(
+                    registration_id,
+                    mock_report.get('hierarchy_data', {}),
+                    ubo_name_set
+                )
+            except Exception as e:
+                logger.warning(f"Failed to build mock tree structure: {e}")
+                mock_report['tree_structure'] = None
+            
+            return jsonify({
+                'success': True,
+                'timestamp': datetime.now().isoformat(),
+                'data': mock_report,
+                'is_mock': True
+            })
+        
+        # ✅ Real Data Mode: Normal API call
+        
         # New implementation does not rely on a persistent UBO system instance
         
         logger.info(f"Starting analysis for company: {registration_id}")
