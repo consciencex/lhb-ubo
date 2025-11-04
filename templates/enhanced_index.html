@@ -282,7 +282,7 @@
         <div class="main-container">
             <!-- Header -->
             <div class="header">
-                <h1><i class="fas fa-search"></i> LH Bank UBO Analysis System</h1>
+                <h1><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjNkI3Mjg1Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxIQjwvdGV4dD4KPC9zdmc+" alt="LHB" style="width: 40px; height: 40px; margin-right: 12px; vertical-align: middle;"> LH Bank UBO Analysis System</h1>
                 <p>Ultimate Beneficial Owner (UBO) verification dashboard</p>
             </div>
             
@@ -345,12 +345,19 @@
                         <i class="fas fa-sitemap"></i> Shareholding Structure
                     </div>
                     <div class="level-content">
-                        <h5 class="text-secondary fw-semibold mb-3">Shareholding Tree</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="text-secondary fw-semibold mb-0">Shareholding Network</h5>
+                            <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
+                                <!-- Level buttons will be added dynamically -->
+                            </div>
+                        </div>
                         <div id="hierarchyTree" class="hierarchy-tree-container"></div>
                         <div class="tree-legend">
+                            <span><span class="legend-swatch" style="background: #1f2937;"></span> Main Company (Analysis Target)</span>
                             <span><span class="legend-swatch company"></span> Company</span>
                             <span><span class="legend-swatch personal"></span> Individual</span>
                             <span><span class="legend-swatch ubo"></span> UBO ≥ 15%</span>
+                            <span><span class="legend-swatch" style="background: #DC2626;"></span> UBO Path</span>
                         </div>
                     </div>
                 </div>
@@ -701,11 +708,21 @@
                     const detailId = `shareholderDetail-${level}-${companyName.replace(/[^a-zA-Z0-9]/g, '')}-${idx}`;
                     const detailItems = (sh.entries || []).map((entry, entryIdx) => {
                         const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
-                        const expression = factorTexts.length ? factorTexts.join(' × ') : '—';
                         const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
                         const directText = `${(entry.direct || 0).toFixed(4)}%`;
                         const effectiveText = `${(entry.effective || 0).toFixed(4)}%`;
-                        return `<li>Path ${entryIdx + 1}: ${pathNames || 'N/A'} → direct ${directText} | UBO ${expression} ⇒ ${effectiveText}</li>`;
+                        
+                        // ✅ Show full UBO calculation path with multiplication
+                        let calcExpression = '—';
+                        if (factorTexts.length > 0) {
+                            calcExpression = `<span class="badge bg-info">${factorTexts.join(' × ')} = ${effectiveText}</span>`;
+                        }
+                        
+                        return `<li class="mb-1">
+                            <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
+                            <span class="text-muted">Direct: ${directText}</span> | 
+                            <span class="text-primary">UBO Calc: ${calcExpression}</span>
+                        </li>`;
                     }).join('');
                     
                     // ✅ แสดง UBO Effect ในการ์ดหลัก
@@ -910,6 +927,49 @@
                 return;
             }
             
+            // ✅ Create Level Selector
+            const maxLevel = d3.max(graphData.nodes, d => d.level) || 3;
+            const levelSelector = document.getElementById('levelSelector');
+            let selectedMaxLevel = maxLevel; // Show all levels by default
+            
+            let levelBtns = '<button class="btn btn-sm btn-outline-primary active" data-level="all">All Levels</button>';
+            for (let i = 1; i <= maxLevel; i++) {
+                levelBtns += `<button class="btn btn-sm btn-outline-primary" data-level="${i}">Level 0-${i}</button>`;
+            }
+            levelSelector.innerHTML = levelBtns;
+            
+            // Level selector event handler
+            levelSelector.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    levelSelector.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const level = this.getAttribute('data-level');
+                    selectedMaxLevel = level === 'all' ? maxLevel : parseInt(level);
+                    
+                    // Filter and update visibility
+                    node.style('display', d => d.level <= selectedMaxLevel ? 'block' : 'none');
+                    nodeLabel.style('display', d => d.level <= selectedMaxLevel ? 'block' : 'none');
+                    
+                    // Filter edges based on visible nodes
+                    link.style('display', d => {
+                        const sourceLevel = typeof d.source === 'object' ? d.source.level : 
+                                          graphData.nodes.find(n => n.id === d.source)?.level || 0;
+                        const targetLevel = typeof d.target === 'object' ? d.target.level : 
+                                          graphData.nodes.find(n => n.id === d.target)?.level || 0;
+                        return (sourceLevel <= selectedMaxLevel && targetLevel <= selectedMaxLevel) ? 'block' : 'none';
+                    });
+                    
+                    linkLabel.style('display', d => {
+                        const sourceLevel = typeof d.source === 'object' ? d.source.level : 
+                                          graphData.nodes.find(n => n.id === d.source)?.level || 0;
+                        const targetLevel = typeof d.target === 'object' ? d.target.level : 
+                                          graphData.nodes.find(n => n.id === d.target)?.level || 0;
+                        return (sourceLevel <= selectedMaxLevel && targetLevel <= selectedMaxLevel) ? 'block' : 'none';
+                    });
+                });
+            });
+            
             const width = Math.max(1200, container.node().getBoundingClientRect().width);
             const height = Math.max(800, window.innerHeight * 0.7);
             
@@ -928,19 +988,19 @@
             // More pronounced line thickness difference: 10% = 2.5px, 20% = 5px, 50% = 12.5px
             const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1.5, 18]);
             
-            // Smooth forces for easy dragging with good distribution
+            // Low gravity forces for maximum node freedom and distribution
             const simulation = d3.forceSimulation(graphData.nodes)
                 .force('link', d3.forceLink(graphData.edges).id(d => d.id)
-                    .distance(d => 200 - (d.percent * 0.6)) // More dynamic distance based on %
-                    .strength(0.4)) // Much weaker link force for smooth dragging
-                .force('charge', d3.forceManyBody().strength(-900).distanceMax(500)) // Lower repulsion for smooth movement
-                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.02)) // Even gentler centering
+                    .distance(d => 250 - (d.percent * 0.8)) // Longer distance for more spread
+                    .strength(0.3)) // Weaker link force
+                .force('charge', d3.forceManyBody().strength(-900).distanceMax(600)) // Lower repulsion for smooth movement
+                .force('center', d3.forceCenter(width / 2, height / 2).strength(0.005)) // Very minimal centering
                 .force('collision', d3.forceCollide()
                     .radius(d => nodeScale(d.capital) + 50) // Large collision radius
                     .strength(0.8)) // Lower collision prevention for smoother drag
-                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.3 : 0.01)) // Gentler pull to center
-                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.3 : 0.01))
-                .force('radial', d3.forceRadial(d => d.level * 180, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.2)) // Gentler radial distribution
+                .force('x', d3.forceX(width / 2).strength(d => d.level === 0 ? 0.15 : 0.005)) // Minimal pull to center
+                .force('y', d3.forceY(height / 2).strength(d => d.level === 0 ? 0.15 : 0.005))
+                .force('radial', d3.forceRadial(d => d.level * 220, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.15)) // Weaker radial distribution
                 .alphaDecay(0.02) // Slower cooling for better settling
                 .velocityDecay(0.2); // Less friction for smoother movement
             
@@ -951,8 +1011,34 @@
                 .attr('markerUnits', 'userSpaceOnUse') // Fixed size regardless of stroke width
                 .append('path').attr('d', 'M0,-3L10,0L0,3').attr('fill', '#6b7280');
             
+            // Identify UBO nodes
+            const uboNodeIds = new Set(graphData.nodes.filter(n => n.is_ubo).map(n => n.id));
+            
+            // Mark edges that lead to UBO nodes (recursively find all paths to UBOs)
+            const uboPathEdges = new Set();
+            function markUBOPaths(nodeId, visited = new Set()) {
+                if (visited.has(nodeId)) return false;
+                visited.add(nodeId);
+                
+                if (uboNodeIds.has(nodeId)) return true;
+                
+                const outgoingEdges = graphData.edges.filter(e => e.target === nodeId || e.target.id === nodeId);
+                for (const edge of outgoingEdges) {
+                    const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
+                    if (markUBOPaths(sourceId, new Set(visited))) {
+                        uboPathEdges.add(edge);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // Mark all UBO paths
+            uboNodeIds.forEach(uboId => markUBOPaths(uboId));
+            
             const link = g.append('g').selectAll('line').data(graphData.edges).join('line')
-                .attr('stroke', '#6b7280').attr('stroke-opacity', 0.7)
+                .attr('stroke', d => uboPathEdges.has(d) ? '#DC2626' : '#6b7280') // Red for UBO paths
+                .attr('stroke-opacity', d => uboPathEdges.has(d) ? 0.9 : 0.7)
                 .attr('marker-end', 'url(#arrow)').attr('stroke-width', d => linkWidthScale(d.percent));
             
             const linkLabel = g.append('g').selectAll('text').data(graphData.edges).join('text')
@@ -962,8 +1048,22 @@
             
             const node = g.append('g').selectAll('circle').data(graphData.nodes).join('circle')
                 .attr('r', d => nodeScale(d.capital))
-                .attr('fill', d => d.is_ubo ? '#EF4444' : (d.type === 'personal' ? '#10b981' : '#3b82f6'))
-                .attr('stroke', d => d.is_ubo ? '#991b1b' : '#fff').attr('stroke-width', d => d.is_ubo ? 3 : 2)
+                .attr('fill', d => {
+                    if (d.level === 0) return '#1f2937'; // Main company = black
+                    if (d.is_ubo) return '#EF4444'; // UBO = red
+                    if (d.type === 'personal') return '#10b981'; // Personal = green
+                    return '#3b82f6'; // Company = blue
+                })
+                .attr('stroke', d => {
+                    if (d.level === 0) return '#000000'; // Main company black stroke
+                    if (d.is_ubo) return '#991b1b'; // UBO red stroke
+                    return '#fff';
+                })
+                .attr('stroke-width', d => {
+                    if (d.level === 0) return 4; // Main company thicker stroke
+                    if (d.is_ubo) return 3;
+                    return 2;
+                })
                 .style('cursor', 'pointer')
                 .call(d3.drag()
                     .on('start', e => { if (!e.active) simulation.alphaTarget(0.3).restart(); e.subject.fx = e.subject.x; e.subject.fy = e.subject.y; })
