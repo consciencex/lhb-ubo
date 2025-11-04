@@ -123,6 +123,7 @@
             background: #f8fbff;
             border-radius: 12px;
             border: 1px solid rgba(102, 126, 234, 0.2);
+            position: relative;
         }
 
         .hierarchy-tree-container svg {
@@ -130,18 +131,26 @@
         }
 
         .tree-legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 12px;
-            font-size: 0.9em;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 0.85em;
             color: #425466;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .tree-legend span {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            white-space: nowrap;
         }
 
         .legend-swatch {
@@ -150,6 +159,7 @@
             border-radius: 4px;
             border: 1px solid rgba(17, 24, 39, 0.25);
             display: inline-block;
+            flex-shrink: 0;
         }
 
         .legend-swatch.company {
@@ -282,7 +292,7 @@
         <div class="main-container">
             <!-- Header -->
             <div class="header">
-                <h1><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjNkI3Mjg1Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjQ4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxIQjwvdGV4dD4KPC9zdmc+" alt="LHB" style="width: 40px; height: 40px; margin-right: 12px; vertical-align: middle;"> LH Bank UBO Analysis System</h1>
+                <h1><img src="{{ url_for('static', filename='icon/LHB_Logo.png') }}" alt="LHB" style="width: 50px; height: 50px; margin-right: 12px; vertical-align: middle;"> LH Bank UBO Analysis System</h1>
                 <p>Ultimate Beneficial Owner (UBO) verification dashboard</p>
             </div>
             
@@ -345,19 +355,17 @@
                         <i class="fas fa-sitemap"></i> Shareholding Structure
                     </div>
                     <div class="level-content">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="text-secondary fw-semibold mb-0">Shareholding Network</h5>
+                        <h5 class="text-secondary fw-semibold mb-3">Shareholding Network</h5>
+                        
+                        <!-- Center Level Selector -->
+                        <div class="text-center mb-3">
                             <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
                                 <!-- Level buttons will be added dynamically -->
                             </div>
                         </div>
-                        <div id="hierarchyTree" class="hierarchy-tree-container"></div>
-                        <div class="tree-legend">
-                            <span><span class="legend-swatch" style="background: #1f2937;"></span> Main Company (Analysis Target)</span>
-                            <span><span class="legend-swatch company"></span> Company</span>
-                            <span><span class="legend-swatch personal"></span> Individual</span>
-                            <span><span class="legend-swatch ubo"></span> UBO ≥ 15%</span>
-                            <span><span class="legend-swatch" style="background: #DC2626;"></span> UBO Path</span>
+                        
+                        <div id="hierarchyTree" class="hierarchy-tree-container" style="position: relative;">
+                            <!-- Legend will be positioned inside the container -->
                         </div>
                     </div>
                 </div>
@@ -709,19 +717,16 @@
                     const detailItems = (sh.entries || []).map((entry, entryIdx) => {
                         const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
                         const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
-                        const directText = `${(entry.direct || 0).toFixed(4)}%`;
-                        const effectiveText = `${(entry.effective || 0).toFixed(4)}%`;
+                        const directText = `${(entry.direct || 0).toFixed(2)}%`;
+                        const effectiveText = `${(entry.effective || 0).toFixed(2)}%`;
                         
-                        // ✅ Show full UBO calculation path with multiplication
-                        let calcExpression = '—';
-                        if (factorTexts.length > 0) {
-                            calcExpression = `<span class="badge bg-info">${factorTexts.join(' × ')} = ${effectiveText}</span>`;
-                        }
+                        // ✅ Show UBO calculation in format: Direct: X% | UBO: A% × B% × C%
+                        const uboCalcText = factorTexts.length > 0 ? factorTexts.join(' × ') : directText;
                         
                         return `<li class="mb-1">
                             <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
                             <span class="text-muted">Direct: ${directText}</span> | 
-                            <span class="text-primary">UBO Calc: ${calcExpression}</span>
+                            <span class="text-primary">UBO: ${uboCalcText}</span>
                         </li>`;
                     }).join('');
                     
@@ -1099,6 +1104,18 @@
                 node.attr('cx', d => d.x).attr('cy', d => d.y);
                 nodeLabel.attr('x', d => d.x).attr('y', d => d.y);
             });
+            
+            // ✅ Add Legend to the container
+            const legendHTML = `
+                <div class="tree-legend">
+                    <span><span class="legend-swatch" style="background: #1f2937;"></span> Main Company</span>
+                    <span><span class="legend-swatch" style="background: #3b82f6;"></span> Company</span>
+                    <span><span class="legend-swatch" style="background: #10b981;"></span> Individual</span>
+                    <span><span class="legend-swatch" style="background: #EF4444;"></span> UBO ≥ 15%</span>
+                    <span><span class="legend-swatch" style="background: #DC2626; border: none; height: 3px; margin-top: 6px;"></span> UBO Path</span>
+                </div>
+            `;
+            document.getElementById('hierarchyTree').insertAdjacentHTML('beforeend', legendHTML);
         }
         
         // Auto-focus on input
