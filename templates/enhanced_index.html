@@ -117,8 +117,8 @@
 
         .hierarchy-tree-container {
             width: 100%;
-            min-height: 420px;
-            overflow-x: auto;
+            height: 600px;
+            overflow: auto;
             padding: 10px;
             background: #f8fbff;
             border-radius: 12px;
@@ -720,13 +720,18 @@
                         const directText = `${(entry.direct || 0).toFixed(2)}%`;
                         const effectiveText = `${(entry.effective || 0).toFixed(2)}%`;
                         
-                        // ✅ Show UBO calculation in format: Direct: X% | UBO: A% × B% × C%
-                        const uboCalcText = factorTexts.length > 0 ? factorTexts.join(' × ') : directText;
+                        // ✅ Show UBO calculation with full multiplication and result
+                        let uboCalcDisplay = '';
+                        if (factorTexts.length > 0) {
+                            uboCalcDisplay = `<span class="badge bg-info">${factorTexts.join(' × ')} = ${effectiveText}</span>`;
+                        } else {
+                            uboCalcDisplay = effectiveText;
+                        }
                         
-                        return `<li class="mb-1">
+                        return `<li class="mb-2">
                             <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
-                            <span class="text-muted">Direct: ${directText}</span> | 
-                            <span class="text-primary">UBO: ${uboCalcText}</span>
+                            <span class="text-muted">Direct Share: ${directText}</span><br>
+                            <span class="text-primary">UBO Effect: ${uboCalcDisplay}</span>
                         </li>`;
                     }).join('');
                     
@@ -976,7 +981,7 @@
             });
             
             const width = Math.max(1200, container.node().getBoundingClientRect().width);
-            const height = Math.max(800, window.innerHeight * 0.7);
+            const height = 600; // Fixed height for better viewport fit
             
             const svg = container.append('svg')
                 .attr('width', '100%')
