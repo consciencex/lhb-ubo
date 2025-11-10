@@ -374,7 +374,8 @@
                     </div>
                     <div class="level-content">
                         <p class="text-muted mb-3">
-                            <i class="fas fa-info-circle"></i> These companies have no shareholder data available (foreign companies or institutions). Manual verification may be required.
+                            <i class="fas fa-info-circle"></i> These companies have <strong>no shareholder data available</strong> from the API. 
+                            They may be foreign companies, institutions, or companies where data could not be retrieved. Manual verification required.
                         </p>
                         <div id="investigationResults">
                             <!-- Investigation companies will be populated here -->
@@ -912,7 +913,7 @@
                 return;
             }
             
-            // Find companies with no shareholders (dead-end companies)
+            // Find companies with NO shareholders at all (API couldn't find data)
             // These are typically level 1 or 2 companies (not level 0 main company)
             const investigationCompanies = [];
             
@@ -921,20 +922,17 @@
                 const shareholders = company.shareholders || [];
                 const companyType = company.type || 'company';
                 
-                // Check if it's a company (not main) with no shareholders or only personal shareholders
+                // Check if it's a company (not main) with ZERO shareholders
+                // This means API could not retrieve shareholder data for this company
                 if (level > 0 && level <= 2 && companyType !== 'personal') {
-                    const corporateShareholders = shareholders.filter(sh => 
-                        sh.shareholder_type === 'company' || sh.shareholder_type === 'corporate'
-                    );
-                    
-                    // If no corporate shareholders (dead-end), add to investigation list
-                    if (corporateShareholders.length === 0 && shareholders.length > 0) {
+                    // If NO shareholders at all, it's an investigation company
+                    if (shareholders.length === 0) {
                         investigationCompanies.push({
                             name: company.display_name || company.name_en || company.name_th || company.company_id,
                             company_id: company.company_id,
                             level: level,
-                            total_shareholders: shareholders.length,
-                            personal_shareholders: shareholders.filter(sh => sh.shareholder_type === 'personal').length
+                            total_shareholders: 0,
+                            personal_shareholders: 0
                         });
                     }
                 }
@@ -961,12 +959,12 @@
                         <p class="mb-2 text-muted small">
                             <strong>Company ID:</strong> ${company.company_id || 'N/A'}
                         </p>
-                        <p class="mb-0 text-muted small">
-                            <i class="fas fa-users"></i> ${company.total_shareholders} shareholder(s) - All are individuals
+                        <p class="mb-0 text-danger small fw-bold">
+                            <i class="fas fa-exclamation-triangle"></i> No shareholder data available
                         </p>
                         <p class="mb-0 small" style="color: #1e40af;">
-                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> This company has no corporate shareholders. 
-                            It may be a foreign company or institution. Manual verification recommended.
+                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> API could not retrieve shareholder data. 
+                            This may be a foreign company or institution. Manual verification required.
                         </p>
                     </div>
                 `;
@@ -1245,21 +1243,18 @@
             // Identify UBO nodes
             const uboNodeIds = new Set(graphData.nodes.filter(n => n.is_ubo).map(n => n.id));
             
-            // Identify investigation nodes (companies with no outgoing edges to other companies)
+            // Identify investigation nodes (companies with NO shareholders at all - API couldn't find data)
             const investigationNodeIds = new Set();
             graphData.nodes.forEach(node => {
                 if (node.type === 'company' && node.level > 0 && node.level <= 2) {
-                    // Check if this node has any outgoing edges to other companies
-                    const hasCompanyChildren = graphData.edges.some(edge => {
+                    // Check if this node has ANY outgoing edges at all (to anyone - company or individual)
+                    const hasAnyChildren = graphData.edges.some(edge => {
                         const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
-                        const targetNode = graphData.nodes.find(n => {
-                            const targetId = typeof edge.target === 'object' ? edge.target.id : edge.target;
-                            return n.id === targetId;
-                        });
-                        return sourceId === node.id && targetNode && targetNode.type === 'company';
+                        return sourceId === node.id;
                     });
                     
-                    if (!hasCompanyChildren) {
+                    // If NO children at all, it means API couldn't find shareholder data
+                    if (!hasAnyChildren) {
                         investigationNodeIds.add(node.id);
                     }
                 }
@@ -1432,51 +1427,73 @@
             
             findPaths(selectedNode.id);
             
-            // Apply highlighting - only change connected elements
+            // Apply STRONG highlighting - connected elements very visible
             const investigationIds = elements.investigationNodeIds || new Set();
             
             elements.nodes
-                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
+                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
                 .attr('stroke-width', d => {
-                    if (d.id === selectedNode.id) return 5; // Selected entity - thick orange border
-                    if (!connectedNodes.has(d.id)) return 1; // Faded nodes
-                    // Connected nodes - keep original styling
-                    if (d.level === 0) return 4;
-                    if (d.is_ubo || investigationIds.has(d.id)) return 3;
-                    return 2;
+                    if (d.id === selectedNode.id) return 6; // Selected entity - very thick border
+                    if (!connectedNodes.has(d.id)) return 0.5; // Very thin for faded
+                    // Connected nodes - emphasize with thicker borders
+                    if (d.level === 0) return 5;
+                    if (d.is_ubo || investigationIds.has(d.id)) return 4;
+                    return 3;
                 })
                 .attr('stroke', d => {
-                    if (d.id === selectedNode.id) return '#f59e0b'; // Orange for selected
-                    if (!connectedNodes.has(d.id)) return '#ddd'; // Faded
-                    // Keep original colors for connected nodes
+                    if (d.id === selectedNode.id) return '#f59e0b'; // Bright orange for selected
+                    if (!connectedNodes.has(d.id)) return '#e5e7eb'; // Very light for faded
+                    // Emphasize connected nodes with bright borders
                     if (d.level === 0) return '#000000';
                     if (d.is_ubo) return '#991b1b';
-                    if (investigationIds.has(d.id)) return '#f59e0b'; // Investigation nodes keep orange border
-                    return '#fff';
+                    if (investigationIds.has(d.id)) return '#f59e0b';
+                    return '#ffffff'; // Bright white border for connected nodes
+                })
+                .attr('filter', d => {
+                    // Add glow effect to connected nodes
+                    if (connectedNodes.has(d.id)) {
+                        return 'drop-shadow(0px 0px 8px rgba(59, 130, 246, 0.6))';
+                    }
+                    return 'none';
                 });
             
             elements.nodeLabels
-                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
-                .attr('font-weight', d => d.id === selectedNode.id ? '800' : '600');
+                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
+                .attr('font-weight', d => {
+                    if (d.id === selectedNode.id) return '900'; // Extra bold for selected
+                    if (connectedNodes.has(d.id)) return '700'; // Bold for connected
+                    return '600';
+                })
+                .attr('font-size', d => {
+                    if (d.id === selectedNode.id) return '13px'; // Bigger for selected
+                    if (connectedNodes.has(d.id)) return '12px'; // Bigger for connected
+                    return '11px';
+                })
+                .attr('fill', d => connectedNodes.has(d.id) ? '#111827' : '#d1d5db');
             
-            // Only change opacity and width for connected paths, KEEP ORIGINAL COLORS
+            // HIGHLIGHT connected paths with much more visibility
             elements.links
-                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.05)
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.03)
                 .attr('stroke-width', d => {
-                    if (!connectedEdges.has(d)) return 0.5; // Thin faded lines
-                    // Connected edges - make thicker but keep color
-                    return elements.linkWidthScale ? elements.linkWidthScale(d.percent) * 1.5 : 3;
+                    if (!connectedEdges.has(d)) return 0.3; // Very thin faded lines
+                    // Connected edges - make MUCH thicker and more visible
+                    const baseWidth = elements.linkWidthScale ? elements.linkWidthScale(d.percent) : 2;
+                    return baseWidth * 2.5; // Much thicker
                 })
                 .attr('stroke', d => {
-                    if (!connectedEdges.has(d)) return '#e5e7eb'; // Very light gray for faded
-                    // KEEP ORIGINAL COLORS: Red for UBO paths, gray for others
-                    return elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#6b7280';
+                    if (!connectedEdges.has(d)) return '#f3f4f6'; // Almost invisible gray for faded
+                    // HIGHLIGHT connected paths: Bright colors
+                    if (elements.uboPathEdges && elements.uboPathEdges.has(d)) {
+                        return '#DC2626'; // Keep UBO paths red
+                    }
+                    return '#3b82f6'; // Bright blue for highlighted regular paths
                 });
             
             elements.linkLabels
-                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.05)
-                .attr('font-weight', d => connectedEdges.has(d) ? '700' : '600')
-                .attr('font-size', d => connectedEdges.has(d) ? '11px' : '10px');
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0)
+                .attr('font-weight', d => connectedEdges.has(d) ? '800' : '600')
+                .attr('font-size', d => connectedEdges.has(d) ? '12px' : '10px')
+                .attr('fill', d => connectedEdges.has(d) ? '#1f2937' : '#9ca3af');
         }
         
         function clearHighlight() {
@@ -1497,13 +1514,16 @@
                 .attr('stroke', d => {
                     if (d.level === 0) return '#000000';
                     if (d.is_ubo) return '#991b1b';
-                    if (investigationIds.has(d.id)) return '#f59e0b'; // Investigation nodes keep orange border
+                    if (investigationIds.has(d.id)) return '#f59e0b';
                     return '#fff';
-                });
+                })
+                .attr('filter', 'none'); // Remove glow effect
             
             elements.nodeLabels
                 .style('opacity', 1)
-                .attr('font-weight', '600');
+                .attr('font-weight', '600')
+                .attr('font-size', '11px')
+                .attr('fill', '#1f2937');
             
             elements.links
                 .style('opacity', d => elements.uboPathEdges && elements.uboPathEdges.has(d) ? 0.9 : 0.7)
@@ -1513,7 +1533,8 @@
             elements.linkLabels
                 .style('opacity', 1)
                 .attr('font-weight', '600')
-                .attr('font-size', '10px');
+                .attr('font-size', '10px')
+                .attr('fill', '#374151');
         }
         
         // Auto-focus on input
