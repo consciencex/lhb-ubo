@@ -395,15 +395,25 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold"><i class="fas fa-user"></i> Filter by Individual:</label>
-                                <select id="individualFilter" class="form-select form-select-sm">
-                                    <option value="">-- All Individuals --</option>
-                                </select>
+                                <div class="input-group">
+                                    <select id="individualFilter" class="form-select form-select-sm">
+                                        <option value="">-- All Individuals --</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()">
+                                        <i class="fas fa-times"></i> Clear
+                                    </button>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold"><i class="fas fa-building"></i> Filter by Company:</label>
-                                <select id="companyFilter" class="form-select form-select-sm">
-                                    <option value="">-- All Companies --</option>
-                                </select>
+                                <div class="input-group">
+                                    <select id="companyFilter" class="form-select form-select-sm">
+                                        <option value="">-- All Companies --</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()">
+                                        <i class="fas fa-times"></i> Clear
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         
@@ -1572,6 +1582,23 @@
                 .attr('font-weight', '600')
                 .attr('font-size', '10px')
                 .attr('fill', '#374151');
+        }
+        
+        // Clear filter functions
+        function clearIndividualFilter() {
+            const individualFilter = document.getElementById('individualFilter');
+            if (individualFilter) {
+                individualFilter.value = '';
+                clearHighlight();
+            }
+        }
+        
+        function clearCompanyFilter() {
+            const companyFilter = document.getElementById('companyFilter');
+            if (companyFilter) {
+                companyFilter.value = '';
+                clearHighlight();
+            }
         }
         
         // Auto-focus on input
