@@ -367,6 +367,13 @@ def analyze_company():
             else:
                 candidate_dict = candidate
             nationality = candidate_dict.get('nationality') or 'Unknown'
+            
+            # Include path details for calculation transparency
+            path_details = candidate_dict.get('path_details', [])
+            if hasattr(path_details, '__iter__') and not isinstance(path_details, (str, bytes)):
+                path_details_list = list(path_details)
+            else:
+                path_details_list = []
                 
             report['ubos'].append({
                 'name': candidate_dict.get('name', 'Unknown'),
@@ -374,7 +381,9 @@ def analyze_company():
                 'identification_method': f"Method {candidate_dict.get('method', 1)}",
                 'nationality': nationality,
                 'is_director': candidate_dict.get('is_director', False),
-                'ubo_status': 'YES' if candidate_dict.get('total_percentage', 0) >= 15.0 else 'NO'
+                'ubo_status': 'YES' if candidate_dict.get('total_percentage', 0) >= 15.0 else 'NO',
+                'path_details': path_details_list,
+                'paths_count': len(path_details_list)
             })
         
         # Build network graph (NetworkX-based spider web visualization)

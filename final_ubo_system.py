@@ -46,6 +46,11 @@ class UBOCandidate:
     method: int  # 1 = shareholding, 2 = control, 3 = management
     nationality: Optional[str] = None
     is_director: bool = False
+    path_details: List[Dict[str, Any]] = None  # Detailed path calculation info
+    
+    def __post_init__(self):
+        if self.path_details is None:
+            self.path_details = []
 
 @dataclass
 class UBOAnalysisResult:
@@ -422,6 +427,7 @@ class FinalUBOAnalyzer:
                                 name=shareholder_name,
                                 total_percentage=0.0,
                                 paths=[],
+                                path_details=[],
                                 method=1,
                                 nationality=sanitized_nationality or None,
                                 is_director=(shareholder.directorship or '').upper() == 'YES'
@@ -429,6 +435,18 @@ class FinalUBOAnalyzer:
                         
                         self.ubo_results[shareholder_name].total_percentage += effective_percentage
                         self.ubo_results[shareholder_name].paths.append([step.get('entity_id') for step in shareholder_path])
+                        
+                        # Add detailed path calculation
+                        path_factors = [step.get('share_percent', 0) for step in shareholder_path]
+                        path_names = [step.get('entity_name', 'Unknown') for step in shareholder_path]
+                        path_detail = {
+                            'factors': path_factors,
+                            'names': path_names,
+                            'result': effective_percentage,
+                            'calculation': ' × '.join([f"{f:.2f}%" for f in path_factors]) + f" = {effective_percentage:.3f}%"
+                        }
+                        self.ubo_results[shareholder_name].path_details.append(path_detail)
+                        
                         candidate = self.ubo_results[shareholder_name]
                         if not candidate.nationality and sanitized_nationality:
                             candidate.nationality = sanitized_nationality

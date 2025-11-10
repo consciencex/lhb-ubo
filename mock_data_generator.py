@@ -66,13 +66,46 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
         'ubos': [
             {
                 'name': 'WILLIAM ANDERSON',
-                'total_percentage': 32.45,
-                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_B'], ['XXXXXXXX', 'COMP_C', 'COMP_G'], ['XXXXXXXX', 'COMP_D', 'COMP_J']],
+                'total_percentage': 28.099,
+                'paths': [['XXXXXXXX', 'COMP_A'], ['XXXXXXXX', 'COMP_B'], ['XXXXXXXX', 'COMP_C'], ['XXXXXXXX', 'COMP_D', 'COMP_J'], ['XXXXXXXX', 'COMP_G']],
                 'method': 1,
                 'nationality': 'American',
                 'is_director': True,
                 'identification_method': 'Method 1',
-                'ubo_status': 'YES'
+                'ubo_status': 'YES',
+                'paths_count': 5,
+                'path_details': [
+                    {
+                        'factors': [18.5, 22.5, 76.2],
+                        'names': ['VENTURE CAPITAL PARTNERS', 'GLOBAL INVESTMENT CORPORATION', 'WILLIAM ANDERSON'],
+                        'result': 3.171,
+                        'calculation': '76.2% × 18.5% × 22.5% = 3.171%'
+                    },
+                    {
+                        'factors': [22.5, 38.2],
+                        'names': ['GLOBAL INVESTMENT CORPORATION', 'WILLIAM ANDERSON'],
+                        'result': 8.595,
+                        'calculation': '38.2% × 22.5% = 8.595%'
+                    },
+                    {
+                        'factors': [18.8, 42.1],
+                        'names': ['ASIA PACIFIC HOLDINGS LTD', 'WILLIAM ANDERSON'],
+                        'result': 7.914,
+                        'calculation': '42.1% × 18.8% = 7.914%'
+                    },
+                    {
+                        'factors': [31.2, 14.6, 82.5],
+                        'names': ['PRIVATE EQUITY VENTURES', 'NORTH AMERICAN FUND', 'WILLIAM ANDERSON'],
+                        'result': 3.758,
+                        'calculation': '82.5% × 31.2% × 14.6% = 3.758%'
+                    },
+                    {
+                        'factors': [16.3, 28.6],
+                        'names': ['EUROPEAN FINANCIAL GROUP', 'WILLIAM ANDERSON'],
+                        'result': 4.661,
+                        'calculation': '28.6% × 16.3% = 4.661%'
+                    }
+                ]
             },
             {
                 'name': 'SOPHIA CHEN',
@@ -82,7 +115,40 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'nationality': 'Singaporean',
                 'is_director': False,
                 'identification_method': 'Method 1',
-                'ubo_status': 'YES'
+                'ubo_status': 'YES',
+                'paths_count': 5,
+                'path_details': [
+                    {
+                        'factors': [22.5, 28.4],
+                        'names': ['GLOBAL INVESTMENT CORPORATION', 'SOPHIA CHEN'],
+                        'result': 6.39,
+                        'calculation': '28.4% × 22.5% = 6.390%'
+                    },
+                    {
+                        'factors': [18.75, 14.2, 68.4],
+                        'names': ['ASIA PACIFIC HOLDINGS LTD', 'STRATEGIC HOLDINGS INC', 'SOPHIA CHEN'],
+                        'result': 1.819,
+                        'calculation': '68.4% × 14.2% × 18.75% = 1.819%'
+                    },
+                    {
+                        'factors': [16.3, 35.8],
+                        'names': ['EUROPEAN FINANCIAL GROUP', 'SOPHIA CHEN'],
+                        'result': 5.835,
+                        'calculation': '35.8% × 16.3% = 5.835%'
+                    },
+                    {
+                        'factors': [12.8, 52.3, 58.7],
+                        'names': ['SOUTHEAST ASIA CAPITAL', 'EMERGING MARKETS FUND', 'SOPHIA CHEN'],
+                        'result': 3.929,
+                        'calculation': '58.7% × 52.3% × 12.8% = 3.929%'
+                    },
+                    {
+                        'factors': [6.35, 64.2, 92.1],
+                        'names': ['MIDDLE EAST INVESTMENT GROUP', 'INTERNATIONAL EQUITY FUND', 'SOPHIA CHEN'],
+                        'result': 3.755,
+                        'calculation': '92.1% × 64.2% × 6.35% = 3.755%'
+                    }
+                ]
             },
             # Non-UBOs (< 15%)
             {

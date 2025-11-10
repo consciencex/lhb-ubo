@@ -357,6 +357,22 @@
                     <div class="level-content">
                         <h5 class="text-secondary fw-semibold mb-3">Shareholding Network</h5>
                         
+                        <!-- Entity Filter Dropdowns -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"><i class="fas fa-user"></i> Filter by Individual:</label>
+                                <select id="individualFilter" class="form-select form-select-sm">
+                                    <option value="">-- All Individuals --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"><i class="fas fa-building"></i> Filter by Company:</label>
+                                <select id="companyFilter" class="form-select form-select-sm">
+                                    <option value="">-- All Companies --</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <!-- Center Level Selector -->
                         <div class="text-center mb-3">
                             <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
@@ -805,14 +821,45 @@
             let html = '';
             qualifiedUbos.forEach((ubo, index) => {
                 const percentage = parseFloat(ubo.total_percentage).toFixed(2);
+                const pathDetails = ubo.path_details || [];
+                const pathsCount = ubo.paths_count || pathDetails.length || 0;
+                
+                // Build path calculation details
+                let pathDetailsHtml = '';
+                if (pathDetails.length > 0) {
+                    pathDetailsHtml = '<div class="mt-3"><h6>UBO Calculation Details (All Paths):</h6><ol class="mb-0" style="font-size: 0.9em;">';
+                    pathDetails.forEach((detail, i) => {
+                        pathDetailsHtml += `
+                            <li class="mb-2">
+                                <strong>Path ${i + 1}:</strong> ${detail.names ? detail.names.join(' → ') : 'N/A'}<br>
+                                <span class="badge bg-info">${detail.calculation || 'N/A'}</span>
+                            </li>
+                        `;
+                    });
+                    // Show total calculation
+                    const pathSums = pathDetails.map(d => `${d.result.toFixed(3)}%`).join(' + ');
+                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(255,255,255,0.3); border-radius: 8px;"><strong>Total UBO Effect:</strong> ${pathSums} = <strong>${percentage}%</strong></div></div>`;
+                }
+                
+                const detailId = `uboDetail-${index}`;
                 html += `
                     <div class="ubo-item">
                         <h5><i class="fas fa-crown"></i> UBO #${index + 1}</h5>
                         <p><strong>Name:</strong> ${ubo.name || 'Unknown'}</p>
-                        <p><strong>Shareholding:</strong> ${percentage}%</p>
+                        <p><strong>Total Shareholding:</strong> ${percentage}% <span class="badge bg-light text-dark">${pathsCount} paths</span></p>
                         <p><strong>Identification Method:</strong> ${ubo.identification_method || 'Method 1'}</p>
                         <p><strong>Nationality:</strong> ${ubo.nationality || 'Unknown'}</p>
                         <p><strong>Director:</strong> ${ubo.is_director ? 'Yes' : 'No'}</p>
+                        ${pathDetails.length > 0 ? `
+                        <button class="btn btn-sm btn-light mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
+                            <i class="fas fa-calculator"></i> View Calculation Details
+                        </button>
+                        <div class="collapse mt-2" id="${detailId}">
+                            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                                ${pathDetailsHtml}
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
                 `;
             });
@@ -928,6 +975,66 @@
                 });
         }
         
+        // Global state for network graph
+        let currentGraphData = null;
+        let currentSimulation = null;
+        let currentSelectedEntity = null;
+        
+        function populateFilterDropdowns(graphData) {
+            const individualFilter = document.getElementById('individualFilter');
+            const companyFilter = document.getElementById('companyFilter');
+            
+            // Clear existing options (except first "All" option)
+            individualFilter.innerHTML = '<option value="">-- All Individuals --</option>';
+            companyFilter.innerHTML = '<option value="">-- All Companies --</option>';
+            
+            // Get unique individuals and companies
+            const individuals = new Set();
+            const companies = new Set();
+            
+            graphData.nodes.forEach(node => {
+                if (node.type === 'personal') {
+                    individuals.add(node.full_name);
+                } else if (node.type === 'company' && node.level > 0) {
+                    companies.add(node.full_name);
+                }
+            });
+            
+            // Populate dropdowns (sorted)
+            Array.from(individuals).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                individualFilter.appendChild(option);
+            });
+            
+            Array.from(companies).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                companyFilter.appendChild(option);
+            });
+            
+            // Add event listeners
+            individualFilter.addEventListener('change', function() {
+                if (this.value) {
+                    companyFilter.value = ''; // Clear other filter
+                    highlightEntity(this.value);
+                } else {
+                    clearHighlight();
+                }
+            });
+            
+            companyFilter.addEventListener('change', function() {
+                if (this.value) {
+                    individualFilter.value = ''; // Clear other filter
+                    highlightEntity(this.value);
+                } else {
+                    clearHighlight();
+                }
+            });
+        }
+        
         function renderNetworkGraph(graphData) {
             const container = d3.select('#hierarchyTree');
             container.selectAll('*').remove();
@@ -936,6 +1043,12 @@
                 container.append('p').attr('class', 'text-muted').text('No network data available.');
                 return;
             }
+            
+            // Store graph data globally
+            currentGraphData = graphData;
+            
+            // Populate filter dropdowns
+            populateFilterDropdowns(graphData);
             
             // ✅ Create Level Selector
             const maxLevel = d3.max(graphData.nodes, d => d.level) || 3;
@@ -1046,15 +1159,20 @@
             // Mark all UBO paths
             uboNodeIds.forEach(uboId => markUBOPaths(uboId));
             
+            // Store link and node references globally for highlighting
+            window.networkGraphElements = window.networkGraphElements || {};
+            
             const link = g.append('g').selectAll('line').data(graphData.edges).join('line')
                 .attr('stroke', d => uboPathEdges.has(d) ? '#DC2626' : '#6b7280') // Red for UBO paths
                 .attr('stroke-opacity', d => uboPathEdges.has(d) ? 0.9 : 0.7)
-                .attr('marker-end', 'url(#arrow)').attr('stroke-width', d => linkWidthScale(d.percent));
+                .attr('marker-end', 'url(#arrow)').attr('stroke-width', d => linkWidthScale(d.percent))
+                .attr('class', 'graph-link');
             
             const linkLabel = g.append('g').selectAll('text').data(graphData.edges).join('text')
                 .attr('fill', '#374151').attr('font-size', '10px').attr('font-weight', '600')
                 .attr('text-anchor', 'middle').attr('dy', -5)
-                .text(d => `${d.percent.toFixed(1)}%`);
+                .text(d => `${d.percent.toFixed(1)}%`)
+                .attr('class', 'graph-link-label');
             
             const node = g.append('g').selectAll('circle').data(graphData.nodes).join('circle')
                 .attr('r', d => nodeScale(d.capital))
@@ -1082,7 +1200,21 @@
             
             const nodeLabel = g.append('g').selectAll('text').data(graphData.nodes).join('text')
                 .attr('fill', '#1f2937').attr('font-size', '11px').attr('font-weight', '600')
-                .attr('text-anchor', 'middle').attr('dy', d => nodeScale(d.capital) + 18).text(d => d.name);
+                .attr('text-anchor', 'middle').attr('dy', d => nodeScale(d.capital) + 18).text(d => d.name)
+                .attr('class', 'graph-node-label');
+            
+            // Store references for highlighting
+            window.networkGraphElements = {
+                nodes: node,
+                nodeLabels: nodeLabel,
+                links: link,
+                linkLabels: linkLabel,
+                simulation: simulation,
+                graphData: graphData,
+                uboPathEdges: uboPathEdges,
+                nodeScale: nodeScale,
+                linkWidthScale: linkWidthScale
+            };
             
             const tooltip = d3.select('body').append('div').style('position', 'absolute').style('background', 'rgba(255,255,255,0.98)')
                 .style('border', '2px solid #3b82f6').style('border-radius', '8px').style('padding', '12px')
@@ -1121,6 +1253,114 @@
                 </div>
             `;
             document.getElementById('hierarchyTree').insertAdjacentHTML('beforeend', legendHTML);
+        }
+        
+        // Highlighting functions for entity filtering
+        function highlightEntity(entityName) {
+            if (!window.networkGraphElements) return;
+            
+            const elements = window.networkGraphElements;
+            const graphData = elements.graphData;
+            
+            // Find the selected node
+            const selectedNode = graphData.nodes.find(n => n.full_name === entityName);
+            if (!selectedNode) return;
+            
+            currentSelectedEntity = entityName;
+            
+            // Find all paths connected to this entity
+            const connectedNodes = new Set([selectedNode.id]);
+            const connectedEdges = new Set();
+            
+            // Recursive function to find all paths
+            function findPaths(nodeId, visited = new Set()) {
+                if (visited.has(nodeId)) return;
+                visited.add(nodeId);
+                connectedNodes.add(nodeId);
+                
+                // Find edges where this node is source or target
+                graphData.edges.forEach(edge => {
+                    const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
+                    const targetId = typeof edge.target === 'object' ? edge.target.id : edge.target;
+                    
+                    if (sourceId === nodeId || targetId === nodeId) {
+                        connectedEdges.add(edge);
+                        const otherNodeId = sourceId === nodeId ? targetId : sourceId;
+                        if (!visited.has(otherNodeId)) {
+                            findPaths(otherNodeId, visited);
+                        }
+                    }
+                });
+            }
+            
+            findPaths(selectedNode.id);
+            
+            // Apply highlighting
+            elements.nodes
+                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
+                .attr('stroke-width', d => {
+                    if (d.id === selectedNode.id) return 5; // Selected entity
+                    if (connectedNodes.has(d.id)) return d.is_ubo || d.level === 0 ? 3 : 2;
+                    return 1;
+                })
+                .attr('stroke', d => {
+                    if (d.id === selectedNode.id) return '#f59e0b'; // Orange for selected
+                    if (d.level === 0) return '#000000';
+                    if (d.is_ubo) return '#991b1b';
+                    return '#fff';
+                });
+            
+            elements.nodeLabels
+                .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
+                .attr('font-weight', d => d.id === selectedNode.id ? '800' : '600');
+            
+            elements.links
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.1)
+                .attr('stroke-width', d => connectedEdges.has(d) ? elements.linkWidthScale ? elements.linkWidthScale(d.percent) * 1.5 : 3 : 1)
+                .attr('stroke', d => {
+                    if (!connectedEdges.has(d)) return '#6b7280';
+                    return elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#2563eb';
+                });
+            
+            elements.linkLabels
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.1)
+                .attr('font-weight', d => connectedEdges.has(d) ? '700' : '600')
+                .attr('font-size', d => connectedEdges.has(d) ? '11px' : '10px');
+        }
+        
+        function clearHighlight() {
+            if (!window.networkGraphElements) return;
+            
+            currentSelectedEntity = null;
+            const elements = window.networkGraphElements;
+            
+            // Reset all elements to default state
+            elements.nodes
+                .style('opacity', 1)
+                .attr('stroke-width', d => {
+                    if (d.level === 0) return 4;
+                    if (d.is_ubo) return 3;
+                    return 2;
+                })
+                .attr('stroke', d => {
+                    if (d.level === 0) return '#000000';
+                    if (d.is_ubo) return '#991b1b';
+                    return '#fff';
+                });
+            
+            elements.nodeLabels
+                .style('opacity', 1)
+                .attr('font-weight', '600');
+            
+            elements.links
+                .style('opacity', d => elements.uboPathEdges && elements.uboPathEdges.has(d) ? 0.9 : 0.7)
+                .attr('stroke-width', d => elements.linkWidthScale ? elements.linkWidthScale(d.percent) : 2)
+                .attr('stroke', d => elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#6b7280');
+            
+            elements.linkLabels
+                .style('opacity', 1)
+                .attr('font-weight', '600')
+                .attr('font-size', '10px');
         }
         
         // Auto-focus on input
