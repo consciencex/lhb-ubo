@@ -1500,6 +1500,9 @@
                 })
                 .attr('fill', d => connectedNodes.has(d.id) ? '#111827' : '#d1d5db');
             
+            // Check if selected entity is a UBO
+            const isSelectedUBO = selectedNodes.some(n => n.is_ubo === true);
+            
             // HIGHLIGHT connected paths with much more visibility
             elements.links
                 .style('opacity', d => connectedEdges.has(d) ? 1 : 0.03)
@@ -1511,11 +1514,16 @@
                 })
                 .attr('stroke', d => {
                     if (!connectedEdges.has(d)) return '#f3f4f6'; // Almost invisible gray for faded
-                    // HIGHLIGHT connected paths: Bright colors
-                    if (elements.uboPathEdges && elements.uboPathEdges.has(d)) {
-                        return '#DC2626'; // Keep UBO paths red
+                    // HIGHLIGHT connected paths: 
+                    // If selected person is UBO, show all their paths in RED
+                    if (isSelectedUBO) {
+                        return '#DC2626'; // RED for UBO person's paths
                     }
-                    return '#3b82f6'; // Bright blue for highlighted regular paths
+                    // Otherwise, keep original logic
+                    if (elements.uboPathEdges && elements.uboPathEdges.has(d)) {
+                        return '#DC2626'; // Red for UBO paths
+                    }
+                    return '#3b82f6'; // Bright blue for regular paths
                 });
             
             elements.linkLabels
