@@ -285,6 +285,24 @@
             color: #6c757d;
             font-size: 0.9em;
         }
+        
+        .investigation-item {
+            background: #f0f9ff;
+            border-left: 4px solid #1e40af;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+        
+        .investigation-item h6 {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .investigation-item .badge {
+            font-size: 0.75em;
+        }
     </style>
 </head>
 <body>
@@ -346,6 +364,21 @@
                     <h3><i class="fas fa-crown"></i> UBO Analysis Results</h3>
                     <div id="uboResults">
                         <!-- UBO results will be populated here -->
+                    </div>
+                </div>
+                
+                <!-- Companies Requiring Further Investigation -->
+                <div class="level-card" id="investigationSection" style="display: none;">
+                    <div class="level-header" style="background: linear-gradient(45deg, #1e3a8a, #1e40af);">
+                        <i class="fas fa-exclamation-triangle"></i> Companies Requiring Further Investigation
+                    </div>
+                    <div class="level-content">
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-info-circle"></i> These companies have no shareholder data available (foreign companies or institutions). Manual verification may be required.
+                        </p>
+                        <div id="investigationResults">
+                            <!-- Investigation companies will be populated here -->
+                        </div>
                     </div>
                 </div>
                 
@@ -484,6 +517,9 @@
             
             // Display UBO results
             displayUBOResults(data.ubos);
+            
+            // Display companies requiring investigation
+            displayInvestigationCompanies(data.hierarchy_data);
             
             // Display network graph (NEW: Interactive spider-web visualization)
             if (data.network_graph && data.network_graph.nodes && data.network_graph.nodes.length > 0) {
@@ -867,6 +903,78 @@
             container.innerHTML = html;
         }
         
+        function displayInvestigationCompanies(hierarchyData) {
+            const container = document.getElementById('investigationResults');
+            const section = document.getElementById('investigationSection');
+            
+            if (!hierarchyData) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            // Find companies with no shareholders (dead-end companies)
+            // These are typically level 1 or 2 companies (not level 0 main company)
+            const investigationCompanies = [];
+            
+            Object.values(hierarchyData).forEach(company => {
+                const level = company.level || 0;
+                const shareholders = company.shareholders || [];
+                const companyType = company.type || 'company';
+                
+                // Check if it's a company (not main) with no shareholders or only personal shareholders
+                if (level > 0 && level <= 2 && companyType !== 'personal') {
+                    const corporateShareholders = shareholders.filter(sh => 
+                        sh.shareholder_type === 'company' || sh.shareholder_type === 'corporate'
+                    );
+                    
+                    // If no corporate shareholders (dead-end), add to investigation list
+                    if (corporateShareholders.length === 0 && shareholders.length > 0) {
+                        investigationCompanies.push({
+                            name: company.display_name || company.name_en || company.name_th || company.company_id,
+                            company_id: company.company_id,
+                            level: level,
+                            total_shareholders: shareholders.length,
+                            personal_shareholders: shareholders.filter(sh => sh.shareholder_type === 'personal').length
+                        });
+                    }
+                }
+            });
+            
+            if (investigationCompanies.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            // Sort by level
+            investigationCompanies.sort((a, b) => a.level - b.level);
+            
+            section.style.display = 'block';
+            
+            let html = '';
+            investigationCompanies.forEach((company, index) => {
+                html += `
+                    <div class="investigation-item">
+                        <h6>
+                            <i class="fas fa-building"></i> ${company.name}
+                            <span class="badge bg-primary ms-2">Level ${company.level}</span>
+                        </h6>
+                        <p class="mb-2 text-muted small">
+                            <strong>Company ID:</strong> ${company.company_id || 'N/A'}
+                        </p>
+                        <p class="mb-0 text-muted small">
+                            <i class="fas fa-users"></i> ${company.total_shareholders} shareholder(s) - All are individuals
+                        </p>
+                        <p class="mb-0 small" style="color: #1e40af;">
+                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> This company has no corporate shareholders. 
+                            It may be a foreign company or institution. Manual verification recommended.
+                        </p>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
         function truncateLabel(label, max = 26) {
             if (!label) return '';
             return label.length > max ? label.slice(0, max - 3) + '...' : label;
@@ -1137,6 +1245,26 @@
             // Identify UBO nodes
             const uboNodeIds = new Set(graphData.nodes.filter(n => n.is_ubo).map(n => n.id));
             
+            // Identify investigation nodes (companies with no outgoing edges to other companies)
+            const investigationNodeIds = new Set();
+            graphData.nodes.forEach(node => {
+                if (node.type === 'company' && node.level > 0 && node.level <= 2) {
+                    // Check if this node has any outgoing edges to other companies
+                    const hasCompanyChildren = graphData.edges.some(edge => {
+                        const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
+                        const targetNode = graphData.nodes.find(n => {
+                            const targetId = typeof edge.target === 'object' ? edge.target.id : edge.target;
+                            return n.id === targetId;
+                        });
+                        return sourceId === node.id && targetNode && targetNode.type === 'company';
+                    });
+                    
+                    if (!hasCompanyChildren) {
+                        investigationNodeIds.add(node.id);
+                    }
+                }
+            });
+            
             // Mark edges that lead to UBO nodes (recursively find all paths to UBOs)
             const uboPathEdges = new Set();
             function markUBOPaths(nodeId, visited = new Set()) {
@@ -1180,16 +1308,19 @@
                     if (d.level === 0) return '#1f2937'; // Main company = black
                     if (d.is_ubo) return '#EF4444'; // UBO = red
                     if (d.type === 'personal') return '#10b981'; // Personal = green
+                    if (investigationNodeIds.has(d.id)) return '#1e40af'; // Investigation = deep blue
                     return '#3b82f6'; // Company = blue
                 })
                 .attr('stroke', d => {
                     if (d.level === 0) return '#000000'; // Main company black stroke
                     if (d.is_ubo) return '#991b1b'; // UBO red stroke
+                    if (investigationNodeIds.has(d.id)) return '#f59e0b'; // Investigation = orange stroke (highlight)
                     return '#fff';
                 })
                 .attr('stroke-width', d => {
                     if (d.level === 0) return 4; // Main company thicker stroke
                     if (d.is_ubo) return 3;
+                    if (investigationNodeIds.has(d.id)) return 3; // Investigation nodes thicker stroke
                     return 2;
                 })
                 .style('cursor', 'pointer')
@@ -1212,6 +1343,7 @@
                 simulation: simulation,
                 graphData: graphData,
                 uboPathEdges: uboPathEdges,
+                investigationNodeIds: investigationNodeIds,
                 nodeScale: nodeScale,
                 linkWidthScale: linkWidthScale
             };
@@ -1222,17 +1354,21 @@
                 .style('opacity', 0).style('max-width', '320px').style('box-shadow', '0 4px 12px rgba(0,0,0,0.15)').style('z-index', 10000);
             
             node.on('mouseover', (e, d) => {
+                const isInvestigation = investigationNodeIds.has(d.id);
                 tooltip.html(`<div style="font-weight:600;color:#60a5fa;margin-bottom:8px;font-size:14px;">${d.full_name}</div>
                     <div><strong>Type:</strong> ${d.type === 'personal' ? 'Individual' : 'Company'}</div>
                     ${d.regis_id ? `<div><strong>ID:</strong> ${d.regis_id}</div>` : ''}
                     ${d.capital > 0 ? `<div><strong>Capital:</strong> ฿${d.capital.toLocaleString()}</div>` : ''}
                     ${d.is_ubo ? '<div style="color:#ef4444;"><strong>✅ UBO (≥15%)</strong></div>' : ''}
+                    ${isInvestigation ? '<div style="color:#1e40af;"><strong>⚠️ Requires Investigation</strong></div>' : ''}
                     <div><strong>Level:</strong> ${d.level}</div>`)
                 .style('left', (e.pageX + 15) + 'px').style('top', (e.pageY + 15) + 'px').style('opacity', 1);
-                d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', 4).attr('r', d => nodeScale(d.capital) * 1.2);
+                d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', 5).attr('r', d => nodeScale(d.capital) * 1.2);
             }).on('mouseout', (e, d) => {
                 tooltip.style('opacity', 0);
-                d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', d => d.is_ubo ? 3 : 2).attr('r', d => nodeScale(d.capital));
+                const isInvestigation = investigationNodeIds.has(d.id);
+                const strokeWidth = d.level === 0 ? 4 : (d.is_ubo || isInvestigation ? 3 : 2);
+                d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', strokeWidth).attr('r', d => nodeScale(d.capital));
             });
             
             simulation.on('tick', () => {
@@ -1247,6 +1383,7 @@
                 <div class="tree-legend">
                     <span><span class="legend-swatch" style="background: #1f2937;"></span> Main Company</span>
                     <span><span class="legend-swatch" style="background: #3b82f6;"></span> Company</span>
+                    <span><span class="legend-swatch" style="background: #1e40af; border: 2px solid #f59e0b;"></span> Investigation Needed</span>
                     <span><span class="legend-swatch" style="background: #10b981;"></span> Individual</span>
                     <span><span class="legend-swatch" style="background: #EF4444;"></span> UBO ≥ 15%</span>
                     <span><span class="legend-swatch" style="background: #DC2626; border: none; height: 3px; margin-top: 6px;"></span> UBO Path</span>
@@ -1268,11 +1405,11 @@
             
             currentSelectedEntity = entityName;
             
-            // Find all paths connected to this entity
+            // Find all paths connected to this entity (like UBO path logic)
             const connectedNodes = new Set([selectedNode.id]);
             const connectedEdges = new Set();
             
-            // Recursive function to find all paths
+            // Recursive function to find all paths (both directions)
             function findPaths(nodeId, visited = new Set()) {
                 if (visited.has(nodeId)) return;
                 visited.add(nodeId);
@@ -1295,18 +1432,26 @@
             
             findPaths(selectedNode.id);
             
-            // Apply highlighting
+            // Apply highlighting - only change connected elements
+            const investigationIds = elements.investigationNodeIds || new Set();
+            
             elements.nodes
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
                 .attr('stroke-width', d => {
-                    if (d.id === selectedNode.id) return 5; // Selected entity
-                    if (connectedNodes.has(d.id)) return d.is_ubo || d.level === 0 ? 3 : 2;
-                    return 1;
+                    if (d.id === selectedNode.id) return 5; // Selected entity - thick orange border
+                    if (!connectedNodes.has(d.id)) return 1; // Faded nodes
+                    // Connected nodes - keep original styling
+                    if (d.level === 0) return 4;
+                    if (d.is_ubo || investigationIds.has(d.id)) return 3;
+                    return 2;
                 })
                 .attr('stroke', d => {
                     if (d.id === selectedNode.id) return '#f59e0b'; // Orange for selected
+                    if (!connectedNodes.has(d.id)) return '#ddd'; // Faded
+                    // Keep original colors for connected nodes
                     if (d.level === 0) return '#000000';
                     if (d.is_ubo) return '#991b1b';
+                    if (investigationIds.has(d.id)) return '#f59e0b'; // Investigation nodes keep orange border
                     return '#fff';
                 });
             
@@ -1314,16 +1459,22 @@
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.15)
                 .attr('font-weight', d => d.id === selectedNode.id ? '800' : '600');
             
+            // Only change opacity and width for connected paths, KEEP ORIGINAL COLORS
             elements.links
-                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.1)
-                .attr('stroke-width', d => connectedEdges.has(d) ? elements.linkWidthScale ? elements.linkWidthScale(d.percent) * 1.5 : 3 : 1)
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.05)
+                .attr('stroke-width', d => {
+                    if (!connectedEdges.has(d)) return 0.5; // Thin faded lines
+                    // Connected edges - make thicker but keep color
+                    return elements.linkWidthScale ? elements.linkWidthScale(d.percent) * 1.5 : 3;
+                })
                 .attr('stroke', d => {
-                    if (!connectedEdges.has(d)) return '#6b7280';
-                    return elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#2563eb';
+                    if (!connectedEdges.has(d)) return '#e5e7eb'; // Very light gray for faded
+                    // KEEP ORIGINAL COLORS: Red for UBO paths, gray for others
+                    return elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#6b7280';
                 });
             
             elements.linkLabels
-                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.1)
+                .style('opacity', d => connectedEdges.has(d) ? 1 : 0.05)
                 .attr('font-weight', d => connectedEdges.has(d) ? '700' : '600')
                 .attr('font-size', d => connectedEdges.has(d) ? '11px' : '10px');
         }
@@ -1333,18 +1484,20 @@
             
             currentSelectedEntity = null;
             const elements = window.networkGraphElements;
+            const investigationIds = elements.investigationNodeIds || new Set();
             
             // Reset all elements to default state
             elements.nodes
                 .style('opacity', 1)
                 .attr('stroke-width', d => {
                     if (d.level === 0) return 4;
-                    if (d.is_ubo) return 3;
+                    if (d.is_ubo || investigationIds.has(d.id)) return 3;
                     return 2;
                 })
                 .attr('stroke', d => {
                     if (d.level === 0) return '#000000';
                     if (d.is_ubo) return '#991b1b';
+                    if (investigationIds.has(d.id)) return '#f59e0b'; // Investigation nodes keep orange border
                     return '#fff';
                 });
             
