@@ -1394,46 +1394,75 @@
             const elements = window.networkGraphElements;
             const graphData = elements.graphData;
             
-            // Find the selected node
-            const selectedNode = graphData.nodes.find(n => n.full_name === entityName);
-            if (!selectedNode) return;
+            // Find ALL nodes with matching name (person may appear multiple times)
+            const selectedNodes = graphData.nodes.filter(n => n.full_name === entityName);
+            if (selectedNodes.length === 0) return;
             
             currentSelectedEntity = entityName;
             
-            // Find all paths connected to this entity (like UBO path logic)
-            const connectedNodes = new Set([selectedNode.id]);
+            // Find ONLY paths from selected entity TO main company (root)
+            const connectedNodes = new Set();
             const connectedEdges = new Set();
             
-            // Recursive function to find all paths (both directions)
-            function findPaths(nodeId, visited = new Set()) {
-                if (visited.has(nodeId)) return;
-                visited.add(nodeId);
-                connectedNodes.add(nodeId);
+            // Add all instances of the selected person/company
+            selectedNodes.forEach(node => connectedNodes.add(node.id));
+            
+            // Find the main company (level 0)
+            const mainCompany = graphData.nodes.find(n => n.level === 0);
+            if (!mainCompany) {
+                console.warn('Main company not found');
+                return;
+            }
+            
+            // Find all paths from selected node to main company
+            // Direction: selected node -> ... -> main company
+            function findPathsToMain(currentId, visited = new Set()) {
+                if (visited.has(currentId)) return false;
+                visited.add(currentId);
                 
-                // Find edges where this node is source or target
+                // Reached main company
+                if (currentId === mainCompany.id) {
+                    return true;
+                }
+                
+                let foundPath = false;
+                
+                // Find all edges where current node is SOURCE (going outward to main)
                 graphData.edges.forEach(edge => {
                     const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
                     const targetId = typeof edge.target === 'object' ? edge.target.id : edge.target;
                     
-                    if (sourceId === nodeId || targetId === nodeId) {
-                        connectedEdges.add(edge);
-                        const otherNodeId = sourceId === nodeId ? targetId : sourceId;
-                        if (!visited.has(otherNodeId)) {
-                            findPaths(otherNodeId, visited);
+                    // Only follow edges FROM current node (shareholder -> company direction)
+                    if (sourceId === currentId) {
+                        const newVisited = new Set(visited);
+                        if (findPathsToMain(targetId, newVisited)) {
+                            // This edge is part of a path to main
+                            connectedEdges.add(edge);
+                            connectedNodes.add(sourceId);
+                            connectedNodes.add(targetId);
+                            foundPath = true;
                         }
                     }
                 });
+                
+                return foundPath;
             }
             
-            findPaths(selectedNode.id);
+            // Find paths from ALL instances of the selected person/company
+            selectedNodes.forEach(node => {
+                findPathsToMain(node.id);
+            });
             
             // Apply STRONG highlighting - connected elements very visible
             const investigationIds = elements.investigationNodeIds || new Set();
             
+            // Check if node is one of the selected nodes
+            const isSelectedNode = (nodeId) => selectedNodes.some(n => n.id === nodeId);
+            
             elements.nodes
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
                 .attr('stroke-width', d => {
-                    if (d.id === selectedNode.id) return 6; // Selected entity - very thick border
+                    if (isSelectedNode(d.id)) return 6; // Selected entity - very thick border
                     if (!connectedNodes.has(d.id)) return 0.5; // Very thin for faded
                     // Connected nodes - emphasize with thicker borders
                     if (d.level === 0) return 5;
@@ -1441,7 +1470,7 @@
                     return 3;
                 })
                 .attr('stroke', d => {
-                    if (d.id === selectedNode.id) return '#f59e0b'; // Bright orange for selected
+                    if (isSelectedNode(d.id)) return '#f59e0b'; // Bright orange for selected
                     if (!connectedNodes.has(d.id)) return '#e5e7eb'; // Very light for faded
                     // Emphasize connected nodes with bright borders
                     if (d.level === 0) return '#000000';
@@ -1460,12 +1489,12 @@
             elements.nodeLabels
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
                 .attr('font-weight', d => {
-                    if (d.id === selectedNode.id) return '900'; // Extra bold for selected
+                    if (isSelectedNode(d.id)) return '900'; // Extra bold for selected
                     if (connectedNodes.has(d.id)) return '700'; // Bold for connected
                     return '600';
                 })
                 .attr('font-size', d => {
-                    if (d.id === selectedNode.id) return '13px'; // Bigger for selected
+                    if (isSelectedNode(d.id)) return '13px'; // Bigger for selected
                     if (connectedNodes.has(d.id)) return '12px'; // Bigger for connected
                     return '11px';
                 })
