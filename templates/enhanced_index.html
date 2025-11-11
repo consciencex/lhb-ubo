@@ -117,7 +117,7 @@
 
         .hierarchy-tree-container {
             width: 100%;
-            height: 680px;
+            height: 600px;
             overflow: auto;
             padding: 10px;
             background: #f8fbff;
@@ -303,6 +303,27 @@
         .investigation-item .badge {
             font-size: 0.75em;
         }
+        
+        #shareholderTable {
+            font-size: 0.85em;
+        }
+        
+        #shareholderTable thead th {
+            background: linear-gradient(45deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            border-bottom: 2px solid #667eea;
+            font-weight: 600;
+            color: #374151;
+            padding: 10px 8px;
+        }
+        
+        #shareholderTable tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        #shareholderTable td {
+            padding: 8px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
@@ -342,20 +363,24 @@
             
             <!-- Results Section -->
             <div id="results" class="results-section" style="display: none;">
-                <!-- Company Info -->
+                <!-- Company Info and Stats Combined -->
                 <div class="level-card">
                     <div class="level-header">
                         <i class="fas fa-building"></i> Main Company Information
                     </div>
-                    <div class="level-content" id="companyInfo">
-                        <!-- Company info will be populated here -->
-                    </div>
-                </div>
-                
-                <!-- Summary Stats -->
-                <div class="summary-stats">
-                    <div class="row" id="summaryStats">
-                        <!-- Summary stats will be populated here -->
+                    <div class="level-content">
+                        <div class="row">
+                            <div class="col-md-8" id="companyInfo">
+                                <!-- Company info will be populated here -->
+                            </div>
+                            <div class="col-md-4">
+                                <div class="summary-stats" style="background: transparent; padding: 0; margin: 0;">
+                                    <div id="summaryStats">
+                                        <!-- Summary stats will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -385,42 +410,41 @@
                 
                 <!-- Hierarchy Tree -->
                 <div class="level-card">
-                    <div class="level-header">
+                    <div class="level-header" style="padding: 12px 20px;">
                         <i class="fas fa-sitemap"></i> Shareholding Structure
                     </div>
-                    <div class="level-content">
-                        <h5 class="text-secondary fw-semibold mb-3">Shareholding Network</h5>
-                        
-                        <!-- Entity Filter Dropdowns -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold"><i class="fas fa-user"></i> Filter by Individual:</label>
-                                <div class="input-group">
+                    <div class="level-content" style="padding: 15px 20px;">
+                        <!-- Compact Filter Row -->
+                        <div class="row align-items-center mb-2">
+                            <div class="col-md-2">
+                                <h6 class="text-secondary fw-semibold mb-0" style="font-size: 0.95em;">Network</h6>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     <select id="individualFilter" class="form-select form-select-sm">
                                         <option value="">-- All Individuals --</option>
                                     </select>
                                     <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()">
-                                        <i class="fas fa-times"></i> Clear
+                                        <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold"><i class="fas fa-building"></i> Filter by Company:</label>
-                                <div class="input-group">
+                            <div class="col-md-4">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     <select id="companyFilter" class="form-select form-select-sm">
                                         <option value="">-- All Companies --</option>
                                     </select>
                                     <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()">
-                                        <i class="fas fa-times"></i> Clear
+                                        <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Center Level Selector -->
-                        <div class="text-center mb-3">
-                            <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
-                                <!-- Level buttons will be added dynamically -->
+                            <div class="col-md-2 text-center">
+                                <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
+                                    <!-- Level buttons will be added dynamically -->
+                                </div>
                             </div>
                         </div>
                         
@@ -430,46 +454,29 @@
                     </div>
                 </div>
 
-                <!-- Shareholder Levels -->
+                <!-- Shareholder Levels Table -->
                 <div class="level-card">
-                    <div class="level-header">
+                    <div class="level-header" style="padding: 12px 20px;">
                         <i class="fas fa-layer-group"></i> Shareholder Details by Level
                     </div>
-                    <div class="level-content">
-                        <div class="accordion level-accordion" id="levelAccordion">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingLevel1">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level1Collapse" aria-expanded="false" aria-controls="level1Collapse">
-                                        <span><i class="fas fa-layer-group me-2"></i> Level 1 - Direct Shareholders</span>
-                                        <span class="level-badge" id="level1Badge">0</span>
-                                    </button>
-                                </h2>
-                                <div id="level1Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel1" data-bs-parent="#levelAccordion">
-                                    <div class="accordion-body shareholder-body" id="level1Content"></div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingLevel2">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level2Collapse" aria-expanded="false" aria-controls="level2Collapse">
-                                        <span><i class="fas fa-layer-group me-2"></i> Level 2 - Indirect Shareholders</span>
-                                        <span class="level-badge" id="level2Badge">0</span>
-                                    </button>
-                                </h2>
-                                <div id="level2Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel2" data-bs-parent="#levelAccordion">
-                                    <div class="accordion-body shareholder-body" id="level2Content"></div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingLevel3">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#level3Collapse" aria-expanded="false" aria-controls="level3Collapse">
-                                        <span><i class="fas fa-layer-group me-2"></i> Level 3 - Third-tier Shareholders</span>
-                                        <span class="level-badge" id="level3Badge">0</span>
-                                    </button>
-                                </h2>
-                                <div id="level3Collapse" class="accordion-collapse collapse" aria-labelledby="headingLevel3" data-bs-parent="#levelAccordion">
-                                    <div class="accordion-body shareholder-body" id="level3Content"></div>
-                                </div>
-                            </div>
+                    <div class="level-content" style="padding: 15px 20px;">
+                        <div style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
+                            <table class="table table-sm table-hover" id="shareholderTable">
+                                <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                    <tr>
+                                        <th style="width: 5%;">Level</th>
+                                        <th style="width: 25%;">Shareholder Name</th>
+                                        <th style="width: 10%;">Type</th>
+                                        <th style="width: 20%;">Held By Company</th>
+                                        <th style="width: 10%;">Direct %</th>
+                                        <th style="width: 10%;">UBO Effect %</th>
+                                        <th style="width: 20%;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="shareholderTableBody">
+                                    <!-- Table rows will be populated here -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -604,28 +611,28 @@
             const uboCount = ubos.filter(ubo => ubo.total_percentage >= 15).length;
             
             const html = `
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number">${levelCounts[1]}</div>
-                        <div class="stat-label">Level 1</div>
+                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 1</div>
+                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[1]}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number">${levelCounts[2]}</div>
-                        <div class="stat-label">Level 2</div>
+                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 2</div>
+                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[2]}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number">${levelCounts[3]}</div>
-                        <div class="stat-label">Level 3</div>
+                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 3</div>
+                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[3]}</div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="stat-item">
-                        <div class="stat-number">${uboCount}</div>
-                        <div class="stat-label">UBO (≥15%)</div>
+                <div class="stat-item" style="border-left: 4px solid ${uboCount > 0 ? '#EF4444' : '#10b981'}; padding: 10px; margin-bottom: 10px; background: ${uboCount > 0 ? '#fef2f2' : '#f0fdf4'}; border-radius: 8px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">UBO (≥15%)</div>
+                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: ${uboCount > 0 ? '#EF4444' : '#10b981'};">${uboCount}</div>
                     </div>
                 </div>
             `;
@@ -633,6 +640,13 @@
         }
         
         function displayLevelDetails(hierarchyData) {
+            const tableBody = document.getElementById('shareholderTableBody');
+            
+            if (!tableBody) {
+                console.warn('Table body not found');
+                return;
+            }
+            
             // Group by level
             const levelData = {1: [], 2: [], 3: []};
             
@@ -653,47 +667,80 @@
                     shareholders.forEach(sh => {
                         levelData[displayLevel].push({
                             ...sh,
-                            company_name: companyLabel
+                            company_name: companyLabel,
+                            display_level: displayLevel
                         });
                     });
                 }
             });
             
-            const collapseConfig = {
-                1: {collapseId: 'level1Collapse', badgeId: 'level1Badge'},
-                2: {collapseId: 'level2Collapse', badgeId: 'level2Badge'},
-                3: {collapseId: 'level3Collapse', badgeId: 'level3Badge'}
-            };
-
-            let expanded = false;
+            // Build table rows for all levels
+            let html = '';
+            let rowIndex = 0;
+            
             for (let level = 1; level <= 3; level++) {
                 const aggregated = aggregateShareholders(levelData[level]);
-                displayLevelContent(level, aggregated);
-
-                const cfg = collapseConfig[level];
-                const badgeEl = document.getElementById(cfg.badgeId);
-                if (badgeEl) {
-                    badgeEl.textContent = aggregated.length;
-                }
-
-                const collapseEl = document.getElementById(cfg.collapseId);
-                const buttonEl = document.querySelector(`button[data-bs-target="#${cfg.collapseId}"]`);
-                if (!collapseEl || !buttonEl) continue;
-
-                const collapseInstance = bootstrap.Collapse.getOrCreateInstance(collapseEl, {toggle: false});
-                if (!expanded && aggregated.length > 0) {
-                    collapseInstance.show();
-                    buttonEl.classList.remove('collapsed');
-                    buttonEl.setAttribute('aria-expanded', 'true');
-                    expanded = true;
-                } else {
-                    collapseInstance.hide();
-                    buttonEl.classList.add('collapsed');
-                    buttonEl.setAttribute('aria-expanded', 'false');
-                }
+                
+                aggregated.forEach(sh => {
+                    const directShare = parseFloat(sh.direct || 0).toFixed(2);
+                    const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
+                    const type = sh.type || 'personal';
+                    const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
+                    const typeText = type === 'personal' ? 'Individual' : 'Company';
+                    const typeBadge = type === 'personal' ? 'success' : 'primary';
+                    const detailId = `shareholderDetailTable-${rowIndex}`;
+                    
+                    // Build detail content
+                    const detailItems = (sh.entries || []).map((entry, entryIdx) => {
+                        const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
+                        const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
+                        const effectiveText = `${(entry.effective || 0).toFixed(2)}%`;
+                        
+                        let uboCalcDisplay = '';
+                        if (factorTexts.length > 0) {
+                            uboCalcDisplay = `${factorTexts.join(' × ')} = ${effectiveText}`;
+                        } else {
+                            uboCalcDisplay = effectiveText;
+                        }
+                        
+                        return `<div class="mb-2 small">
+                            <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
+                            <span class="badge bg-info">${uboCalcDisplay}</span>
+                        </div>`;
+                    }).join('');
+                    
+                    html += `
+                        <tr>
+                            <td class="text-center"><span class="badge bg-secondary">${level}</span></td>
+                            <td><i class="${typeIcon}"></i> ${sh.label}</td>
+                            <td><span class="badge bg-${typeBadge}">${typeText}</span></td>
+                            <td class="small text-muted">${sh.company_name}</td>
+                            <td class="text-end fw-bold" style="color: #4C51BF;">${directShare}%</td>
+                            <td class="text-end fw-bold" style="color: #059669;">${effectiveShare}%</td>
+                            <td class="text-center">
+                                <button class="btn btn-xs btn-outline-info" style="font-size: 0.75em; padding: 2px 8px;" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
+                                    <i class="fas fa-calculator"></i> Calc
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="collapse" id="${detailId}">
+                            <td colspan="7" style="background: #f8f9fa; padding: 10px;">
+                                <div style="font-size: 0.85em;">
+                                    <strong>Direct Share:</strong> ${directShare}% | 
+                                    <strong>UBO Effect:</strong> ${effectiveShare}% | 
+                                    <strong>Paths:</strong> ${sh.entries.length}
+                                    <div class="mt-2">${detailItems || '<em>No path details</em>'}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    rowIndex++;
+                });
             }
+            
+            tableBody.innerHTML = html || '<tr><td colspan="7" class="text-center text-muted">No shareholder data available</td></tr>';
         }
-
+        
         function aggregateShareholders(shareholders) {
             const itemMap = new Map();
 
@@ -740,104 +787,6 @@
 
         return Array.from(itemMap.values())
             .sort((a, b) => b.direct - a.direct);
-        }
-        
-        function displayLevelContent(level, shareholders) {
-            const containerId = `level${level}Content`;
-            const container = document.getElementById(containerId);
-            
-            if (shareholders.length === 0) {
-                container.innerHTML = '<p class="text-muted">No shareholder data for this level.</p>';
-                return;
-            }
-            
-            // Group by company
-            const companyGroups = {};
-            shareholders.forEach(sh => {
-                const companyName = sh.company_name || 'Not specified';
-                if (!companyGroups[companyName]) {
-                    companyGroups[companyName] = [];
-                }
-                companyGroups[companyName].push(sh);
-            });
-            
-            let html = '';
-            Object.entries(companyGroups).forEach(([companyName, shs]) => {
-                html += `
-                    <div class="mb-3">
-                        <h6 class="text-primary"><i class="fas fa-building"></i> ${companyName}</h6>
-                        <div class="row">
-                `;
-                
-                shs.forEach((sh, idx) => {
-                    const directShare = parseFloat(sh.direct || 0).toFixed(2);
-                    const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
-                    const type = sh.type || 'personal';
-                    const typeClass = type === 'personal' ? 'personal' : 'company';
-                    const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
-                    const typeText = type === 'personal' ? 'Individual' : 'Company';
-                    const detailId = `shareholderDetail-${level}-${companyName.replace(/[^a-zA-Z0-9]/g, '')}-${idx}`;
-                    const detailItems = (sh.entries || []).map((entry, entryIdx) => {
-                        const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
-                        const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
-                        const directText = `${(entry.direct || 0).toFixed(2)}%`;
-                        const effectiveText = `${(entry.effective || 0).toFixed(2)}%`;
-                        
-                        // ✅ Show UBO calculation with full multiplication and result
-                        let uboCalcDisplay = '';
-                        if (factorTexts.length > 0) {
-                            uboCalcDisplay = `<span class="badge bg-info">${factorTexts.join(' × ')} = ${effectiveText}</span>`;
-                        } else {
-                            uboCalcDisplay = effectiveText;
-                        }
-                        
-                        return `<li class="mb-2">
-                            <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
-                            <span class="text-muted">Direct Share: ${directText}</span><br>
-                            <span class="text-primary">UBO Effect: ${uboCalcDisplay}</span>
-                        </li>`;
-                    }).join('');
-                    
-                    // ✅ แสดง UBO Effect ในการ์ดหลัก
-                    const percentDisplay = directShare !== effectiveShare 
-                        ? `${directShare}% <span class="text-muted small">(UBO Effect: ${effectiveShare}%)</span>`
-                        : `${directShare}%`;
-                    
-                    html += `
-                        <div class="col-md-6 mb-2">
-                            <div class="shareholder-item ${typeClass}">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <div class="shareholder-name">
-                                            <i class="${typeIcon}"></i> ${sh.label}
-                                        </div>
-                                        <div class="shareholder-percentage">${percentDisplay}</div>
-                                        <div class="shareholder-type">${typeText}</div>
-                                    </div>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}" aria-expanded="false" aria-controls="${detailId}">
-                                        View UBO Calc
-                                    </button>
-                                </div>
-                                <div class="collapse mt-2" id="${detailId}">
-                                    <div class="card card-body shareholder-ubo-detail">
-                                            <p class="mb-2"><strong>Direct share:</strong> ${directShare}%</p>
-                                            <p class="mb-2"><strong>Effective holding (UBO):</strong> ${effectiveShare}%</p>
-                                            <p class="mb-2 text-muted">Derived from ${sh.entries.length} path(s)</p>
-                                            <ul class="mb-0 ps-3 small text-secondary">${detailItems || '<li>No detailed path data.</li>'}</ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                html += `
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
         }
         
         function displayUBOResults(ubos) {
@@ -1210,7 +1159,7 @@
             });
             
             const width = Math.max(1200, container.node().getBoundingClientRect().width);
-            const height = 680; // Optimized height for screen fit
+            const height = 600; // Optimized height for screen fit
             
             const svg = container.append('svg')
                 .attr('width', '100%')
