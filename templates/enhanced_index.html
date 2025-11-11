@@ -304,11 +304,11 @@
             font-size: 0.75em;
         }
         
-        #shareholderTable {
+        .shareholderLevelTable {
             font-size: 0.85em;
         }
         
-        #shareholderTable thead th {
+        .shareholderLevelTable thead th {
             background: linear-gradient(45deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
             border-bottom: 2px solid #667eea;
             font-weight: 600;
@@ -316,13 +316,24 @@
             padding: 10px 8px;
         }
         
-        #shareholderTable tbody tr:hover {
+        .shareholderLevelTable tbody tr:hover {
             background: #f8f9fa;
         }
         
-        #shareholderTable td {
+        .shareholderLevelTable td {
             padding: 8px;
             vertical-align: middle;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            font-weight: 600;
+            border-bottom: 3px solid #667eea;
         }
     </style>
 </head>
@@ -415,33 +426,30 @@
                     </div>
                     <div class="level-content" style="padding: 15px 20px;">
                         <!-- Compact Filter Row -->
-                        <div class="row align-items-center mb-2">
-                            <div class="col-md-2">
-                                <h6 class="text-secondary fw-semibold mb-0" style="font-size: 0.95em;">Network</h6>
-                            </div>
-                            <div class="col-md-4">
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            <div style="flex: 0 0 auto;">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                    <select id="individualFilter" class="form-select form-select-sm">
+                                    <select id="individualFilter" class="form-select form-select-sm" style="min-width: 200px;">
                                         <option value="">-- All Individuals --</option>
                                     </select>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()" title="Clear filter">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div style="flex: 0 0 auto;">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                    <select id="companyFilter" class="form-select form-select-sm">
+                                    <select id="companyFilter" class="form-select form-select-sm" style="min-width: 200px;">
                                         <option value="">-- All Companies --</option>
                                     </select>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()" title="Clear filter">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-md-2 text-center">
+                            <div style="flex: 1 1 auto; text-align: right;">
                                 <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector">
                                     <!-- Level buttons will be added dynamically -->
                                 </div>
@@ -454,29 +462,95 @@
                     </div>
                 </div>
 
-                <!-- Shareholder Levels Table -->
+                <!-- Shareholder Levels Table with Tabs -->
                 <div class="level-card">
                     <div class="level-header" style="padding: 12px 20px;">
                         <i class="fas fa-layer-group"></i> Shareholder Details by Level
                     </div>
                     <div class="level-content" style="padding: 15px 20px;">
-                        <div style="max-height: 500px; overflow-y: auto; overflow-x: auto;">
-                            <table class="table table-sm table-hover" id="shareholderTable">
-                                <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                    <tr>
-                                        <th style="width: 5%;">Level</th>
-                                        <th style="width: 25%;">Shareholder Name</th>
-                                        <th style="width: 10%;">Type</th>
-                                        <th style="width: 20%;">Held By Company</th>
-                                        <th style="width: 10%;">Direct %</th>
-                                        <th style="width: 10%;">UBO Effect %</th>
-                                        <th style="width: 20%;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="shareholderTableBody">
-                                    <!-- Table rows will be populated here -->
-                                </tbody>
-                            </table>
+                        <!-- Level Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="shareholderTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="level1-tab" data-bs-toggle="tab" data-bs-target="#level1-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> Level 1 <span class="badge bg-secondary ms-1" id="level1Count">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="level2-tab" data-bs-toggle="tab" data-bs-target="#level2-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> Level 2 <span class="badge bg-secondary ms-1" id="level2Count">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="level3-tab" data-bs-toggle="tab" data-bs-target="#level3-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> Level 3 <span class="badge bg-secondary ms-1" id="level3Count">0</span>
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="shareholderTabContent">
+                            <!-- Level 1 Table -->
+                            <div class="tab-pane fade show active" id="level1-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level1TableBody">
+                                            <!-- Level 1 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Level 2 Table -->
+                            <div class="tab-pane fade" id="level2-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level2TableBody">
+                                            <!-- Level 2 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Level 3 Table -->
+                            <div class="tab-pane fade" id="level3-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level3TableBody">
+                                            <!-- Level 3 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -541,7 +615,7 @@
             
             // Display network graph (NEW: Interactive spider-web visualization)
             if (data.network_graph && data.network_graph.nodes && data.network_graph.nodes.length > 0) {
-                renderNetworkGraph(data.network_graph);
+                renderNetworkGraph(data.network_graph, data.hierarchy_data);
             } else {
                 // Fallback to tree diagram
                 renderHierarchyTree(data.tree_structure);
@@ -640,13 +714,6 @@
         }
         
         function displayLevelDetails(hierarchyData) {
-            const tableBody = document.getElementById('shareholderTableBody');
-            
-            if (!tableBody) {
-                console.warn('Table body not found');
-                return;
-            }
-            
             // Group by level
             const levelData = {1: [], 2: [], 3: []};
             
@@ -674,21 +741,34 @@
                 }
             });
             
-            // Build table rows for all levels
-            let html = '';
-            let rowIndex = 0;
-            
+            // Populate each level table separately
             for (let level = 1; level <= 3; level++) {
+                const tableBody = document.getElementById(`level${level}TableBody`);
+                const countBadge = document.getElementById(`level${level}Count`);
+                
+                if (!tableBody) continue;
+                
                 const aggregated = aggregateShareholders(levelData[level]);
                 
-                aggregated.forEach(sh => {
+                // Update count badge
+                if (countBadge) {
+                    countBadge.textContent = aggregated.length;
+                }
+                
+                if (aggregated.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No shareholders found at this level</td></tr>';
+                    continue;
+                }
+                
+                let html = '';
+                aggregated.forEach((sh, idx) => {
                     const directShare = parseFloat(sh.direct || 0).toFixed(2);
                     const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
                     const type = sh.type || 'personal';
                     const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
                     const typeText = type === 'personal' ? 'Individual' : 'Company';
                     const typeBadge = type === 'personal' ? 'success' : 'primary';
-                    const detailId = `shareholderDetailTable-${rowIndex}`;
+                    const detailId = `shareholderDetail-L${level}-${idx}`;
                     
                     // Build detail content
                     const detailItems = (sh.entries || []).map((entry, entryIdx) => {
@@ -703,42 +783,42 @@
                             uboCalcDisplay = effectiveText;
                         }
                         
-                        return `<div class="mb-2 small">
+                        return `<div class="mb-2">
                             <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
-                            <span class="badge bg-info">${uboCalcDisplay}</span>
+                            <span class="badge bg-info mt-1">${uboCalcDisplay}</span>
                         </div>`;
                     }).join('');
                     
                     html += `
                         <tr>
-                            <td class="text-center"><span class="badge bg-secondary">${level}</span></td>
-                            <td><i class="${typeIcon}"></i> ${sh.label}</td>
+                            <td><i class="${typeIcon}"></i> <strong>${sh.label}</strong></td>
                             <td><span class="badge bg-${typeBadge}">${typeText}</span></td>
                             <td class="small text-muted">${sh.company_name}</td>
                             <td class="text-end fw-bold" style="color: #4C51BF;">${directShare}%</td>
                             <td class="text-end fw-bold" style="color: #059669;">${effectiveShare}%</td>
                             <td class="text-center">
-                                <button class="btn btn-xs btn-outline-info" style="font-size: 0.75em; padding: 2px 8px;" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
-                                    <i class="fas fa-calculator"></i> Calc
+                                <button class="btn btn-sm btn-outline-info" style="font-size: 0.75em; padding: 3px 10px;" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
+                                    <i class="fas fa-calculator"></i>
                                 </button>
                             </td>
                         </tr>
                         <tr class="collapse" id="${detailId}">
-                            <td colspan="7" style="background: #f8f9fa; padding: 10px;">
+                            <td colspan="6" style="background: #f0f9ff; padding: 12px; border-left: 3px solid #3b82f6;">
                                 <div style="font-size: 0.85em;">
-                                    <strong>Direct Share:</strong> ${directShare}% | 
-                                    <strong>UBO Effect:</strong> ${effectiveShare}% | 
-                                    <strong>Paths:</strong> ${sh.entries.length}
-                                    <div class="mt-2">${detailItems || '<em>No path details</em>'}</div>
+                                    <div class="mb-2">
+                                        <strong>Direct Share:</strong> ${directShare}% | 
+                                        <strong>UBO Effect:</strong> ${effectiveShare}% | 
+                                        <strong>Number of Paths:</strong> ${sh.entries.length}
+                                    </div>
+                                    <div>${detailItems || '<em>No path details available</em>'}</div>
                                 </div>
                             </td>
                         </tr>
                     `;
-                    rowIndex++;
                 });
+                
+                tableBody.innerHTML = html;
             }
-            
-            tableBody.innerHTML = html || '<tr><td colspan="7" class="text-center text-muted">No shareholder data available</td></tr>';
         }
         
         function aggregateShareholders(shareholders) {
@@ -873,25 +953,27 @@
             }
             
             // Find companies with NO shareholders at all (API couldn't find data)
-            // These are typically level 1 or 2 companies (not level 0 main company)
+            // AND have effective shareholding >= 15%
             const investigationCompanies = [];
             
             Object.values(hierarchyData).forEach(company => {
                 const level = company.level || 0;
                 const shareholders = company.shareholders || [];
                 const companyType = company.type || 'company';
+                const effectivePercent = parseFloat(company.parent_percentage || 0);
                 
                 // Check if it's a company (not main) with ZERO shareholders
-                // This means API could not retrieve shareholder data for this company
+                // AND effective shareholding >= 15% (important enough to investigate)
                 if (level > 0 && level <= 2 && companyType !== 'personal') {
-                    // If NO shareholders at all, it's an investigation company
-                    if (shareholders.length === 0) {
+                    // If NO shareholders AND >= 15%, it's an investigation company
+                    if (shareholders.length === 0 && effectivePercent >= 15.0) {
                         investigationCompanies.push({
                             name: company.display_name || company.name_en || company.name_th || company.company_id,
                             company_id: company.company_id,
                             level: level,
                             total_shareholders: 0,
-                            personal_shareholders: 0
+                            personal_shareholders: 0,
+                            effective_percent: effectivePercent
                         });
                     }
                 }
@@ -909,21 +991,23 @@
             
             let html = '';
             investigationCompanies.forEach((company, index) => {
+                const effectivePercent = company.effective_percent || 0;
                 html += `
                     <div class="investigation-item">
                         <h6>
                             <i class="fas fa-building"></i> ${company.name}
                             <span class="badge bg-primary ms-2">Level ${company.level}</span>
+                            <span class="badge bg-warning ms-2">${effectivePercent.toFixed(2)}% Shareholding</span>
                         </h6>
                         <p class="mb-2 text-muted small">
                             <strong>Company ID:</strong> ${company.company_id || 'N/A'}
                         </p>
-                        <p class="mb-0 text-danger small fw-bold">
+                        <p class="mb-2 text-danger small fw-bold">
                             <i class="fas fa-exclamation-triangle"></i> No shareholder data available
                         </p>
                         <p class="mb-0 small" style="color: #1e40af;">
-                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> API could not retrieve shareholder data. 
-                            This may be a foreign company or institution. Manual verification required.
+                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> This company holds ≥15% but API could not retrieve shareholder data. 
+                            This may be a foreign company or institution. <strong>Manual verification required to identify UBO.</strong>
                         </p>
                     </div>
                 `;
@@ -1100,7 +1184,7 @@
             });
         }
         
-        function renderNetworkGraph(graphData) {
+        function renderNetworkGraph(graphData, hierarchyData) {
             const container = d3.select('#hierarchyTree');
             container.selectAll('*').remove();
             
@@ -1111,6 +1195,7 @@
             
             // Store graph data globally
             currentGraphData = graphData;
+            window.currentHierarchyData = hierarchyData;
             
             // Populate filter dropdowns
             populateFilterDropdowns(graphData);
@@ -1202,8 +1287,16 @@
             // Identify UBO nodes
             const uboNodeIds = new Set(graphData.nodes.filter(n => n.is_ubo).map(n => n.id));
             
-            // Identify investigation nodes (companies with NO shareholders at all - API couldn't find data)
+            // Identify investigation nodes (companies with NO shareholders AND >= 15% shareholding)
             const investigationNodeIds = new Set();
+            
+            // First, calculate effective percentage for each node from hierarchy data
+            const nodeEffectivePercent = new Map();
+            Object.entries(hierarchyData).forEach(([compId, compData]) => {
+                const effectivePercent = parseFloat(compData.parent_percentage || 0);
+                nodeEffectivePercent.set(compId, effectivePercent);
+            });
+            
             graphData.nodes.forEach(node => {
                 if (node.type === 'company' && node.level > 0 && node.level <= 2) {
                     // Check if this node has ANY outgoing edges at all (to anyone - company or individual)
@@ -1212,8 +1305,12 @@
                         return sourceId === node.id;
                     });
                     
-                    // If NO children at all, it means API couldn't find shareholder data
-                    if (!hasAnyChildren) {
+                    // Get effective percentage from hierarchy or node data
+                    const effectivePercent = nodeEffectivePercent.get(node.id) || 
+                                           nodeEffectivePercent.get(node.regis_id) || 0;
+                    
+                    // If NO children AND >= 15%, it means API couldn't find shareholder data for important company
+                    if (!hasAnyChildren && effectivePercent >= 15.0) {
                         investigationNodeIds.add(node.id);
                     }
                 }

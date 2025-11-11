@@ -10,7 +10,7 @@ When user selected an entity (e.g., "YUKI YAMAMOTO") from dropdown, the highligh
 
 ---
 
-เระ## ✅ Solution: Enhanced Highlighting Visibility
+## ✅ Solution: Enhanced Highlighting Visibility
 
 ### Changes Made:
 
