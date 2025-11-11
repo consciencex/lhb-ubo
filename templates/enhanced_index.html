@@ -426,30 +426,34 @@
                     </div>
                     <div class="level-content" style="padding: 15px 20px;">
                         <!-- Compact Filter Row -->
-                        <div class="d-flex align-items-center gap-2 mb-2" style="flex-wrap: nowrap;">
-                            <div style="flex: 0 0 auto; max-width: 28%;">
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text" style="padding: 0.25rem 0.4rem;"><i class="fas fa-user" style="font-size: 0.8em;"></i></span>
-                                    <select id="individualFilter" class="form-select form-select-sm" style="width: 100%; font-size: 0.8em;">
-                                        <option value="">-- All Individuals --</option>
-                                    </select>
-                                    <button class="btn btn-sm btn-outline-secondary" style="padding: 0.25rem 0.4rem;" type="button" onclick="clearIndividualFilter()" title="Clear filter">
-                                        <i class="fas fa-times" style="font-size: 0.75em;"></i>
-                                    </button>
-                                </div>
+                        <div class="row align-items-center mb-2 g-2">
+                            <div class="col-auto">
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i class="fas fa-user"></i></label>
                             </div>
-                            <div style="flex: 0 0 auto; max-width: 28%;">
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-text" style="padding: 0.25rem 0.4rem;"><i class="fas fa-building" style="font-size: 0.8em;"></i></span>
-                                    <select id="companyFilter" class="form-select form-select-sm" style="width: 100%; font-size: 0.8em;">
-                                        <option value="">-- All Companies --</option>
-                                    </select>
-                                    <button class="btn btn-sm btn-outline-secondary" style="padding: 0.25rem 0.4rem;" type="button" onclick="clearCompanyFilter()" title="Clear filter">
-                                        <i class="fas fa-times" style="font-size: 0.75em;"></i>
-                                    </button>
-                                </div>
+                            <div class="col" style="max-width: 240px;">
+                                <select id="individualFilter" class="form-select form-select-sm" style="font-size: 0.85em;">
+                                    <option value="">-- All Individuals --</option>
+                                </select>
                             </div>
-                            <div style="flex: 1 1 auto; text-align: right; min-width: 0;">
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i class="fas fa-building"></i></label>
+                            </div>
+                            <div class="col" style="max-width: 240px;">
+                                <select id="companyFilter" class="form-select form-select-sm" style="font-size: 0.85em;">
+                                    <option value="">-- All Companies --</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()" title="Clear">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="col text-end">
                                 <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector" style="flex-wrap: wrap;">
                                     <!-- Level buttons will be added dynamically (up to 9 buttons) -->
                                 </div>
