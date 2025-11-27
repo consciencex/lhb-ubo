@@ -1,0 +1,493 @@
+/* Shadcn UI Inspired Component Library for LH Bank UBO System */
+/* Clean, minimal, banking-appropriate design */
+
+:root {
+    /* Primary Colors - Professional Blues for Banking */
+    --primary: 214 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary Colors - Muted Blues */
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 214 32% 20%;
+    
+    /* Accent - Trustworthy Blue */
+    --accent: 214 95% 93%;
+    --accent-foreground: 214 95% 20%;
+    
+    /* Neutral Palette */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    
+    /* Muted Backgrounds */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    /* Border Colors */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 214 100% 50%;
+    
+    /* Card Styling */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    
+    /* Destructive/Warning */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Success */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    
+    /* Radius */
+    --radius: 0.5rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Base Typography */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    line-height: 1.6;
+}
+
+/* Button Component */
+.btn-shadcn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-shadcn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+}
+
+.btn-shadcn:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Button Variants */
+.btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: hsl(214 100% 45%);
+    box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+}
+
+.btn-secondary:hover {
+    background: hsl(214 32% 85%);
+}
+
+.btn-outline {
+    border: 1px solid hsl(var(--input));
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+}
+
+.btn-outline:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+}
+
+.btn-ghost {
+    background: transparent;
+    color: hsl(var(--foreground));
+}
+
+.btn-ghost:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+}
+
+.btn-destructive {
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
+}
+
+.btn-destructive:hover {
+    background: hsl(0 84% 55%);
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+}
+
+/* Card Component */
+.card-shadcn {
+    background: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border-radius: calc(var(--radius) + 4px);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card-shadcn:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid hsl(var(--border));
+    background: hsl(var(--muted) / 0.3);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin: 0;
+}
+
+.card-description {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+    margin-top: 0.25rem;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-footer {
+    padding: 1.5rem;
+    border-top: 1px solid hsl(var(--border));
+    background: hsl(var(--muted) / 0.3);
+}
+
+/* Input Component */
+.input-shadcn {
+    display: flex;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--input));
+    background: hsl(var(--background));
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    color: hsl(var(--foreground));
+}
+
+.input-shadcn:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
+}
+
+.input-shadcn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.input-shadcn::placeholder {
+    color: hsl(var(--muted-foreground));
+}
+
+/* Select Component */
+.select-shadcn {
+    display: flex;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--input));
+    background: hsl(var(--background));
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    color: hsl(var(--foreground));
+    cursor: pointer;
+}
+
+.select-shadcn:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
+}
+
+/* Badge Component */
+.badge-shadcn {
+    display: inline-flex;
+    align-items: center;
+    border-radius: calc(var(--radius) - 2px);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.badge-default {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+}
+
+.badge-secondary {
+    background: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+}
+
+.badge-outline {
+    border: 1px solid hsl(var(--border));
+    background: transparent;
+    color: hsl(var(--foreground));
+}
+
+.badge-success {
+    background: hsl(var(--success));
+    color: hsl(var(--success-foreground));
+}
+
+.badge-destructive {
+    background: hsl(var(--destructive));
+    color: hsl(var(--destructive-foreground));
+}
+
+/* Table Component */
+.table-shadcn {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.table-shadcn thead {
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.table-shadcn th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    background: hsl(var(--muted) / 0.5);
+}
+
+.table-shadcn td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid hsl(var(--border));
+}
+
+.table-shadcn tbody tr {
+    transition: background 0.2s ease;
+}
+
+.table-shadcn tbody tr:hover {
+    background: hsl(var(--muted) / 0.5);
+}
+
+/* Alert Component */
+.alert-shadcn {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    margin-bottom: 1rem;
+}
+
+.alert-info {
+    background: hsl(214 95% 96%);
+    border-color: hsl(214 95% 85%);
+    color: hsl(214 95% 20%);
+}
+
+.alert-destructive {
+    background: hsl(0 84% 96%);
+    border-color: hsl(0 84% 85%);
+    color: hsl(0 84% 30%);
+}
+
+.alert-success {
+    background: hsl(142 71% 96%);
+    border-color: hsl(142 71% 85%);
+    color: hsl(142 71% 20%);
+}
+
+/* Progress Component */
+.progress-shadcn {
+    width: 100%;
+    height: 0.5rem;
+    background: hsl(var(--secondary));
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: hsl(var(--primary));
+    transition: width 0.3s ease;
+}
+
+/* Separator */
+.separator-shadcn {
+    height: 1px;
+    background: hsl(var(--border));
+    margin: 1.5rem 0;
+}
+
+/* Loading Spinner */
+.spinner-shadcn {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid hsl(var(--secondary));
+    border-top-color: hsl(var(--primary));
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Container */
+.container-shadcn {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Stat Card */
+.stat-card-shadcn {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: hsl(var(--primary));
+}
+
+/* Utility Classes */
+.text-muted {
+    color: hsl(var(--muted-foreground));
+}
+
+.text-primary {
+    color: hsl(var(--primary));
+}
+
+.text-destructive {
+    color: hsl(var(--destructive));
+}
+
+.text-success {
+    color: hsl(var(--success));
+}
+
+.bg-muted {
+    background: hsl(var(--muted));
+}
+
+.shadow-sm {
+    box-shadow: var(--shadow-sm);
+}
+
+.shadow {
+    box-shadow: var(--shadow);
+}
+
+.shadow-md {
+    box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+    box-shadow: var(--shadow-lg);
+}
+
+.rounded {
+    border-radius: var(--radius);
+}
+
+.rounded-lg {
+    border-radius: calc(var(--radius) + 4px);
+}
+
+/* Language Selector */
+.language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.language-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(var(--foreground));
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.language-btn:hover {
+    background: hsl(var(--accent));
+    box-shadow: var(--shadow);
+}
+
+.language-btn:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container-shadcn {
+        padding: 1rem 0.5rem;
+    }
+    
+    .card-header,
+    .card-content,
+    .card-footer {
+        padding: 1rem;
+    }
+    
+    .language-selector {
+        top: 10px;
+        right: 10px;
+    }
+}
