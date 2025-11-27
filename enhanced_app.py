@@ -125,54 +125,115 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
     return unique_names
 
 
+def normalize_thai_name(name: str) -> str:
+    """Normalize Thai name for comparison by removing title and extra spaces."""
+    if not name:
+        return ''
+    # Remove common Thai titles
+    titles = ['นาย', 'นาง', 'นางสาว', 'ดร.', 'ศ.', 'รศ.', 'ผศ.', 'Mr.', 'Mrs.', 'Ms.', 'Miss']
+    normalized = name.strip()
+    for title in titles:
+        if normalized.startswith(title):
+            normalized = normalized[len(title):].strip()
+            break
+    return normalized.strip()
+
+
 def build_directors_signatories_table(directors: List[Dict], signatory_names: List[str]) -> List[Dict]:
     """Build a combined table of directors and signatories with role classification.
     
+    Properly combines title+firstname+lastname for directors to match with signatory names.
     Returns list of dicts with: name, is_signatory, is_director
     """
-    # Build director names list
-    director_names = []
+    # Build director names with proper title+firstname+lastname format
+    director_entries = []
     for d in directors:
         title = d.get('title', '').strip()
         firstname = d.get('firstname', '').strip()
         lastname = d.get('lastname', '').strip()
-        full_name = f"{title}{firstname} {lastname}".strip()
+        
+        # Build full name with space after title: "นาย พิชัย จิราธิวัฒน์" -> "นายพิชัย จิราธิวัฒน์"
+        if title and firstname:
+            full_name = f"{title}{firstname} {lastname}".strip()
+        elif firstname and lastname:
+            full_name = f"{firstname} {lastname}".strip()
+        elif firstname:
+            full_name = firstname
+        else:
+            continue
+            
         if full_name:
-            director_names.append(full_name)
+            director_entries.append({
+                'full_name': full_name,
+                'normalized': normalize_thai_name(full_name),
+                'firstname': firstname,
+                'lastname': lastname
+            })
     
-    # Create combined list with role flags
-    combined = {}
-    
-    # Add signatories
+    # Normalize signatory names for matching
+    signatory_entries = []
     for name in signatory_names:
-        if name not in combined:
-            combined[name] = {'name': name, 'is_signatory': True, 'is_director': False}
-        else:
-            combined[name]['is_signatory'] = True
+        signatory_entries.append({
+            'full_name': name,
+            'normalized': normalize_thai_name(name)
+        })
     
-    # Add directors
-    for name in director_names:
-        if name not in combined:
-            combined[name] = {'name': name, 'is_signatory': False, 'is_director': True}
-        else:
-            combined[name]['is_director'] = True
+    # Create combined list - use normalized names for matching
+    combined = {}
+    matched_directors = set()
     
-    # Try to match similar names (for production API where names might be slightly different)
-    # Simple matching: check if firstname matches
-    for sig_name in signatory_names:
-        sig_parts = sig_name.split()
-        if len(sig_parts) >= 2:
-            sig_firstname = sig_parts[1] if sig_parts[0] in ['นาย', 'นาง', 'นางสาว'] else sig_parts[0]
-            for dir_name in director_names:
-                dir_parts = dir_name.split()
-                if len(dir_parts) >= 2:
-                    dir_firstname = dir_parts[0].replace('นาย', '').replace('นาง', '').replace('นางสาว', '') or dir_parts[1]
-                    if sig_firstname == dir_firstname:
-                        # Found match - update the signatory entry to also be director
-                        if sig_name in combined:
-                            combined[sig_name]['is_director'] = True
+    # First, add signatories and try to match with directors
+    for sig in signatory_entries:
+        sig_name = sig['full_name']
+        sig_normalized = sig['normalized']
+        
+        # Check for matching director
+        is_director = False
+        for i, dir_entry in enumerate(director_entries):
+            if i in matched_directors:
+                continue
+            
+            # Match by normalized name (without title)
+            if sig_normalized == dir_entry['normalized']:
+                is_director = True
+                matched_directors.add(i)
+                break
+            
+            # Match by firstname + lastname
+            sig_parts = sig_normalized.split()
+            if len(sig_parts) >= 2:
+                sig_firstname = sig_parts[0]
+                sig_lastname = sig_parts[-1]
+                if (sig_firstname == dir_entry['firstname'] and sig_lastname == dir_entry['lastname']):
+                    is_director = True
+                    matched_directors.add(i)
+                    break
+                # Also try matching just firstname (for cases with middle names)
+                if sig_firstname == dir_entry['firstname'] or sig_lastname == dir_entry['lastname']:
+                    # Check if at least one more part matches
+                    if dir_entry['firstname'] in sig_normalized or dir_entry['lastname'] in sig_normalized:
+                        is_director = True
+                        matched_directors.add(i)
+                        break
+        
+        combined[sig_name] = {
+            'name': sig_name,
+            'is_signatory': True,
+            'is_director': is_director
+        }
     
-    # Convert to list and sort
+    # Add remaining directors that weren't matched
+    for i, dir_entry in enumerate(director_entries):
+        if i not in matched_directors:
+            dir_name = dir_entry['full_name']
+            if dir_name not in combined:
+                combined[dir_name] = {
+                    'name': dir_name,
+                    'is_signatory': False,
+                    'is_director': True
+                }
+    
+    # Convert to list and sort: signatories first, then directors, alphabetically
     result = list(combined.values())
     result.sort(key=lambda x: (-x['is_signatory'], -x['is_director'], x['name']))
     
