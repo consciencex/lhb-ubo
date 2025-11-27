@@ -363,6 +363,11 @@ def initialize_ubo_system():
         logger.error(f"Failed to initialize UBO System: {e}")
         return False
 
+@app.route('/favicon.ico')
+def favicon():
+    """Serve favicon"""
+    return send_file(os.path.join(app.root_path, 'static', 'icon', 'LHB_Logo.png'), mimetype='image/png')
+
 @app.route('/')
 def index():
     """Main page"""
