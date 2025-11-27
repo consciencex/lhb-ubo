@@ -1,382 +1,180 @@
 # 🏦 LH Bank UBO Analysis System
 
-ระบบวิเคราะห์ผู้ได้รับผลประโยชน์ที่แท้จริง (Ultimate Beneficial Owner) ตามเอกสาร **NC958 PRO05-2568** ของธนาคารแห่งประเทศไทย
+ระบบวิเคราะห์ Ultimate Beneficial Owner (UBO) สำหรับธนาคารแลนด์ แอนด์ เฮ้าส์
 
 ---
 
-## ✨ คุณสมบัติหลัก
+## 🚀 Quick Start (Docker - แนะนำ)
 
-- 🔍 **3-Tier Analysis** - ตรวจสอบการถือหุ้น 3 ทอด (Level 1-3)
-- 📊 **15% Threshold** - เกณฑ์ UBO ตาม NC958 PRO05-2568
-- 🧮 **Effective Ownership Calculation** - คำนวณการถือหุ้นทางอ้อม (indirect)
-- 🌐 **Web Interface** - UI สวยงามใช้งานง่าย
-- 📈 **Interactive Tree Diagram** - แผนภูมิโครงสร้างการถือหุ้นแบบ interactive (D3.js)
-- 🚀 **Vercel Deployment** - Deploy ready สำหรับ Vercel Pro
+### ความต้องการ
+- Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
+- เครื่องต้องอยู่ใน **VPN Network** ที่เข้าถึง API ได้
 
----
-
-## 📁 โครงสร้างโปรเจค
-
-```
-UBO/
-├── final_ubo_system.py      # Core UBO analysis logic
-├── enhanced_app.py           # Main Flask application
-├── vercel_app.py             # Vercel entry point (Flask app)
-├── templates/
-│   └── enhanced_index.html   # Frontend UI
-├── requirements.txt          # Python dependencies
-├── vercel.json               # Vercel configuration
-├── .gitignore                # Git ignore rules
-├── README.md                 # Documentation (this file)
-└── [Reference Files]
-    └── Enlite BOL API.postman_collection.json
-```
-
----
-
-## 🚀 Quick Start
-
-### Local Development
+### 4 ขั้นตอน
 
 ```bash
 # 1. Clone repository
 git clone https://github.com/consciencex/lhb-ubo.git
 cd lhb-ubo
 
-# 2. Install dependencies
-pip3 install -r requirements.txt
+# 2. สร้างไฟล์ .env (ใส่ API Key)
+cp env.example .env
 
-# 3. (Optional) Set environment variables for custom API settings
-export ENLITE_API_KEY="your-api-key-here"
-export ENLITE_API_URL="https://xignal-uat.bol.co.th"
-export ENLITE_API_TIMEOUT="60"
+# 3. แก้ไข .env ใส่ API Key จริง
+notepad .env   # Windows
+nano .env      # Mac/Linux
 
-# 4. Run application
-python3 enhanced_app.py
-
-# 5. Open browser
-# http://localhost:4444
+# 4. Start container
+docker-compose up -d
 ```
 
-**หมายเหตุ:** สำหรับ local development, default values จะถูกใช้ถ้าไม่ตั้งค่า environment variables
-
-### Vercel Deployment
-
-1. **Push to GitHub** (if not already)
-   ```bash
-   git add .
-   git commit -m "Your message"
-   git push origin main
-   ```
-
-2. **Deploy to Vercel**
-   - ไปที่ [vercel.com](https://vercel.com)
-   - Import project จาก GitHub
-   - Vercel จะ auto-detect configuration
-   - คลิก "Deploy"
-
-3. **Production URL**
-   - `https://lhb-ubo.vercel.app` (หรือตามชื่อ project)
-
----
-
-## 🔧 Configuration
-
-### Vercel Settings
-
-**Project Name:** `lhb-ubo`  
-**Framework Preset:** `Flask` หรือ `Other`  
-**Root Directory:** `./`  
-**Install Command:** `pip install -r requirements.txt`  
-**Build Command:** (empty)  
-**Output Directory:** (empty)
-
-### Environment Variables (Required)
-
-ตั้งค่า Environment Variables ใน Vercel Dashboard:
-
-#### ขั้นตอนการตั้งค่า:
-
-1. **ไปที่ Vercel Dashboard**
-   - Login: [https://vercel.com](https://vercel.com)
-   - เลือก Project: `lhb-ubo`
-
-2. **ไปที่ Settings → Environment Variables**
-   - คลิกแท็บ **"Settings"**
-   - คลิก **"Environment Variables"** ในเมนูด้านซ้าย
-
-3. **เพิ่ม Variables:**
-   - คลิก **"Add New"**
-   - เพิ่ม variables ตามตารางด้านล่าง
-   - เลือก Environment: **Production** ✅ (และ Preview, Development ถ้าต้องการ)
-   - คลิก **"Save"**
-
-#### Variables ที่ต้องตั้งค่า:
-
-| Variable | Value | Environment | Required |
-|----------|-------|-------------|----------|
-| `ENLITE_API_KEY` | `HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV` | ✅ Production<br>✅ Preview | ✅ **Yes** |
-| `ENLITE_API_URL` | `https://xignal-uat.bol.co.th` | ✅ Production<br>✅ Preview | Optional |
-| `ENLITE_API_TIMEOUT` | `60` | ✅ Production<br>✅ Preview | Optional |
-
-#### หลังตั้งค่า:
-
-- ✅ **Redeploy** deployment ปัจจุบัน
-- หรือรอ auto-deploy จาก commit ใหม่
-
-**ดูคู่มือละเอียด:** `VERCEL_ENV_SETUP.md`
-
----
-
-## 📊 การใช้งาน
-
-### 1. วิเคราะห์บริษัท
-
-1. เปิด Web Interface
-2. ใส่ **Company Registration ID** (เช่น: `0107548000234`)
-3. คลิก **"Analyze UBO"**
-4. ดูผลการวิเคราะห์:
-   - Company Information
-   - Summary Statistics
-   - UBO Analysis Results
-   - Shareholding Structure (Tree Diagram)
-   - Shareholder Details by Level
-
-### 2. UBO Calculation
-
-ระบบจะคำนวณ:
-- **Direct Shareholding** - การถือหุ้นโดยตรง
-- **Effective Ownership** - การถือหุ้นทางอ้อม (ผ่านหลายทอด)
-- **UBO Threshold** - ≥15% ตาม NC958 PRO05-2568
-
-**ตัวอย่าง:** `70.00% × 50.00% × 20.00% ⇒ 7.0000%`
-
----
-
-## 🔍 UBO Analysis Logic
-
-### Algorithm (3-Tier Shareholding Analysis)
-
-**Queue-based BFS traversal for 3 tiers of shareholders:**
-
-1. **Tier 1 (Level 1)** - ตรวจสอบผู้ถือหุ้นโดยตรง (Level 1) ของบริษัทหลัก (Level 0)
-   - เรียก API: `levelHeldBy level="1"` ของบริษัทหลัก
-   - เก็บ personal shareholders ใน UBO candidates
-   - เก็บ corporate shareholders ไว้ประมวลผลต่อ
-
-2. **Tier 2 (Level 2)** - ตรวจสอบผู้ถือหุ้นโดยตรง (Level 1) ของ **ทุกบริษัท** ที่พบใน Tier 1
-   - สำหรับแต่ละ corporate shareholder จาก Tier 1
-   - เรียก API: `levelHeldBy level="1"` ของบริษัทนั้นๆ
-   - เก็บ personal shareholders ใน UBO candidates (คำนวน effective % จาก chain)
-   - เก็บ corporate shareholders ไว้ประมวลผลต่อ
-
-3. **Tier 3 (Level 3)** - ตรวจสอบผู้ถือหุ้นโดยตรง (Level 1) ของ **ทุกบริษัท** ที่พบใน Tier 2
-   - สำหรับแต่ละ corporate shareholder จาก Tier 2
-   - เรียก API: `levelHeldBy level="1"` ของบริษัทนั้นๆ
-   - เก็บ personal shareholders ใน UBO candidates (คำนวน effective % จาก chain)
-   - หยุดการวนซ้ำที่ Tier 3 (ไม่ไปต่อที่ Tier 4)
-
-**หมายเหตุ:** 
-- ระบบจะวนซ้ำหา Level 1 shareholders เป็นทอดๆ จนครบ 3 ทอด
-- แต่ละทอดจะคำนวน effective ownership % = ผลคูณของ % ตลอด chain
-- UBO = บุคคลธรรมดา (personal) ที่มี effective ownership >= 15%
-
-### UBO Identification
-
-- ✅ **Yes UBO** - Effective ownership ≥15%
-- ❌ **No UBO** - Effective ownership <15%
-
-### Calculation Path
-
-ระบบจะแสดง calculation path สำหรับแต่ละ shareholder:
+### เปิดใช้งาน
 ```
-Path 1: Company A (70%) → Company B (50%) → Person C (20%) = 70% × 50% × 20% ⇒ 7.00%
+http://localhost:4444
 ```
 
 ---
 
-## 📈 Features
+## 📝 ตั้งค่า API Key
 
-### Frontend
+แก้ไขไฟล์ `.env`:
 
-- **Responsive Design** - ใช้งานได้ทุกอุปกรณ์
-- **Interactive Tree** - D3.js hierarchical tree visualization
-- **Collapsible Sections** - Level 1, 2, 3 shareholder lists
-- **UBO Calculation Details** - แสดงรายละเอียดการคำนวณ
-- **English Output** - ทุก output เป็นภาษาอังกฤษ (ไม่มี encoding issues)
+```env
+ENLITE_API_KEY=your_api_key_here
+ENLITE_API_URL=https://enlite.lhb.co.th
+ENLITE_API_TIMEOUT=60
+```
 
-### Backend
-
-- **Queue-based Processing** - ประมวลผลแบบ queue สำหรับ 3 levels
-- **Circular Reference Detection** - ป้องกัน infinite loops
-- **Error Handling** - จัดการ connection errors, timeouts
-- **Data Sanitization** - ทำความสะอาดข้อมูล non-ASCII
-- **API Caching** - Cache API responses เพื่อลด latency
+> ⚠️ **สำคัญ:** ไฟล์ `.env` จะไม่ถูก commit เข้า git (เพื่อความปลอดภัย)
 
 ---
 
-## 🛠️ Technical Stack
+## 🖥️ วิธี Deploy อื่นๆ
 
-- **Backend:** Python 3.9+, Flask
-- **Frontend:** HTML5, Bootstrap 5, D3.js v7
-- **API:** Enlite SOAP API (BOL)
-- **Deployment:** Vercel (Pro tier)
-- **Language:** Python, JavaScript
+### Option 2: Python โดยตรง (ไม่ใช้ Docker)
+
+```bash
+# 1. Clone
+git clone https://github.com/consciencex/lhb-ubo.git
+cd lhb-ubo
+
+# 2. ติดตั้ง dependencies
+pip install -r requirements.txt
+
+# 3. สร้าง .env
+cp env.example .env
+notepad .env  # ใส่ API Key
+
+# 4. Run
+python enhanced_app.py
+```
+
+### Option 3: Windows (Double-click)
+
+1. ดาวน์โหลด ZIP จาก GitHub
+2. แตกไฟล์
+3. สร้างไฟล์ `.env` จาก `env.example`
+4. Double-click `install_windows.bat` (ติดตั้ง)
+5. Double-click `start_server.bat` (รัน)
 
 ---
 
-## ⚙️ Vercel Pro Configuration
+## 📁 โครงสร้าง Project
 
-```json
-{
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 60,
-      "memory": 3008
-    },
-    "vercel_app.py": {
-      "maxDuration": 60,
-      "memory": 3008
-    }
-  },
-  "regions": ["sin1"]
-}
 ```
-
-**Features:**
-- ⏱️ 60 seconds timeout (แทน 10 วินาที)
-- 💾 3008 MB memory (แทน 1024 MB)
-- 🌏 Singapore region (`sin1`) - Latency ต่ำสำหรับไทย
-
----
-
-## 📝 API Endpoints
-
-### `POST /api/analyze`
-
-วิเคราะห์บริษัท UBO
-
-**Request:**
-```json
-{
-  "registration_id": "0107548000234"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "company_info": {...},
-    "hierarchy_data": {...},
-    "ubos": [...],
-    "tree_structure": {...}
-  }
-}
-```
-
-### `GET /api/status`
-
-ตรวจสอบสถานะระบบ
-
-**Response:**
-```json
-{
-  "status": "running",
-  "ubo_system_initialized": true,
-  "timestamp": "2025-10-30 21:00:00"
-}
+lhb-ubo/
+├── app.py                  # Vercel entrypoint
+├── enhanced_app.py         # Main Flask application
+├── final_ubo_system.py     # Core UBO analysis logic
+├── mock_data_generator.py  # Mock data for testing
+├── templates/
+│   └── enhanced_index.html # Frontend UI
+├── static/
+│   ├── css/               # Stylesheets
+│   ├── icon/              # Logo
+│   └── locales/           # i18n (TH/EN)
+├── docs/                  # Documentation
+├── env.example            # Environment template
+├── Dockerfile             # Docker image
+├── docker-compose.yml     # Docker compose
+├── requirements.txt       # Python dependencies
+└── vercel.json           # Vercel config
 ```
 
 ---
 
-## 🔧 Development
+## 🔧 คำสั่งที่ใช้บ่อย
 
-### Project Structure
-
-```
-final_ubo_system.py    # Core analysis logic
-├── FinalEnliteAPIClient     # API client
-├── analyze_company_ubo()   # Main analysis function
-└── UBOAnalysisResult        # Result dataclass
-
-enhanced_app.py        # Flask application
-├── /api/analyze       # Analysis endpoint
-├── /api/status        # Status endpoint
-└── /                  # Home page (serves template)
-
-vercel_app.py         # Vercel entry point
-api/index.py          # API serverless function
+### Docker
+```bash
+docker-compose up -d      # Start
+docker-compose down       # Stop
+docker-compose logs -f    # View logs
+docker-compose restart    # Restart
+docker-compose up -d --build  # Rebuild
 ```
 
-### Key Functions
+### ตรวจสอบ
+```bash
+# Health check
+curl http://localhost:4444/api/status
 
-#### `analyze_company_ubo(registration_id: str) -> UBOAnalysisResult`
-- วิเคราะห์ UBO สำหรับบริษัทที่ระบุ
-- Returns: UBOAnalysisResult with hierarchy, UBOs, risk level
-
-#### `build_tree_structure(root_id, hierarchy, ubo_names) -> Dict`
-- สร้าง tree structure สำหรับ D3.js visualization
-- Returns: Nested dictionary สำหรับ rendering
+# ดู container
+docker ps
+```
 
 ---
 
-## ⚠️ Troubleshooting
+## 🌐 Network Requirements
 
-### Connection Error
+ระบบต้องสามารถเข้าถึง:
+- `https://enlite.lhb.co.th` (Production API)
 
-**ปัญหา:** API connection failed  
-**แก้ไข:**
-- ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต
-- ตรวจสอบ VPN (ถ้ามี)
-- API อาจตอบช้า (timeout 60 วินาที)
-
-### Deployment Error
-
-**ปัญหา:** Vercel deployment failed  
-**แก้ไข:**
-- ตรวจสอบ `vercel.json` ไม่มี syntax error
-- ตรวจสอบ `requirements.txt` ครบถ้วน
-- ตรวจสอบ build logs ใน Vercel Dashboard
-
-### Function Timeout
-
-**ปัญหา:** Function timeout on Vercel  
-**แก้ไข:**
-- ตรวจสอบว่า `maxDuration: 60` ใน `vercel.json`
-- Vercel Pro tier รองรับถึง 60 วินาที ✅
+> หากไม่สามารถเข้าถึง API ได้ ตรวจสอบว่าเครื่องอยู่ใน VPN Network
 
 ---
 
-## 📚 Reference Documents
+## 📖 เอกสารเพิ่มเติม
 
-- **NC958 PRO05-2568** - กระบวนการปฏิบัติงาน การระบุผู้ได้รับผลประโยชน์ที่แท้จริง UBO
-- **Enlite BOL API** - API documentation (Postman collection)
+| เอกสาร | คำอธิบาย |
+|--------|---------|
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | คู่มือ Deploy ละเอียด |
+| [docs/DOCKER_DEPLOY.md](docs/DOCKER_DEPLOY.md) | Docker deployment guide |
+| [docs/README_DEPLOY.md](docs/README_DEPLOY.md) | Windows deployment guide |
+| [docs/ALGORITHM_CONFIRMATION.md](docs/ALGORITHM_CONFIRMATION.md) | UBO calculation algorithm |
+
+---
+
+## ❓ Troubleshooting
+
+### "ENLITE_API_KEY not set"
+```bash
+# ตรวจสอบว่ามีไฟล์ .env
+cat .env
+
+# ถ้าไม่มี ให้สร้างใหม่
+cp env.example .env
+# แล้วแก้ไขใส่ API Key
+```
+
+### "Connection refused" หรือ API ไม่ตอบ
+- ตรวจสอบว่าเชื่อมต่อ VPN แล้ว
+- ทดสอบ: `ping enlite.lhb.co.th`
+
+### Docker ไม่ start
+```bash
+docker-compose logs  # ดู error
+docker-compose down --rmi all  # ลบแล้วสร้างใหม่
+docker-compose up -d --build
+```
 
 ---
 
 ## 📞 Support
 
-สำหรับคำถามหรือการสนับสนุน:
-- GitHub Issues: https://github.com/consciencex/lhb-ubo/issues
-- Repository: https://github.com/consciencex/lhb-ubo
+หากพบปัญหา ติดต่อทีมพัฒนา
 
 ---
 
-## 📄 License
-
-Internal use - LH Bank
-
----
-
-## 🎉 Status
-
-✅ **Production Ready**  
-✅ **Vercel Deployed**  
-✅ **Documentation Complete**  
-✅ **Code Optimized**
-
----
-
-**ระบบพร้อมใช้งาน! 🚀**
+**Version:** 2.0.0  
+**Last Updated:** November 2025
