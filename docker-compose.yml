@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  ubo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lhb-ubo-system
+    ports:
+      - "4444:4444"
+    environment:
+      - ENLITE_API_KEY=fVldOOnGL48NHuUYclP5kLKtZXoCZOr49DFtDqR5vLleuQJ1wQdMyLpY8P7g2ZtQ
+      - ENLITE_API_URL=https://enlite.lhb.co.th
+      - ENLITE_API_TIMEOUT=60
+      - FLASK_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:4444/api/status', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - ubo-network
+
+networks:
+  ubo-network:
+    driver: bridge
+
