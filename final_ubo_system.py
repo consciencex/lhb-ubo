@@ -565,9 +565,15 @@ class FinalUBOAnalyzer:
             return 'HIGH', 'NON_COMPLIANT'
 
 # Global instances - Load from environment variables
-# Production API
-ENLITE_API_KEY = os.getenv('ENLITE_API_KEY', 'fVldOOnGL48NHuUYclP5kLKtZXoCZOr49DFtDqR5vLleuQJ1wQdMyLpY8P7g2ZtQ')
+# SECURITY: API keys must be set via environment variables or .env file
+# Never hardcode API keys in source code!
+ENLITE_API_KEY = os.getenv('ENLITE_API_KEY')
 ENLITE_API_URL = os.getenv('ENLITE_API_URL', 'https://enlite.lhb.co.th')
+
+# Validate required environment variables
+if not ENLITE_API_KEY:
+    import logging
+    logging.warning("ENLITE_API_KEY not set! API calls will fail. Set it in .env file or environment variables.")
 ENLITE_API_TIMEOUT = int(os.getenv('ENLITE_API_TIMEOUT', '60'))
 
 api_client = FinalEnliteAPIClient(ENLITE_API_KEY, ENLITE_API_URL)

@@ -1,55 +1,133 @@
-# 🚀 Deployment Guide - Vercel
+# 🚀 Deployment Guide
 
-## ✅ Quick Start
+## 🔐 Security First!
 
-### Deploy บน Vercel:
-1. Push code to GitHub
-2. Import project ที่ https://vercel.com
-3. Set Environment Variables (ดูด้านล่าง)
-4. Deploy!
+**⚠️ NEVER commit API keys to git!**
+
+All sensitive data must be stored in:
+- `.env` file (local development)
+- Environment Variables (production)
 
 ---
 
-## 🔐 Environment Variables
+## 📋 Environment Variables Required
 
-ตั้งค่าใน Vercel Dashboard → Settings → Environment Variables:
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ENLITE_API_KEY` | API key for Enlite service | `your_api_key_here` |
+| `ENLITE_API_URL` | API endpoint URL | `https://enlite.lhb.co.th` |
+| `ENLITE_API_TIMEOUT` | Request timeout (seconds) | `60` |
 
+---
+
+## 🐳 Option 1: Docker Deployment (Recommended)
+
+### Step 1: Clone repository
+```bash
+git clone https://github.com/consciencex/lhb-ubo.git
+cd lhb-ubo
 ```
-ENLITE_API_KEY = HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV
-ENLITE_API_URL = https://xignal-uat.bol.co.th
-ENLITE_API_TIMEOUT = 60
+
+### Step 2: Create .env file
+```bash
+cp env.example .env
+# Edit .env and add your API key
+nano .env
 ```
 
-เลือก Environments: ✅ Production ✅ Preview ✅ Development
+**.env content:**
+```
+ENLITE_API_KEY=your_actual_api_key_here
+ENLITE_API_URL=https://enlite.lhb.co.th
+ENLITE_API_TIMEOUT=60
+```
+
+### Step 3: Start container
+```bash
+docker-compose up -d
+```
+
+### Step 4: Access
+```
+http://localhost:4444
+```
 
 ---
 
-## 📋 Features
+## 🖥️ Option 2: Direct Python (Windows/Linux)
 
-- ✅ Core UBO Analysis (3-tier hierarchy)
-- ✅ D3.js Interactive Tree Visualization
-- ✅ JSON Export
-- ✅ CSV Export (Excel-compatible)
-- ✅ Real-time API Integration
-- ✅ English Output (no garbled text)
+### Step 1: Clone & Install
+```bash
+git clone https://github.com/consciencex/lhb-ubo.git
+cd lhb-ubo
+pip install -r requirements.txt
+```
+
+### Step 2: Create .env file
+```bash
+cp env.example .env
+# Edit .env and add your API key
+```
+
+### Step 3: Run
+```bash
+python enhanced_app.py
+```
 
 ---
 
-## 🛠️ Tech Stack
+## ☁️ Option 3: Vercel Deployment
 
-**Backend:**
-- Flask 2.3+
-- Python 3.10+
-- Requests, lxml
+### Step 1: Import project
+1. Go to https://vercel.com
+2. Import GitHub repository
 
-**Frontend:**
-- D3.js (tree visualization)
-- Bootstrap 5
-- Vanilla JavaScript
+### Step 2: Set Environment Variables
+In Vercel Dashboard → Settings → Environment Variables:
 
-**Deployment:**
-- Vercel (Serverless)
-- Singapore region (sin1)
+| Key | Value |
+|-----|-------|
+| `ENLITE_API_KEY` | `your_api_key` |
+| `ENLITE_API_URL` | `https://enlite.lhb.co.th` |
+| `ENLITE_API_TIMEOUT` | `60` |
+
+⚠️ **Note:** Vercel servers may not have access to internal APIs. See network requirements below.
+
+---
+
+## 🔒 Security Best Practices
+
+### 1. Never commit secrets
+- ✅ Use `.env` file (already in `.gitignore`)
+- ✅ Use environment variables
+- ❌ Never hardcode API keys in source code
+
+### 2. Rotate API keys regularly
+- Change API keys periodically
+- Revoke compromised keys immediately
+
+### 3. Limit network access
+For Docker:
+```yaml
+ports:
+  - "127.0.0.1:4444:4444"  # localhost only
+```
+
+### 4. Use HTTPS in production
+- Deploy behind reverse proxy (nginx/traefik)
+- Use SSL certificates
+
+---
+
+## 🌐 Network Requirements
+
+The server must be able to reach:
+- `https://enlite.lhb.co.th` (Production API)
+
+**If deploying outside bank network:**
+- API may be blocked by firewall
+- Request IP whitelist from infrastructure team
+- Or deploy on internal server with VPN access
 
 ---
 
@@ -57,52 +135,42 @@ ENLITE_API_TIMEOUT = 60
 
 ```
 UBO/
-├── app.py                  # Flask entrypoint (Vercel auto-detect)
+├── app.py                  # Vercel entrypoint
 ├── enhanced_app.py         # Main Flask application
 ├── final_ubo_system.py     # Core UBO analysis logic
 ├── templates/
 │   └── enhanced_index.html # Frontend UI
-├── requirements.txt        # Python dependencies
-├── vercel.json             # Vercel configuration
-└── README.md               # Documentation
+├── static/
+│   ├── css/               # Stylesheets
+│   └── locales/           # i18n translations
+├── env.example            # Environment template
+├── Dockerfile             # Docker image
+├── docker-compose.yml     # Docker orchestration
+├── requirements.txt       # Python dependencies
+└── vercel.json           # Vercel configuration
 ```
 
 ---
 
-## 🔄 Local Development
+## ❓ Troubleshooting
 
+### "ENLITE_API_KEY not set"
+- Create `.env` file from `env.example`
+- Add your API key to `.env`
+
+### API Connection Failed
+- Check VPN/network connection
+- Verify API endpoint is accessible
+- Test with: `curl https://enlite.lhb.co.th`
+
+### Docker build failed
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Set environment variables
-export ENLITE_API_KEY=your_key_here
-export ENLITE_API_URL=https://xignal-uat.bol.co.th
-export ENLITE_API_TIMEOUT=60
-
-# Run locally
-python enhanced_app.py
-
-# Access: http://localhost:4444
+docker-compose down --rmi all
+docker-compose up -d --build
 ```
 
 ---
 
-## 🚨 Troubleshooting
+## 📞 Support
 
-### Build Failed
-- ตรวจสอบ environment variables
-- ดู build logs ใน Vercel Dashboard
-
-### API Errors
-- ตรวจสอบ ENLITE_API_KEY ถูกต้อง
-- ตรวจสอบ API endpoint accessible
-
-### Size Limit
-- Vercel limit: 250MB (serverless)
-- Current size: ~50MB ✅
-
----
-
-**Production URL:** https://lhb-ubo.vercel.app
-
+For assistance, contact the development team.

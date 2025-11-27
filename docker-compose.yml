@@ -8,10 +8,10 @@ services:
     container_name: lhb-ubo-system
     ports:
       - "4444:4444"
+    # SECURITY: Load secrets from .env file (never commit .env to git!)
+    env_file:
+      - .env
     environment:
-      - ENLITE_API_KEY=fVldOOnGL48NHuUYclP5kLKtZXoCZOr49DFtDqR5vLleuQJ1wQdMyLpY8P7g2ZtQ
-      - ENLITE_API_URL=https://enlite.lhb.co.th
-      - ENLITE_API_TIMEOUT=60
       - FLASK_ENV=production
     restart: unless-stopped
     healthcheck:

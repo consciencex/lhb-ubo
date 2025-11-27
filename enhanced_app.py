@@ -13,6 +13,13 @@ import logging
 from typing import Any, Dict, List, Optional, Set
 import networkx as nx
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed, use system environment variables
+
 # Import Final UBO System
 from final_ubo_system import analyze_company_ubo
 

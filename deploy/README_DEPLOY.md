@@ -9,6 +9,26 @@
 
 ---
 
+## 🔐 Security: ตั้งค่า API Key
+
+**⚠️ สำคัญ: ห้าม hardcode API key ใน source code!**
+
+ต้องสร้างไฟล์ `.env` เพื่อเก็บ API key:
+
+```cmd
+copy env.example .env
+notepad .env
+```
+
+**แก้ไขไฟล์ .env:**
+```
+ENLITE_API_KEY=your_actual_api_key_here
+ENLITE_API_URL=https://enlite.lhb.co.th
+ENLITE_API_TIMEOUT=60
+```
+
+---
+
 ## 📦 ขั้นตอนการติดตั้ง
 
 ### Step 1: ติดตั้ง Python (ถ้ายังไม่มี)
@@ -30,7 +50,17 @@ cd lhb-ubo
 2. คลิก "Code" → "Download ZIP"
 3. แตกไฟล์ไปยัง folder ที่ต้องการ เช่น `C:\UBO`
 
-### Step 3: ติดตั้ง Dependencies
+### Step 3: ตั้งค่า API Key
+
+```cmd
+cd C:\UBO
+copy env.example .env
+notepad .env
+```
+
+แก้ไข `ENLITE_API_KEY=your_actual_api_key_here` ให้เป็น key จริง
+
+### Step 4: ติดตั้ง Dependencies
 
 เปิด Command Prompt (cmd) แล้วรัน:
 
@@ -39,7 +69,7 @@ cd C:\UBO
 pip install -r requirements.txt
 ```
 
-### Step 4: รันระบบ
+### Step 5: รันระบบ
 
 **วิธีที่ 1: รันด้วย Command**
 ```cmd

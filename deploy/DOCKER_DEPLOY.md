@@ -8,14 +8,36 @@
 
 ---
 
-## 🚀 Quick Start (2 คำสั่ง)
+## 🔐 Security: ตั้งค่า API Key
+
+**⚠️ สำคัญ: ต้องสร้างไฟล์ `.env` ก่อน start container!**
 
 ```bash
 # 1. Clone repository
 git clone https://github.com/consciencex/lhb-ubo.git
 cd lhb-ubo
 
-# 2. Start with Docker Compose
+# 2. สร้างไฟล์ .env จาก template
+cp env.example .env
+
+# 3. แก้ไข .env ใส่ API key จริง
+notepad .env   # Windows
+nano .env      # Linux/Mac
+```
+
+**แก้ไขไฟล์ .env:**
+```
+ENLITE_API_KEY=your_actual_api_key_here
+ENLITE_API_URL=https://enlite.lhb.co.th
+ENLITE_API_TIMEOUT=60
+```
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Start container (หลังจากสร้าง .env แล้ว)
 docker-compose up -d
 ```
 
