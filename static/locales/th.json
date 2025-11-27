@@ -1,0 +1,159 @@
+{
+    "header": {
+        "title": "ระบบวิเคราะห์ UBO ธนาคารแลนด์ แอนด์ เฮ้าส์",
+        "subtitle": "แดชบอร์ดตรวจสอบผู้รับผลประโยชน์ที่แท้จริง (UBO)"
+    },
+    "language": {
+        "current": "TH",
+        "switch": "เปลี่ยนเป็นภาษาอังกฤษ"
+    },
+    "input": {
+        "label": "เลขทะเบียนนิติบุคคล",
+        "placeholder": "เช่น 0107548000234",
+        "button": "วิเคราะห์ UBO",
+        "analyzing": "กำลังวิเคราะห์ข้อมูล UBO..."
+    },
+    "companyInfo": {
+        "title": "ข้อมูลบริษัทหลัก",
+        "name": "ชื่อบริษัท:",
+        "businessType": "ประเภทธุรกิจ:",
+        "regisId": "เลขทะเบียน:",
+        "status": "สถานะ:",
+        "capital": "ทุนจดทะเบียน:",
+        "regisDate": "วันที่จดทะเบียน:",
+        "analysisTime": "เวลาที่วิเคราะห์:",
+        "officialSignatory": "ผู้มีอำนาจลงนาม",
+        "unknown": "ไม่ระบุ"
+    },
+    "directors": {
+        "title": "รายชื่อกรรมการและผู้มีอำนาจลงนาม",
+        "tableTitle": "รายชื่อกรรมการและผู้มีอำนาจ",
+        "no": "ลำดับ",
+        "name": "รายชื่อ",
+        "signatory": "ผู้มีอำนาจลงนาม",
+        "director": "กรรมการ"
+    },
+    "stats": {
+        "level1": "ระดับ 1",
+        "level2": "ระดับ 2",
+        "level3": "ระดับ 3",
+        "ubo": "UBO (≥15%)"
+    },
+    "ubo": {
+        "title": "ผลการวิเคราะห์ UBO",
+        "noUbo": "ไม่พบ UBO ที่มีสัดส่วน ≥15%",
+        "calcDetails": "รายละเอียดการคำนวณ UBO (ทุกเส้นทาง):",
+        "path": "เส้นทาง",
+        "totalEffect": "ผลรวม UBO:",
+        "header": "UBO ลำดับที่",
+        "no": "ลำดับ",
+        "name": "ชื่อ",
+        "shareholding": "สัดส่วนการถือหุ้นรวม:",
+        "pathsCount": "เส้นทาง",
+        "pathsLabel": "จำนวนเส้นทาง",
+        "method": "วิธีการระบุ:",
+        "nationality": "สัญชาติ",
+        "uboEffect": "% UBO",
+        "isSignatory": "ผู้มีอำนาจลงนาม",
+        "isDirector": "กรรมการ",
+        "director": "เป็นกรรมการ:",
+        "action": "ดำเนินการ",
+        "yes": "ใช่",
+        "no": "ไม่ใช่",
+        "viewDetails": "ดูรายละเอียดการคำนวณ",
+        "viewCalculation": "ดูการคำนวณ",
+        "viewRelationship": "ดูความสัมพันธ์",
+        "identified": "ระบุ UBO แล้ว",
+        "percentage": "สัดส่วนรวม",
+        "paths": "เส้นทางการคำนวณ",
+        "pathCount": "เส้นทาง",
+        "viewPaths": "ดูเส้นทาง",
+        "hidePaths": "ซ่อนเส้นทาง"
+    },
+    "investigation": {
+        "title": "บริษัทที่ต้องตรวจสอบเพิ่มเติม",
+        "description": "บริษัทเหล่านี้ไม่มีข้อมูลผู้ถือหุ้นจาก API อาจเป็นบริษัทต่างประเทศ สถาบัน หรือบริษัทที่ไม่สามารถดึงข้อมูลได้ ต้องตรวจสอบด้วยตนเอง",
+        "noData": "ไม่มีข้อมูลผู้ถือหุ้น",
+        "actionRequired": "สิ่งที่ต้องดำเนินการ:",
+        "actionDesc": "บริษัทนี้ถือหุ้น ≥15% แต่ API ไม่สามารถดึงข้อมูลผู้ถือหุ้นได้ อาจเป็นบริษัทต่างประเทศหรือสถาบัน จำเป็นต้องตรวจสอบด้วยตนเองเพื่อระบุ UBO"
+    },
+    "hierarchy": {
+        "title": "โครงสร้างการถือหุ้น",
+        "individualFilter": "-- บุคคลทั้งหมด --",
+        "companyFilter": "-- บริษัททั้งหมด --",
+        "clearFilter": "ล้าง",
+        "level": "ระดับ",
+        "all": "ทั้งหมด",
+        "legend": {
+            "company": "บริษัท",
+            "individual": "บุคคล",
+            "ubo": "UBO (≥15%)"
+        }
+    },
+    "shareholderDetails": {
+        "title": "รายละเอียดผู้ถือหุ้นแยกตามระดับ",
+        "name": "ชื่อผู้ถือหุ้น",
+        "type": "ประเภท",
+        "heldBy": "ถือหุ้นในบริษัท",
+        "directPercent": "สัดส่วนโดยตรง %",
+        "effectivePercent": "สัดส่วน UBO %",
+        "actions": "การดำเนินการ",
+        "viewDetail": "ดูรายละเอียด",
+        "hideDetail": "ซ่อนรายละเอียด",
+        "individual": "บุคคล",
+        "company": "บริษัท",
+        "noShareholders": "ไม่พบผู้ถือหุ้นในระดับนี้",
+        "path": "เส้นทาง",
+        "totalAggregated": "รวม (รวมจากทุกเส้นทาง)",
+        "levelDetails": {
+            "title": "รายละเอียดผู้ถือหุ้นแยกตามระดับ",
+            "level1Tab": "ระดับ 1",
+            "level2Tab": "ระดับ 2",
+            "level3Tab": "ระดับ 3",
+            "noShareholders": "ไม่พบผู้ถือหุ้นในระดับนี้"
+        }
+    },
+    "table": {
+        "shareholderName": "ชื่อผู้ถือหุ้น",
+        "type": "ประเภท",
+        "heldBy": "ถือโดยบริษัท",
+        "directPercent": "% ทางตรง",
+        "uboEffect": "% ผลกระทบ UBO",
+        "actions": "การกระทำ",
+        "individual": "บุคคลธรรมดา",
+        "company": "บริษัท",
+        "directShare": "สัดส่วนทางตรง:",
+        "uboEffectLabel": "ผลกระทบ UBO:",
+        "numberOfPaths": "จำนวนเส้นทาง:",
+        "noPathDetails": "ไม่มีรายละเอียดเส้นทาง"
+    },
+    "filters": {
+        "allIndividuals": "-- บุคคลทั้งหมด --",
+        "allCompanies": "-- บริษัททั้งหมด --",
+        "searchIndividuals": "ค้นหาบุคคล...",
+        "searchCompanies": "ค้นหาบริษัท..."
+    },
+    "legend": {
+        "mainCompany": "บริษัทหลัก",
+        "company": "บริษัท",
+        "investigationNeeded": "ต้องตรวจสอบ",
+        "individual": "บุคคลธรรมดา",
+        "ubo15": "UBO ≥ 15%",
+        "uboPath": "เส้นทาง UBO"
+    },
+    "tooltip": {
+        "type": "ประเภท:",
+        "id": "เลขทะเบียน:",
+        "capital": "ทุนจดทะเบียน:",
+        "level": "ระดับ:",
+        "requiresInvestigation": "⚠️ ต้องตรวจสอบ"
+    },
+    "common": {
+        "unknown": "ไม่ทราบ",
+        "yes": "ใช่",
+        "no": "ไม่ใช่",
+        "loading": "กำลังโหลด...",
+        "error": "ข้อผิดพลาด",
+        "success": "สำเร็จ"
+    }
+}

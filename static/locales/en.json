@@ -1,0 +1,191 @@
+{
+    "header": {
+        "title": "LH Bank UBO Analysis System",
+        "subtitle": "Ultimate Beneficial Owner (UBO) verification dashboard"
+    },
+    "language": {
+        "current": "EN",
+        "switch": "Switch to Thai"
+    },
+    "input": {
+        "label": "Company Registration ID",
+        "placeholder": "e.g., 0107548000234",
+        "button": "Analyze UBO",
+        "analyzing": "Analyzing UBO data..."
+    },
+    "companyInfo": {
+        "title": "Main Company Information",
+        "name": "Company Name:",
+        "businessType": "Business Type:",
+        "regisId": "Registration ID:",
+        "status": "Status:",
+        "capital": "Registered Capital:",
+        "regisDate": "Registration Date:",
+        "analysisTime": "Analysis Time:",
+        "officialSignatory": "Authorized Signatories",
+        "unknown": "Unknown"
+    },
+    "directors": {
+        "title": "Directors and Authorized Signatories",
+        "tableTitle": "List of Directors and Authorized Signatories",
+        "no": "No.",
+        "name": "Name",
+        "signatory": "Authorized Signatory",
+        "director": "Director"
+    },
+    "stats": {
+        "level1": "Level 1",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "ubo": "UBO (≥15%)"
+    },
+    "ubo": {
+        "title": "UBO Analysis Results",
+        "noUbo": "No UBO met the ≥15% threshold.",
+        "calcDetails": "UBO Calculation Details (All Paths):",
+        "path": "Path",
+        "totalEffect": "Total UBO Effect:",
+        "header": "UBO #",
+        "no": "No.",
+        "name": "Name",
+        "shareholding": "Total Shareholding:",
+        "pathsCount": "paths",
+        "pathsLabel": "Paths",
+        "method": "Identification Method:",
+        "nationality": "Nationality",
+        "uboEffect": "% UBO",
+        "isSignatory": "Signatory",
+        "isDirector": "Director",
+        "director": "Director:",
+        "action": "Action",
+        "yes": "Yes",
+        "no": "No",
+        "viewDetails": "View Calculation Details",
+        "viewCalculation": "View Calculation",
+        "viewRelationship": "View Relation",
+        "identified": "UBO Identified",
+        "percentage": "Total Percentage",
+        "paths": "Calculation Paths",
+        "pathCount": "paths",
+        "viewPaths": "View Paths",
+        "hidePaths": "Hide Paths"
+    },
+    "investigation": {
+        "title": "Companies Requiring Further Investigation",
+        "description": "These companies have no shareholder data available from the API. They may be foreign companies, institutions, or companies where data could not be retrieved. Manual verification required.",
+        "noData": "No shareholder data available",
+        "actionRequired": "Action Required:",
+        "actionDesc": "This company holds ≥15% but API could not retrieve shareholder data. This may be a foreign company or institution. Manual verification required to identify UBO."
+    },
+    "hierarchy": {
+        "title": "Shareholding Structure",
+        "individualFilter": "-- All Individuals --",
+        "companyFilter": "-- All Companies --",
+        "clearFilter": "Clear",
+        "level": "Level",
+        "all": "All",
+        "legend": {
+            "company": "Company",
+            "individual": "Individual",
+            "ubo": "UBO (≥15%)"
+        }
+    },
+    "shareholderDetails": {
+        "title": "Shareholder Details by Level",
+        "name": "Shareholder Name",
+        "type": "Type",
+        "heldBy": "Held By Company",
+        "viewDetail": "View Detail",
+        "hideDetail": "Hide Detail",
+        "levelDetails": {
+            "title": "Shareholder Details by Level",
+            "level1Tab": "Level 1",
+            "level2Tab": "Level 2",
+            "level3Tab": "Level 3",
+            "noShareholders": "No shareholders found at this level"
+        },
+        "table": {
+            "shareholderName": "Shareholder Name",
+            "type": "Type",
+            "heldBy": "Held By Company",
+            "directPercent": "Direct %",
+            "uboEffect": "UBO Effect %",
+            "actions": "Actions",
+            "individual": "Individual",
+            "company": "Company",
+            "directShare": "Direct Share:",
+            "uboEffectLabel": "UBO Effect:",
+            "numberOfPaths": "Number of Paths:",
+            "noPathDetails": "No path details available"
+        },
+        "filters": {
+            "allIndividuals": "-- All Individuals --",
+            "allCompanies": "-- All Companies --",
+            "searchIndividuals": "Search individuals...",
+            "searchCompanies": "Search companies..."
+        },
+        "legend": {
+            "mainCompany": "Main Company",
+            "company": "Company",
+            "investigationNeeded": "Investigation Needed",
+            "individual": "Individual",
+            "ubo15": "UBO ≥ 15%",
+            "uboPath": "UBO Path"
+        },
+        "tooltip": {
+            "type": "Type:",
+            "id": "ID:",
+            "capital": "Capital:",
+            "level": "Level:",
+            "requiresInvestigation": "⚠️ Requires Investigation"
+        },
+        "path": "Path",
+        "totalAggregated": "Total (Aggregated)"
+    },
+    "filters": {
+        "allIndividuals": "-- All Individuals --",
+        "allCompanies": "-- All Companies --",
+        "searchIndividuals": "Search individuals...",
+        "searchCompanies": "Search companies..."
+    },
+    "legend": {
+        "mainCompany": "Main Company",
+        "company": "Company",
+        "investigationNeeded": "Investigation Needed",
+        "individual": "Individual",
+        "ubo15": "UBO ≥ 15%",
+        "uboPath": "UBO Path"
+    },
+    "tooltip": {
+        "type": "Type:",
+        "id": "ID:",
+        "capital": "Capital:",
+        "level": "Level:",
+        "requiresInvestigation": "⚠️ Requires Investigation"
+    },
+    "table": {
+        "shareholderName": "Shareholder Name",
+        "type": "Type",
+        "heldBy": "Held By Company",
+        "directPercent": "Direct %",
+        "uboEffect": "UBO Effect %",
+        "actions": "Actions",
+        "individual": "Individual",
+        "company": "Company",
+        "directShare": "Direct Share:",
+        "uboEffectLabel": "UBO Effect:",
+        "numberOfPaths": "Number of Paths:",
+        "noPathDetails": "No path details available"
+    },
+    "levelDetails": {
+        "noShareholders": "No shareholders found at this level"
+    },
+    "common": {
+        "unknown": "Unknown",
+        "yes": "Yes",
+        "no": "No",
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success"
+    }
+}

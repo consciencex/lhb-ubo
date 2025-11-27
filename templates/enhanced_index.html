@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,58 +8,61 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/shadcn-components.css') }}" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: hsl(210 40% 96%);
             min-height: 100vh;
         }
-        
+
         .main-container {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             margin: 20px;
             padding: 30px;
+            position: relative;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
             border-bottom: 3px solid #667eea;
         }
-        
+
         .header h1 {
             color: #2c3e50;
             font-weight: bold;
             margin-bottom: 10px;
         }
-        
+
         .header p {
             color: #7f8c8d;
             font-size: 1.1em;
         }
-        
+
         .input-section {
             background: #f8f9fa;
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 30px;
         }
-        
+
         .form-control {
             border-radius: 10px;
             border: 2px solid #e9ecef;
             padding: 15px;
             font-size: 1.1em;
         }
-        
+
         .form-control:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
-        
+
         .btn-analyze {
             background: linear-gradient(45deg, #667eea, #764ba2);
             border: none;
@@ -69,24 +73,24 @@
             color: white;
             transition: all 0.3s ease;
         }
-        
+
         .btn-analyze:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
-        
+
         .results-section {
-            margin-top: 30px;
+            margin-top: 40px;
         }
-        
+
         .level-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 32px;
             overflow: hidden;
         }
-        
+
         .level-header {
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
@@ -94,11 +98,11 @@
             font-weight: bold;
             font-size: 1.3em;
         }
-        
+
         .level-content {
             padding: 20px;
         }
-        
+
         .shareholder-item {
             background: #f8f9fa;
             border-radius: 10px;
@@ -106,11 +110,11 @@
             margin-bottom: 8px;
             border-left: 4px solid #667eea;
         }
-        
+
         .shareholder-item.personal {
             border-left-color: #28a745;
         }
-        
+
         .shareholder-item.company {
             border-left-color: #007bff;
         }
@@ -137,7 +141,7 @@
             background: rgba(255, 255, 255, 0.95);
             padding: 12px 16px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             font-size: 0.85em;
             color: #425466;
             z-index: 100;
@@ -176,7 +180,7 @@
         }
 
         .accordion.level-accordion .accordion-button {
-            background: linear-gradient(45deg, rgba(102,126,234,0.15), rgba(118,75,162,0.15));
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
             font-weight: 600;
             color: #374151;
             display: flex;
@@ -191,11 +195,11 @@
 
         .accordion.level-accordion .accordion-button:focus {
             box-shadow: none;
-            border-color: rgba(102,126,234,0.4);
+            border-color: rgba(102, 126, 234, 0.4);
         }
 
         .level-badge {
-            background: rgba(59,130,246,0.12);
+            background: rgba(59, 130, 246, 0.12);
             color: #1d4ed8;
             border-radius: 999px;
             padding: 3px 10px;
@@ -206,19 +210,19 @@
         .shareholder-body {
             background: #f9fafb;
         }
-        
+
         .shareholder-name {
             font-weight: 600;
             color: #1f2937;
             margin-bottom: 4px;
         }
-        
+
         .shareholder-percentage {
             font-size: 0.95em;
             font-weight: 600;
             color: #4C51BF;
         }
-        
+
         .shareholder-type {
             font-size: 0.8em;
             color: #6b7280;
@@ -232,234 +236,556 @@
         .shareholder-ubo-detail {
             background: #f4f7ff;
             border-radius: 10px;
-            border: 1px solid rgba(99,102,241,0.25);
+            border: 1px solid rgba(99, 102, 241, 0.25);
             font-size: 0.85em;
             color: #334155;
         }
-        
+
         .ubo-section {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
             color: white;
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 20px;
-            margin-top: 20px;
+            margin-top: 28px;
+            margin-bottom: 28px;
         }
         
+        .ubo-section h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .ubo-section.no-ubo {
+            background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+        }
+
         .ubo-item {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
-        
+
         .loading {
             text-align: center;
             padding: 40px;
         }
-        
+
         .spinner-border {
             width: 3rem;
             height: 3rem;
             color: #667eea;
         }
-        
+
         .summary-stats {
             background: #e8f4fd;
             border-radius: 10px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 28px;
         }
-        
+
         .stat-item {
             text-align: center;
             padding: 10px;
         }
-        
+
         .stat-number {
             font-size: 2em;
             font-weight: bold;
             color: #667eea;
         }
-        
+
         .stat-label {
             color: #6c757d;
             font-size: 0.9em;
         }
-        
+
         .investigation-item {
             background: #f0f9ff;
             border-left: 4px solid #1e40af;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
         }
-        
+
         .investigation-item h6 {
             color: #1e3a8a;
             font-weight: 600;
             margin-bottom: 8px;
         }
-        
+
         .investigation-item .badge {
             font-size: 0.75em;
         }
-        
+
         .shareholderLevelTable {
             font-size: 0.85em;
         }
-        
+
         .shareholderLevelTable thead th {
-            background: linear-gradient(45deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             border-bottom: 2px solid #667eea;
             font-weight: 600;
             color: #374151;
             padding: 10px 8px;
         }
-        
+
         .shareholderLevelTable tbody tr:hover {
             background: #f8f9fa;
         }
-        
+
         .shareholderLevelTable td {
             padding: 8px;
             vertical-align: middle;
         }
-        
+
         .nav-tabs .nav-link {
             color: #6c757d;
             font-weight: 500;
         }
-        
+
         .nav-tabs .nav-link.active {
             color: #667eea;
             font-weight: 600;
             border-bottom: 3px solid #667eea;
         }
+        
+        /* Directors Table Styles */
+        .directors-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        .directors-table thead th {
+            background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(59, 130, 246, 0.1));
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e3a8a;
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        .directors-table tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .directors-table tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        .directors-table td {
+            padding: 10px 15px;
+        }
+        
+        .directors-table .checkbox-cell {
+            text-align: center;
+            width: 100px;
+        }
+        
+        .directors-table .checkbox-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        
+        .directors-table .checkbox-icon.checked {
+            background: #10b981;
+            color: white;
+        }
+        
+        .directors-table .checkbox-icon.unchecked {
+            background: #e5e7eb;
+            color: #9ca3af;
+        }
+        
+        /* Enhanced UBO Table Styles */
+        .ubo-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9em;
+        }
+        
+        .ubo-table thead th {
+            background: rgba(0, 0, 0, 0.15);
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.8em;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .ubo-table thead th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+        
+        .ubo-table thead th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        
+        .ubo-table tbody tr {
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.2s;
+        }
+        
+        .ubo-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .ubo-table td {
+            padding: 10px 8px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        }
+        
+        .ubo-table .ubo-name {
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .ubo-table .ubo-percentage {
+            font-weight: 700;
+            font-size: 1.05em;
+            color: #fef9c3;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .ubo-table .badge-check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 0.8em;
+        }
+        
+        .ubo-table .badge-check.yes {
+            background: rgba(34, 197, 94, 0.4);
+            color: #bbf7d0;
+            border: 2px solid rgba(34, 197, 94, 0.6);
+        }
+        
+        .ubo-table .badge-check.no {
+            background: rgba(156, 163, 175, 0.3);
+            color: #d1d5db;
+            border: 2px solid rgba(156, 163, 175, 0.4);
+        }
+        
+        .ubo-table .btn-view-relation {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .ubo-table .btn-view-relation:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+        
+        /* Company Info Compact Grid */
+        .company-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px 24px;
+        }
+        
+        .company-info-grid .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .company-info-grid .info-label {
+            font-size: 0.8em;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .company-info-grid .info-value {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .company-info-grid .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .btn-ubo-action {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-ubo-action:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+        
+        /* Choices.js Custom Styles - Compact */
+        .choices__inner {
+            border-radius: 6px !important;
+            border: 1px solid #d1d5db !important;
+            min-height: 30px !important;
+            padding: 2px 5px !important;
+            font-size: 0.72em !important;
+        }
+        
+        .choices__inner:focus-within {
+            border-color: #667eea !important;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15) !important;
+        }
+        
+        .choices__list--single .choices__item {
+            font-size: 0.72em !important;
+        }
+        
+        .choices__list--dropdown {
+            border-radius: 6px !important;
+            border: 1px solid #d1d5db !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+            font-size: 0.72em !important;
+            max-width: 350px !important;
+        }
+        
+        .choices__list--dropdown .choices__item {
+            padding: 5px 8px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.72em !important;
+        }
+        
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)) !important;
+        }
+        
+        .choices__group .choices__heading {
+            background: #f1f5f9;
+            padding: 5px 8px;
+            font-weight: 600;
+            font-size: 0.68em;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .choices__input {
+            font-size: 0.72em !important;
+        }
+        
+        .choices__placeholder {
+            font-size: 0.72em !important;
+        }
+        
+        /* Section Spacing */
+        .section-spacer {
+            margin-top: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .section-spacer-sm {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* Directors Section */
+        #directorsSection {
+            margin-top: 28px;
+        }
+        
+        /* Company Info Section */
+        #companyInfoSection {
+            margin-bottom: 28px;
+        }
+        
+        /* UBO Results Section */
+        #uboResults {
+            margin-top: 28px;
+        }
+        
+        /* Investigation Section */
+        #investigationSection {
+            margin-top: 32px;
+        }
+        
+        /* Enhanced spacing for cards within sections */
+        .level-card + .level-card {
+            margin-top: 28px;
+        }
+        
+        /* Input section spacing */
+        .input-section {
+            margin-bottom: 36px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="main-container">
+            <!-- Language Selector -->
+            <div class="language-selector" style="position: absolute; top: 20px; right: 30px; z-index: 1000;">
+                <button class="language-btn" onclick="toggleLanguage()" id="languageBtn"
+                    style="background: white; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px 20px; font-size: 1em; font-weight: 600; color: #2c3e50; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <i class="fas fa-globe"></i>
+                    <span id="currentLang">TH</span>
+                </button>
+            </div>
+
             <!-- Header -->
             <div class="header">
-                <h1><img src="{{ url_for('static', filename='icon/LHB_Logo.png') }}" alt="LHB" style="width: 50px; height: 50px; margin-right: 12px; vertical-align: middle;"> LH Bank UBO Analysis System</h1>
-                <p>Ultimate Beneficial Owner (UBO) verification dashboard</p>
+                <h1><img src="{{ url_for('static', filename='icon/LHB_Logo.png') }}" alt="LHB"
+                        style="width: 50px; height: 50px; margin-right: 12px; vertical-align: middle;"> <span
+                        data-i18n="header.title">LH Bank UBO Analysis System</span></h1>
+                <p data-i18n="header.subtitle">Ultimate Beneficial Owner (UBO) verification dashboard</p>
             </div>
-            
+
             <!-- Input Section -->
             <div class="input-section">
                 <div class="row">
                     <div class="col-md-8">
                         <label for="registrationId" class="form-label">
-                            <i class="fas fa-building"></i> Company Registration ID
+                            <i class="fas fa-building"></i> <span data-i18n="input.label">Company Registration ID</span>
                         </label>
-                        <input type="text" class="form-control" id="registrationId" 
-                               placeholder="e.g., 0107548000234" value="0107548000234">
+                        <input type="text" class="form-control form-control-lg" id="registrationId"
+                            data-i18n-placeholder="input.placeholder" placeholder="Enter Registration ID (13 digits)"
+                            maxlength="13" value="0107562000386">
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button class="btn btn-analyze w-100" onclick="analyzeUBO()">
-                            <i class="fas fa-play"></i> Analyze UBO
+                        <button class="btn btn-analyze btn-shadcn btn-primary btn-lg w-100" onclick="analyzeUBO()">
+                            <i class="fas fa-play"></i> <span data-i18n="input.button">Analyze UBO</span>
                         </button>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Loading -->
             <div id="loading" class="loading" style="display: none;">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Analyzing...</span>
-                </div>
-                <p class="mt-3">Analyzing UBO data...</p>
+                <div class="spinner-shadcn"></div>
+                <p class="mt-3" data-i18n="input.analyzing">Analyzing UBO data...</p>
             </div>
-            
+
             <!-- Results Section -->
             <div id="results" class="results-section" style="display: none;">
-                <!-- Company Info and Stats Combined -->
+                <!-- Company Info -->
                 <div class="level-card">
                     <div class="level-header">
-                        <i class="fas fa-building"></i> Main Company Information
+                        <i class="fas fa-building"></i> <span data-i18n="companyInfo.title">Main Company
+                            Information</span>
                     </div>
                     <div class="level-content">
-                        <div class="row">
-                            <div class="col-md-8" id="companyInfo">
-                                <!-- Company info will be populated here -->
-                            </div>
-                            <div class="col-md-4">
-                                <div class="summary-stats" style="background: transparent; padding: 0; margin: 0;">
-                                    <div id="summaryStats">
-                                        <!-- Summary stats will be populated here -->
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="companyInfo">
+                            <!-- Company info will be populated here -->
                         </div>
                     </div>
                 </div>
                 
+                <!-- Directors and Signatories Table -->
+                <div class="level-card" id="directorsSection" style="display: none;">
+                    <div class="level-header" style="background: linear-gradient(45deg, #1e3a8a, #3b82f6);">
+                        <i class="fas fa-user-tie"></i> <span data-i18n="directors.title">Directors and Authorized Signatories</span>
+                    </div>
+                    <div class="level-content">
+                        <div id="directorsTable">
+                            <!-- Directors/Signatories table will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
                 <!-- UBO Results -->
                 <div class="ubo-section" id="uboSection">
-                    <h3><i class="fas fa-crown"></i> UBO Analysis Results</h3>
+                    <h3><i class="fas fa-crown"></i> <span data-i18n="ubo.title">UBO Analysis Results</span></h3>
                     <div id="uboResults">
                         <!-- UBO results will be populated here -->
                     </div>
                 </div>
-                
+
                 <!-- Companies Requiring Further Investigation -->
                 <div class="level-card" id="investigationSection" style="display: none;">
                     <div class="level-header" style="background: linear-gradient(45deg, #1e3a8a, #1e40af);">
-                        <i class="fas fa-exclamation-triangle"></i> Companies Requiring Further Investigation
+                        <i class="fas fa-exclamation-triangle"></i> <span data-i18n="investigation.title">Companies
+                            Requiring Further Investigation</span>
                     </div>
                     <div class="level-content">
                         <p class="text-muted mb-3">
-                            <i class="fas fa-info-circle"></i> These companies have <strong>no shareholder data available</strong> from the API. 
-                            They may be foreign companies, institutions, or companies where data could not be retrieved. Manual verification required.
+                            <i class="fas fa-info-circle"></i> <span data-i18n="investigation.description">These
+                                companies have no shareholder data available from the API. They may be foreign
+                                companies, institutions, or companies where data could not be retrieved. Manual
+                                verification required.</span>
                         </p>
                         <div id="investigationResults">
                             <!-- Investigation companies will be populated here -->
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Hierarchy Tree -->
                 <div class="level-card">
                     <div class="level-header" style="padding: 12px 20px;">
-                        <i class="fas fa-sitemap"></i> Shareholding Structure
+                        <i class="fas fa-sitemap"></i> <span data-i18n="hierarchy.title">Shareholding Structure</span>
                     </div>
                     <div class="level-content" style="padding: 15px 20px;">
                         <!-- Compact Filter Row -->
                         <div class="row align-items-center mb-2 g-2">
                             <div class="col-auto">
-                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i class="fas fa-user"></i></label>
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i
+                                        class="fas fa-user"></i></label>
                             </div>
                             <div class="col" style="max-width: 240px;">
-                                <select id="individualFilter" class="form-select form-select-sm" style="font-size: 0.85em;">
+                                <select id="individualFilter" class="form-select form-select-sm"
+                                    style="font-size: 0.85em;">
                                     <option value="">-- All Individuals --</option>
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearIndividualFilter()" title="Clear">
+                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    onclick="clearIndividualFilter()" title="Clear">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i class="fas fa-building"></i></label>
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i
+                                        class="fas fa-building"></i></label>
                             </div>
                             <div class="col" style="max-width: 240px;">
-                                <select id="companyFilter" class="form-select form-select-sm" style="font-size: 0.85em;">
+                                <select id="companyFilter" class="form-select form-select-sm"
+                                    style="font-size: 0.85em;">
                                     <option value="">-- All Companies --</option>
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="clearCompanyFilter()" title="Clear">
+                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    onclick="clearCompanyFilter()" title="Clear">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
                             <div class="col text-end">
-                                <div id="levelSelector" class="btn-group btn-group-sm" role="group" aria-label="Level selector" style="flex-wrap: wrap;">
+                                <div id="levelSelector" class="btn-group btn-group-sm" role="group"
+                                    aria-label="Level selector" style="flex-wrap: wrap;">
                                     <!-- Level buttons will be added dynamically (up to 9 buttons) -->
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div id="hierarchyTree" class="hierarchy-tree-container" style="position: relative;">
                             <!-- Legend will be positioned inside the container -->
                         </div>
@@ -469,42 +795,55 @@
                 <!-- Shareholder Levels Table with Tabs -->
                 <div class="level-card">
                     <div class="level-header" style="padding: 12px 20px;">
-                        <i class="fas fa-layer-group"></i> Shareholder Details by Level
+                        <i class="fas fa-layer-group"></i> <span
+                            data-i18n="shareholderDetails.levelDetails.title">Shareholder Details by
+                            Level</span>
                     </div>
                     <div class="level-content" style="padding: 15px 20px;">
                         <!-- Level Tabs -->
                         <ul class="nav nav-tabs mb-3" id="shareholderTabs" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="level1-tab" data-bs-toggle="tab" data-bs-target="#level1-pane" type="button" role="tab">
-                                    <i class="fas fa-layer-group"></i> Level 1 <span class="badge bg-secondary ms-1" id="level1Count">0</span>
+                                <button class="nav-link active" id="level1-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level1-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level1Tab">Level
+                                        1</span> <span class="badge bg-secondary ms-1" id="level1Count">0</span>
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="level2-tab" data-bs-toggle="tab" data-bs-target="#level2-pane" type="button" role="tab">
-                                    <i class="fas fa-layer-group"></i> Level 2 <span class="badge bg-secondary ms-1" id="level2Count">0</span>
+                                <button class="nav-link" id="level2-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level2-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level2Tab">Level
+                                        2</span> <span class="badge bg-secondary ms-1" id="level2Count">0</span>
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="level3-tab" data-bs-toggle="tab" data-bs-target="#level3-pane" type="button" role="tab">
-                                    <i class="fas fa-layer-group"></i> Level 3 <span class="badge bg-secondary ms-1" id="level3Count">0</span>
+                                <button class="nav-link" id="level3-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level3-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level3Tab">Level
+                                        3</span> <span class="badge bg-secondary ms-1" id="level3Count">0</span>
                                 </button>
                             </li>
                         </ul>
-                        
+
                         <!-- Tab Content -->
                         <div class="tab-content" id="shareholderTabContent">
                             <!-- Level 1 Table -->
                             <div class="tab-pane fade show active" id="level1-pane" role="tabpanel">
                                 <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
                                     <table class="table table-sm table-hover shareholderLevelTable">
-                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                             <tr>
-                                                <th style="width: 30%;">Shareholder Name</th>
-                                                <th style="width: 12%;">Type</th>
-                                                <th style="width: 28%;">Held By Company</th>
-                                                <th style="width: 10%;">Direct %</th>
-                                                <th style="width: 10%;">UBO Effect %</th>
-                                                <th style="width: 10%;">Actions</th>
+                                                <th style="width: 30%;" data-i18n="table.shareholderName">Shareholder
+                                                    Name</th>
+                                                <th style="width: 12%;" data-i18n="table.type">Type</th>
+                                                <th style="width: 28%;" data-i18n="table.heldBy">Held By Company</th>
+                                                <th style="width: 10%;" data-i18n="table.directPercent">Direct %</th>
+                                                <th style="width: 10%;" data-i18n="table.uboEffect">UBO Effect %</th>
+                                                <th style="width: 10%;" data-i18n="table.actions">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody id="level1TableBody">
@@ -513,12 +852,13 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <!-- Level 2 Table -->
                             <div class="tab-pane fade" id="level2-pane" role="tabpanel">
                                 <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
                                     <table class="table table-sm table-hover shareholderLevelTable">
-                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                             <tr>
                                                 <th style="width: 30%;">Shareholder Name</th>
                                                 <th style="width: 12%;">Type</th>
@@ -534,12 +874,13 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <!-- Level 3 Table -->
                             <div class="tab-pane fade" id="level3-pane" role="tabpanel">
                                 <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
                                     <table class="table table-sm table-hover shareholderLevelTable">
-                                        <thead style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                                             <tr>
                                                 <th style="width: 30%;">Shareholder Name</th>
                                                 <th style="width: 12%;">Type</th>
@@ -564,19 +905,20 @@
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
         async function analyzeUBO() {
             const registrationId = document.getElementById('registrationId').value.trim();
-            
+
             if (!registrationId) {
                 alert('Please enter a company registration ID.');
                 return;
             }
-            
+
             // Show loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('results').style.display = 'none';
-            
+
             try {
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
@@ -585,9 +927,9 @@
                     },
                     body: JSON.stringify({ registration_id: registrationId })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     displayResults(result.data);
                 } else {
@@ -600,24 +942,27 @@
                 document.getElementById('results').style.display = 'block';
             }
         }
-        
+
+        let lastAnalysisResult = null;
+
         function displayResults(data) {
+            lastAnalysisResult = data;
             // Display company info
             displayCompanyInfo(data.company_info);
-            
-            // Display summary stats
-            displaySummaryStats(data);
-            
+
+            // Display directors and signatories table
+            displayDirectorsTable(data.company_info);
+
             // Display level details
             displayLevelDetails(data.hierarchy_data);
-            
-            // Display UBO results
+
+            // Display UBO results with enhanced cards
             displayUBOResults(data.ubos);
-            
+
             // Display companies requiring investigation
             displayInvestigationCompanies(data.hierarchy_data);
-            
-            // Display network graph (NEW: Interactive spider-web visualization)
+
+            // Display network graph (Interactive spider-web visualization)
             if (data.network_graph && data.network_graph.nodes && data.network_graph.nodes.length > 0) {
                 renderNetworkGraph(data.network_graph, data.hierarchy_data);
             } else {
@@ -637,99 +982,122 @@
             }
             return cleanName || 'Unknown';
         }
-        
+
         function displayCompanyInfo(companyInfo) {
+            const signatoryText = companyInfo.official_signatory || '';
             const html = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Company Name:</strong> ${companyInfo.display_name || companyInfo.name_en || 'Unknown'}</p>
-                        <p><strong>Business Type:</strong> ${companyInfo.business_type || 'Unknown'}</p>
+                <div class="company-info-grid">
+                    <div class="info-item full-width">
+                        <span class="info-label">${t('companyInfo.name')}</span>
+                        <span class="info-value">${companyInfo.display_name || companyInfo.name_en || t('companyInfo.unknown')}</span>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Registration ID:</strong> ${companyInfo.regis_id || 'Unknown'}</p>
-                        <p><strong>Status:</strong> ${companyInfo.status || 'Unknown'}</p>
-                        <p><strong>Registered Capital:</strong> ${companyInfo.capital || 'Unknown'}</p>
-                        <p><strong>Registration Date:</strong> ${companyInfo.regis_date || 'Unknown'}</p>
-                        <p><strong>Analysis Time:</strong> ${companyInfo.check_date || 'Unknown'}</p>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.regisId')}</span>
+                        <span class="info-value">${companyInfo.regis_id || t('companyInfo.unknown')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.businessType')}</span>
+                        <span class="info-value">${companyInfo.business_type || t('companyInfo.unknown')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.status')}</span>
+                        <span class="info-value">${companyInfo.status || t('companyInfo.unknown')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.capital')}</span>
+                        <span class="info-value">${companyInfo.capital || t('companyInfo.unknown')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.regisDate')}</span>
+                        <span class="info-value">${companyInfo.regis_date || t('companyInfo.unknown')}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">${t('companyInfo.analysisTime')}</span>
+                        <span class="info-value">${companyInfo.check_date || t('companyInfo.unknown')}</span>
                     </div>
                 </div>
+                ${signatoryText ? `
+                <div class="mt-3 p-2" style="background: #f8fafc; border-radius: 8px; border-left: 3px solid #3b82f6;">
+                    <p class="mb-0" style="font-size: 0.85em;"><strong><i class="fas fa-signature me-2"></i>${t('companyInfo.officialSignatory')}</strong></p>
+                    <p class="mb-0 mt-1" style="color: #475569; font-size: 0.85em; line-height: 1.5;">${signatoryText}</p>
+                </div>
+                ` : ''}
             `;
             document.getElementById('companyInfo').innerHTML = html;
         }
         
-        function displaySummaryStats(data) {
-            const hierarchyData = data.hierarchy_data || {};
-            const ubos = data.ubos || [];
+        function displayDirectorsTable(companyInfo) {
+            const section = document.getElementById('directorsSection');
+            const container = document.getElementById('directorsTable');
             
-            // Count by level
-            const levelCounts = {1: 0, 2: 0, 3: 0};
-            const typeCounts = {personal: 0, company: 0};
+            const directorsSignatories = companyInfo.directors_signatories || [];
             
-            Object.values(hierarchyData).forEach(company => {
-                const level = company.level || 0;
-                const shareholders = company.shareholders || [];
-                
-                // Shareholders of level 0 company are Level 1
-                // Shareholders of level 1 companies are Level 2
-                // Shareholders of level 2 companies are Level 3
-                const displayLevel = level + 1;
-                
-                if (displayLevel >= 1 && displayLevel <= 3) {
-                    levelCounts[displayLevel] += shareholders.length;
-                }
-                
-                shareholders.forEach(sh => {
-                    const type = sh.shareholder_type || 'personal';
-                    if (typeCounts[type] !== undefined) {
-                        typeCounts[type]++;
-                    }
-                });
+            if (!directorsSignatories || directorsSignatories.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            
+            const companyName = companyInfo.display_name || companyInfo.name_en || t('companyInfo.unknown');
+            
+            let html = `
+                <p class="mb-3" style="font-size: 1.1em; font-weight: 600; color: #1e3a8a;">
+                    <i class="fas fa-list-alt me-2"></i>${t('directors.tableTitle')} : ${companyName}
+                </p>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="directors-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">${t('directors.no')}</th>
+                                <th>${t('directors.name')}</th>
+                                <th class="checkbox-cell">${t('directors.signatory')}</th>
+                                <th class="checkbox-cell">${t('directors.director')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            directorsSignatories.forEach((person, index) => {
+                const signatoryIcon = person.is_signatory 
+                    ? '<span class="checkbox-icon checked"><i class="fas fa-check"></i></span>'
+                    : '<span class="checkbox-icon unchecked"><i class="fas fa-minus"></i></span>';
+                const directorIcon = person.is_director 
+                    ? '<span class="checkbox-icon checked"><i class="fas fa-check"></i></span>'
+                    : '<span class="checkbox-icon unchecked"><i class="fas fa-minus"></i></span>';
+                    
+                html += `
+                    <tr>
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td><i class="fas fa-user me-2" style="color: #6b7280;"></i>${person.name}</td>
+                        <td class="checkbox-cell">${signatoryIcon}</td>
+                        <td class="checkbox-cell">${directorIcon}</td>
+                    </tr>
+                `;
             });
             
-            const uboCount = ubos.filter(ubo => ubo.total_percentage >= 15).length;
-            
-            const html = `
-                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 1</div>
-                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[1]}</div>
-                    </div>
-                </div>
-                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 2</div>
-                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[2]}</div>
-                    </div>
-                </div>
-                <div class="stat-item" style="border-left: 4px solid #667eea; padding: 10px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">Level 3</div>
-                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: #667eea;">${levelCounts[3]}</div>
-                    </div>
-                </div>
-                <div class="stat-item" style="border-left: 4px solid ${uboCount > 0 ? '#EF4444' : '#10b981'}; padding: 10px; margin-bottom: 10px; background: ${uboCount > 0 ? '#fef2f2' : '#f0fdf4'}; border-radius: 8px;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="stat-label" style="font-size: 0.9em; color: #6c757d;">UBO (≥15%)</div>
-                        <div class="stat-number" style="font-size: 1.5em; font-weight: bold; color: ${uboCount > 0 ? '#EF4444' : '#10b981'};">${uboCount}</div>
-                    </div>
+            html += `
+                        </tbody>
+                    </table>
                 </div>
             `;
-            document.getElementById('summaryStats').innerHTML = html;
+            
+            container.innerHTML = html;
         }
-        
+
         function displayLevelDetails(hierarchyData) {
             // Group by level
-            const levelData = {1: [], 2: [], 3: []};
-            
+            const levelData = { 1: [], 2: [], 3: [] };
+
             Object.values(hierarchyData).forEach(company => {
                 const level = company.level || 0;
                 const shareholders = company.shareholders || [];
-                
+
                 // Shareholders of level 0 company are Level 1
                 // Shareholders of level 1 companies are Level 2
                 // Shareholders of level 2 companies are Level 3
                 const displayLevel = level + 1;
-                
+
                 if (displayLevel >= 1 && displayLevel <= 3) {
                     const companyLabel = formatNameWithId(
                         company.display_name || company.name_en || company.name_th || 'Not specified',
@@ -744,55 +1112,55 @@
                     });
                 }
             });
-            
+
             // Populate each level table separately
             for (let level = 1; level <= 3; level++) {
                 const tableBody = document.getElementById(`level${level}TableBody`);
                 const countBadge = document.getElementById(`level${level}Count`);
-                
+
                 if (!tableBody) continue;
-                
+
                 const aggregated = aggregateShareholders(levelData[level]);
-                
+
                 // Update count badge
                 if (countBadge) {
                     countBadge.textContent = aggregated.length;
                 }
-                
+
                 if (aggregated.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No shareholders found at this level</td></tr>';
+                    tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4">${t('levelDetails.noShareholders')}</td></tr>`;
                     continue;
                 }
-                
+
                 let html = '';
                 aggregated.forEach((sh, idx) => {
                     const directShare = parseFloat(sh.direct || 0).toFixed(2);
                     const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
                     const type = sh.type || 'personal';
                     const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
-                    const typeText = type === 'personal' ? 'Individual' : 'Company';
+                    const typeText = type === 'personal' ? t('table.individual') : t('table.company');
                     const typeBadge = type === 'personal' ? 'success' : 'primary';
                     const detailId = `shareholderDetail-L${level}-${idx}`;
-                    
+
                     // Build detail content
                     const detailItems = (sh.entries || []).map((entry, entryIdx) => {
                         const factorTexts = (entry.factors || []).map(val => `${(parseFloat(val) || 0).toFixed(2)}%`);
                         const pathNames = (entry.pathSteps || []).map(step => formatNameWithId(step.name, step.id)).join(' → ');
                         const effectiveText = `${(entry.effective || 0).toFixed(2)}%`;
-                        
+
                         let uboCalcDisplay = '';
                         if (factorTexts.length > 0) {
                             uboCalcDisplay = `${factorTexts.join(' × ')} = ${effectiveText}`;
                         } else {
                             uboCalcDisplay = effectiveText;
                         }
-                        
+
                         return `<div class="mb-2">
                             <strong>Path ${entryIdx + 1}:</strong> ${pathNames || 'N/A'}<br>
                             <span class="badge bg-info mt-1">${uboCalcDisplay}</span>
                         </div>`;
                     }).join('');
-                    
+
                     html += `
                         <tr>
                             <td><i class="${typeIcon}"></i> <strong>${sh.label}</strong></td>
@@ -810,21 +1178,21 @@
                             <td colspan="6" style="background: #f0f9ff; padding: 12px; border-left: 3px solid #3b82f6;">
                                 <div style="font-size: 0.85em;">
                                     <div class="mb-2">
-                                        <strong>Direct Share:</strong> ${directShare}% | 
-                                        <strong>UBO Effect:</strong> ${effectiveShare}% | 
-                                        <strong>Number of Paths:</strong> ${sh.entries.length}
+                                        <strong>${t('table.directShare')}</strong> ${directShare}% | 
+                                        <strong>${t('table.uboEffectLabel')}</strong> ${effectiveShare}% | 
+                                        <strong>${t('table.numberOfPaths')}</strong> ${sh.entries.length}
                                     </div>
-                                    <div>${detailItems || '<em>No path details available</em>'}</div>
+                                    <div>${detailItems || `<em>${t('table.noPathDetails')}</em>`}</div>
                                 </div>
                             </td>
                         </tr>
                     `;
                 });
-                
+
                 tableBody.innerHTML = html;
             }
         }
-        
+
         function aggregateShareholders(shareholders) {
             const itemMap = new Map();
 
@@ -834,138 +1202,248 @@
                 const label = formatNameWithId(baseName, regis);
                 const key = regis ? `regis:${regis}` : `name:${label.toUpperCase()}`;
 
-        if (!itemMap.has(key)) {
-            itemMap.set(key, {
-                label,
-                regisId: regis,
-                type: sh.shareholder_type || 'personal',
-                company_name: sh.company_name || 'Not specified',
-                direct: 0,
-                effective: 0,
-                entries: []
+                if (!itemMap.has(key)) {
+                    itemMap.set(key, {
+                        label,
+                        regisId: regis,
+                        type: sh.shareholder_type || 'personal',
+                        company_name: sh.company_name || 'Not specified',
+                        direct: 0,
+                        effective: 0,
+                        entries: []
+                    });
+                }
+
+                const entry = itemMap.get(key);
+                entry.type = entry.type === 'company' || sh.shareholder_type === 'company' ? 'company' : 'personal';
+                const directContribution = parseFloat(sh.direct_percent ?? sh.percent ?? 0) || 0;
+                const effectiveContribution = parseFloat(sh.effective_percentage || sh.effective || sh.percent || 0) || 0;
+                // ✅ FIX: ใช้ direct % จาก API ตรงๆ ไม่บวก (เอาค่าแรกหรือค่าสูงสุด)
+                if (entry.entries.length === 0) {
+                    entry.direct = directContribution;
+                }
+                // Effective ยังคงบวกเพื่อ UBO calculation
+                entry.effective += effectiveContribution;
+                entry.entries.push({
+                    direct: directContribution,
+                    effective: effectiveContribution,
+                    factors: (sh.ubo_factors || []).map(val => parseFloat(val || 0)),
+                    pathSteps: (sh.ubo_path || []).map(step => ({
+                        name: step.entity_name || 'Unknown',
+                        id: step.entity_id || '',
+                        percent: parseFloat(step.share_percent || 0) || 0
+                    })),
+                    raw: sh
+                });
             });
+
+            return Array.from(itemMap.values())
+                .sort((a, b) => b.direct - a.direct);
         }
 
-        const entry = itemMap.get(key);
-        entry.type = entry.type === 'company' || sh.shareholder_type === 'company' ? 'company' : 'personal';
-        const directContribution = parseFloat(sh.direct_percent ?? sh.percent ?? 0) || 0;
-        const effectiveContribution = parseFloat(sh.effective_percentage || sh.effective || sh.percent || 0) || 0;
-        // ✅ FIX: ใช้ direct % จาก API ตรงๆ ไม่บวก (เอาค่าแรกหรือค่าสูงสุด)
-        if (entry.entries.length === 0) {
-            entry.direct = directContribution;
-        }
-        // Effective ยังคงบวกเพื่อ UBO calculation
-        entry.effective += effectiveContribution;
-        entry.entries.push({
-            direct: directContribution,
-            effective: effectiveContribution,
-            factors: (sh.ubo_factors || []).map(val => parseFloat(val || 0)),
-            pathSteps: (sh.ubo_path || []).map(step => ({
-                name: step.entity_name || 'Unknown',
-                id: step.entity_id || '',
-                percent: parseFloat(step.share_percent || 0) || 0
-            })),
-            raw: sh
-        });
-            });
-
-        return Array.from(itemMap.values())
-            .sort((a, b) => b.direct - a.direct);
-        }
-        
         function displayUBOResults(ubos) {
             const container = document.getElementById('uboResults');
             const uboSection = document.getElementById('uboSection');
             
+            // Get signatory names for mapping
+            const signatoryNames = lastAnalysisResult?.company_info?.signatory_names || [];
+            const directorsSignatories = lastAnalysisResult?.company_info?.directors_signatories || [];
+
             if (!ubos || ubos.length === 0) {
-                container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
-                // ✅ เปลี่ยนเป็นสีเขียวเมื่อไม่มี UBO
-                uboSection.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                container.innerHTML = `<p>${t('ubo.noUbo')}</p>`;
+                uboSection.classList.add('no-ubo');
                 return;
             }
-            
+
             // Sort by percentage
             const sortedUbos = ubos.sort((a, b) => b.total_percentage - a.total_percentage);
             const qualifiedUbos = sortedUbos.filter(ubo => ubo.total_percentage >= 15);
-            
+
             if (qualifiedUbos.length === 0) {
-                container.innerHTML = '<p>No UBO met the ≥15% threshold.</p>';
-                // ✅ เปลี่ยนเป็นสีเขียวเมื่อไม่มี UBO
-                uboSection.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                container.innerHTML = `<p>${t('ubo.noUbo')}</p>`;
+                uboSection.classList.add('no-ubo');
                 return;
             }
+
+            // มี UBO - ใช้สีแดง (default)
+            uboSection.classList.remove('no-ubo');
+
+            // Helper function to check if UBO is a signatory
+            function isSignatory(uboName) {
+                if (!uboName) return false;
+                const normalizedName = uboName.toLowerCase().trim();
+                // Check in signatory names
+                for (const sigName of signatoryNames) {
+                    if (sigName.toLowerCase().includes(normalizedName) || normalizedName.includes(sigName.toLowerCase())) {
+                        return true;
+                    }
+                }
+                // Check in directors_signatories
+                for (const ds of directorsSignatories) {
+                    if (ds.is_signatory && ds.name && (ds.name.toLowerCase().includes(normalizedName) || normalizedName.includes(ds.name.toLowerCase()))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
             
-            // ✅ มี UBO ให้ใช้สีแดง (เดิม)
-            uboSection.style.background = 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)';
-            
-            let html = '';
+            // Helper function to check if UBO is a director
+            function isDirector(uboName, uboIsDirector) {
+                if (uboIsDirector) return true;
+                if (!uboName) return false;
+                const normalizedName = uboName.toLowerCase().trim();
+                for (const ds of directorsSignatories) {
+                    if (ds.is_director && ds.name && (ds.name.toLowerCase().includes(normalizedName) || normalizedName.includes(ds.name.toLowerCase()))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Build table
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table class="ubo-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">${t('ubo.no')}</th>
+                                <th>${t('ubo.name')}</th>
+                                <th>${t('ubo.nationality')}</th>
+                                <th style="text-align: center;">${t('ubo.uboEffect')}</th>
+                                <th style="text-align: center;">${t('ubo.isSignatory')}</th>
+                                <th style="text-align: center;">${t('ubo.isDirector')}</th>
+                                <th style="text-align: center;">${t('ubo.action')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
             qualifiedUbos.forEach((ubo, index) => {
                 const percentage = parseFloat(ubo.total_percentage).toFixed(2);
+                const nationality = ubo.nationality || t('companyInfo.unknown');
+                const uboName = ubo.name || t('companyInfo.unknown');
+                const signatoryStatus = isSignatory(uboName);
+                const directorStatus = isDirector(uboName, ubo.is_director);
                 const pathDetails = ubo.path_details || [];
-                const pathsCount = ubo.paths_count || pathDetails.length || 0;
+                const detailId = `uboCalc-${index}`;
                 
                 // Build path calculation details
                 let pathDetailsHtml = '';
                 if (pathDetails.length > 0) {
-                    pathDetailsHtml = '<div class="mt-3"><h6>UBO Calculation Details (All Paths):</h6><ol class="mb-0" style="font-size: 0.9em;">';
+                    pathDetailsHtml = `<ol class="mb-0" style="font-size: 0.85em; padding-left: 20px;">`;
                     pathDetails.forEach((detail, i) => {
                         pathDetailsHtml += `
-                            <li class="mb-2">
-                                <strong>Path ${i + 1}:</strong> ${detail.names ? detail.names.join(' → ') : 'N/A'}<br>
-                                <span class="badge bg-info">${detail.calculation || 'N/A'}</span>
+                            <li class="mb-1">
+                                <strong>${t('ubo.path')} ${i + 1}:</strong> ${detail.names ? detail.names.join(' → ') : 'N/A'}<br>
+                                <span class="badge bg-info" style="font-size: 0.75em;">${detail.calculation || 'N/A'}</span>
                             </li>
                         `;
                     });
-                    // Show total calculation
                     const pathSums = pathDetails.map(d => `${d.result.toFixed(3)}%`).join(' + ');
-                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(255,255,255,0.3); border-radius: 8px;"><strong>Total UBO Effect:</strong> ${pathSums} = <strong>${percentage}%</strong></div></div>`;
+                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(0,0,0,0.1); border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong>${percentage}%</strong></div>`;
                 }
                 
-                const detailId = `uboDetail-${index}`;
                 html += `
-                    <div class="ubo-item">
-                        <h5><i class="fas fa-crown"></i> UBO #${index + 1}</h5>
-                        <p><strong>Name:</strong> ${ubo.name || 'Unknown'}</p>
-                        <p><strong>Total Shareholding:</strong> ${percentage}% <span class="badge bg-light text-dark">${pathsCount} paths</span></p>
-                        <p><strong>Identification Method:</strong> ${ubo.identification_method || 'Method 1'}</p>
-                        <p><strong>Nationality:</strong> ${ubo.nationality || 'Unknown'}</p>
-                        <p><strong>Director:</strong> ${ubo.is_director ? 'Yes' : 'No'}</p>
-                        ${pathDetails.length > 0 ? `
-                        <button class="btn btn-sm btn-light mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
-                            <i class="fas fa-calculator"></i> View Calculation Details
-                        </button>
-                        <div class="collapse mt-2" id="${detailId}">
-                            <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                    <tr>
+                        <td style="text-align: center; font-weight: 600;">${index + 1}</td>
+                        <td class="ubo-name"><i class="fas fa-crown me-2" style="color: #fef08a;"></i>${uboName}</td>
+                        <td><i class="fas fa-globe me-1" style="opacity: 0.7;"></i>${nationality}</td>
+                        <td class="ubo-percentage" style="text-align: center;">${percentage}%</td>
+                        <td style="text-align: center;">
+                            <span class="badge-check ${signatoryStatus ? 'yes' : 'no'}">
+                                <i class="fas fa-${signatoryStatus ? 'check' : 'minus'}"></i>
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="badge-check ${directorStatus ? 'yes' : 'no'}">
+                                <i class="fas fa-${directorStatus ? 'check' : 'minus'}"></i>
+                            </span>
+                        </td>
+                        <td style="text-align: center; white-space: nowrap;">
+                            ${pathDetails.length > 0 ? `
+                            <button class="btn-view-relation me-1" type="button" data-bs-toggle="collapse" data-bs-target="#${detailId}">
+                                <i class="fas fa-calculator"></i>
+                            </button>
+                            ` : ''}
+                            <button class="btn-view-relation" onclick="viewUBORelationship('${uboName.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-project-diagram"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    ${pathDetails.length > 0 ? `
+                    <tr class="collapse" id="${detailId}">
+                        <td colspan="7" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 0;">
+                            <div style="color: white;">
+                                <strong><i class="fas fa-calculator me-2"></i>${t('ubo.calcDetails')}</strong>
                                 ${pathDetailsHtml}
                             </div>
-                        </div>
-                        ` : ''}
-                    </div>
+                        </td>
+                    </tr>
+                    ` : ''}
                 `;
             });
-            
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
             container.innerHTML = html;
         }
         
+        // Function to view UBO relationship in network graph
+        function viewUBORelationship(uboName) {
+            // Scroll to the network graph section
+            const hierarchySection = document.getElementById('hierarchyTree');
+            if (hierarchySection) {
+                hierarchySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Set the individual filter to the UBO name
+            const individualFilter = document.getElementById('individualFilter');
+            if (individualFilter) {
+                // If using Choices.js
+                if (window.individualChoices) {
+                    window.individualChoices.setChoiceByValue(uboName);
+                } else {
+                    individualFilter.value = uboName;
+                }
+                
+                // Clear company filter
+                const companyFilter = document.getElementById('companyFilter');
+                if (companyFilter) {
+                    if (window.companyChoices) {
+                        window.companyChoices.setChoiceByValue('');
+                    } else {
+                        companyFilter.value = '';
+                    }
+                }
+                
+                // Trigger highlight
+                highlightEntity(uboName);
+            }
+        }
+
         function displayInvestigationCompanies(hierarchyData) {
             const container = document.getElementById('investigationResults');
             const section = document.getElementById('investigationSection');
-            
+
             if (!hierarchyData) {
                 section.style.display = 'none';
                 return;
             }
-            
+
             // Find companies with NO shareholders at all (API couldn't find data)
             // AND have effective shareholding >= 15%
             const investigationCompanies = [];
-            
+
             Object.values(hierarchyData).forEach(company => {
                 const level = company.level || 0;
                 const shareholders = company.shareholders || [];
                 const companyType = company.type || 'company';
                 const effectivePercent = parseFloat(company.parent_percentage || 0);
-                
+
                 // Check if it's a company (not main) with ZERO shareholders
                 // AND effective shareholding >= 15% (important enough to investigate)
                 if (level > 0 && level <= 2 && companyType !== 'personal') {
@@ -982,17 +1460,17 @@
                     }
                 }
             });
-            
+
             if (investigationCompanies.length === 0) {
                 section.style.display = 'none';
                 return;
             }
-            
+
             // Sort by level
             investigationCompanies.sort((a, b) => a.level - b.level);
-            
+
             section.style.display = 'block';
-            
+
             let html = '';
             investigationCompanies.forEach((company, index) => {
                 const effectivePercent = company.effective_percent || 0;
@@ -1000,26 +1478,25 @@
                     <div class="investigation-item">
                         <h6>
                             <i class="fas fa-building"></i> ${company.name}
-                            <span class="badge bg-primary ms-2">Level ${company.level}</span>
-                            <span class="badge bg-warning ms-2">${effectivePercent.toFixed(2)}% Shareholding</span>
+                            <span class="badge bg-primary ms-2">${t('hierarchy.level')} ${company.level}</span>
+                            <span class="badge bg-warning ms-2">${effectivePercent.toFixed(2)}% ${t('ubo.shareholding')}</span>
                         </h6>
                         <p class="mb-2 text-muted small">
-                            <strong>Company ID:</strong> ${company.company_id || 'N/A'}
+                            <strong>${t('companyInfo.regisId')}</strong> ${company.company_id || 'N/A'}
                         </p>
                         <p class="mb-2 text-danger small fw-bold">
-                            <i class="fas fa-exclamation-triangle"></i> No shareholder data available
+                            <i class="fas fa-exclamation-triangle"></i> ${t('investigation.noData')}
                         </p>
                         <p class="mb-0 small" style="color: #1e40af;">
-                            <i class="fas fa-exclamation-circle"></i> <strong>Action Required:</strong> This company holds ≥15% but API could not retrieve shareholder data. 
-                            This may be a foreign company or institution. <strong>Manual verification required to identify UBO.</strong>
+                            <i class="fas fa-exclamation-circle"></i> <strong>${t('investigation.actionRequired')}</strong> ${t('investigation.actionDesc')}
                         </p>
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
         }
-        
+
         function truncateLabel(label, max = 26) {
             if (!label) return '';
             return label.length > max ? label.slice(0, max - 3) + '...' : label;
@@ -1127,144 +1604,252 @@
                     return `${d.data.name || 'Unknown'}\nType: ${typeText}\nDirect Share: ${direct.toFixed(4)}%\nEffective Holding: ${effective.toFixed(4)}%${uboText}`;
                 });
         }
-        
+
         // Global state for network graph
         let currentGraphData = null;
         let currentSimulation = null;
         let currentSelectedEntity = null;
+
+        // Global Choices.js instances
+        let individualChoices = null;
+        let companyChoices = null;
         
         function populateFilterDropdowns(graphData) {
             const individualFilter = document.getElementById('individualFilter');
             const companyFilter = document.getElementById('companyFilter');
+
+            // Destroy existing Choices instances if they exist
+            if (individualChoices) {
+                individualChoices.destroy();
+                individualChoices = null;
+            }
+            if (companyChoices) {
+                companyChoices.destroy();
+                companyChoices = null;
+            }
+
+            // Clear existing options
+            individualFilter.innerHTML = '';
+            companyFilter.innerHTML = '';
+
+            // Group nodes by level with shareholding info
+            const individualsByLevel = {};
+            const companiesByLevel = {};
             
-            // Clear existing options (except first "All" option)
-            individualFilter.innerHTML = '<option value="">-- All Individuals --</option>';
-            companyFilter.innerHTML = '<option value="">-- All Companies --</option>';
-            
-            // Get unique individuals and companies
-            const individuals = new Set();
-            const companies = new Set();
-            
+            // Collect edge percentages for each node
+            const nodePercentages = new Map();
+            graphData.edges.forEach(edge => {
+                const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
+                const percent = edge.percent || 0;
+                if (!nodePercentages.has(sourceId) || nodePercentages.get(sourceId) < percent) {
+                    nodePercentages.set(sourceId, percent);
+                }
+            });
+
             graphData.nodes.forEach(node => {
+                const level = node.level || 0;
+                const percent = nodePercentages.get(node.id) || 0;
+                
                 if (node.type === 'personal') {
-                    individuals.add(node.full_name);
-                } else if (node.type === 'company' && node.level > 0) {
-                    companies.add(node.full_name);
+                    if (!individualsByLevel[level]) {
+                        individualsByLevel[level] = [];
+                    }
+                    individualsByLevel[level].push({
+                        name: node.full_name,
+                        percent: percent,
+                        isUbo: node.is_ubo
+                    });
+                } else if (node.type === 'company' && level > 0) {
+                    if (!companiesByLevel[level]) {
+                        companiesByLevel[level] = [];
+                    }
+                    companiesByLevel[level].push({
+                        name: node.full_name,
+                        percent: percent
+                    });
+                }
+            });
+
+            // Build grouped options for individuals
+            const individualOptions = [{
+                value: '',
+                label: t('filters.allIndividuals'),
+                selected: true,
+                placeholder: true
+            }];
+            
+            const individualLevels = Object.keys(individualsByLevel).map(Number).sort((a, b) => a - b);
+            individualLevels.forEach(level => {
+                // Sort by percentage descending within each level
+                const items = individualsByLevel[level].sort((a, b) => b.percent - a.percent);
+                items.forEach(item => {
+                    const uboTag = item.isUbo ? ' ⭐ UBO' : '';
+                    const percentText = item.percent > 0 ? ` (${item.percent.toFixed(2)}%)` : '';
+                    individualOptions.push({
+                        value: item.name,
+                        label: `${item.name}${percentText}${uboTag}`,
+                        customProperties: {
+                            level: level
+                        }
+                    });
+                });
+            });
+
+            // Build grouped options for companies
+            const companyOptions = [{
+                value: '',
+                label: t('filters.allCompanies'),
+                selected: true,
+                placeholder: true
+            }];
+            
+            const companyLevels = Object.keys(companiesByLevel).map(Number).sort((a, b) => a - b);
+            companyLevels.forEach(level => {
+                // Sort by percentage descending within each level
+                const items = companiesByLevel[level].sort((a, b) => b.percent - a.percent);
+                items.forEach(item => {
+                    const percentText = item.percent > 0 ? ` (${item.percent.toFixed(2)}%)` : '';
+                    companyOptions.push({
+                        value: item.name,
+                        label: `${item.name}${percentText}`,
+                        customProperties: {
+                            level: level
+                        }
+                    });
+                });
+            });
+
+            // Initialize Choices.js for individuals
+            individualChoices = new Choices(individualFilter, {
+                searchEnabled: true,
+                searchPlaceholderValue: t('filters.searchIndividuals'),
+                itemSelectText: '',
+                shouldSort: false,
+                choices: individualOptions,
+                classNames: {
+                    containerOuter: 'choices',
+                    containerInner: 'choices__inner',
                 }
             });
             
-            // Populate dropdowns (sorted)
-            Array.from(individuals).sort().forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                individualFilter.appendChild(option);
+            // Initialize Choices.js for companies
+            companyChoices = new Choices(companyFilter, {
+                searchEnabled: true,
+                searchPlaceholderValue: t('filters.searchCompanies'),
+                itemSelectText: '',
+                shouldSort: false,
+                choices: companyOptions,
+                classNames: {
+                    containerOuter: 'choices',
+                    containerInner: 'choices__inner',
+                }
             });
             
-            Array.from(companies).sort().forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                companyFilter.appendChild(option);
-            });
-            
+            // Store globally for viewUBORelationship function
+            window.individualChoices = individualChoices;
+            window.companyChoices = companyChoices;
+
             // Add event listeners
-            individualFilter.addEventListener('change', function() {
+            individualFilter.addEventListener('change', function () {
                 if (this.value) {
-                    companyFilter.value = ''; // Clear other filter
+                    if (companyChoices) {
+                        companyChoices.setChoiceByValue('');
+                    }
                     highlightEntity(this.value);
                 } else {
                     clearHighlight();
                 }
             });
-            
-            companyFilter.addEventListener('change', function() {
+
+            companyFilter.addEventListener('change', function () {
                 if (this.value) {
-                    individualFilter.value = ''; // Clear other filter
+                    if (individualChoices) {
+                        individualChoices.setChoiceByValue('');
+                    }
                     highlightEntity(this.value);
                 } else {
                     clearHighlight();
                 }
             });
         }
-        
+
         function renderNetworkGraph(graphData, hierarchyData) {
             const container = d3.select('#hierarchyTree');
             container.selectAll('*').remove();
-            
+
             if (!graphData || !graphData.nodes || graphData.nodes.length === 0) {
                 container.append('p').attr('class', 'text-muted').text('No network data available.');
                 return;
             }
-            
+
             // Store graph data globally
             currentGraphData = graphData;
             window.currentHierarchyData = hierarchyData;
-            
+
             // Populate filter dropdowns
             populateFilterDropdowns(graphData);
-            
+
             // ✅ Create Level Selector (compact buttons for up to 9 levels)
             const maxLevel = d3.max(graphData.nodes, d => d.level) || 3;
             const levelSelector = document.getElementById('levelSelector');
             let selectedMaxLevel = maxLevel; // Show all levels by default
-            
+
             let levelBtns = '<button class="btn btn-sm btn-outline-primary active" data-level="all" style="font-size: 0.75em; padding: 0.25rem 0.5rem;">All</button>';
             for (let i = 1; i <= maxLevel; i++) {
                 levelBtns += `<button class="btn btn-sm btn-outline-primary" data-level="${i}" style="font-size: 0.75em; padding: 0.25rem 0.5rem;">0-${i}</button>`;
             }
             levelSelector.innerHTML = levelBtns;
-            
+
             // Level selector event handler
             levelSelector.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     levelSelector.querySelectorAll('button').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
+
                     const level = this.getAttribute('data-level');
                     selectedMaxLevel = level === 'all' ? maxLevel : parseInt(level);
-                    
+
                     // Filter and update visibility
                     node.style('display', d => d.level <= selectedMaxLevel ? 'block' : 'none');
                     nodeLabel.style('display', d => d.level <= selectedMaxLevel ? 'block' : 'none');
-                    
+
                     // Filter edges based on visible nodes
                     link.style('display', d => {
-                        const sourceLevel = typeof d.source === 'object' ? d.source.level : 
-                                          graphData.nodes.find(n => n.id === d.source)?.level || 0;
-                        const targetLevel = typeof d.target === 'object' ? d.target.level : 
-                                          graphData.nodes.find(n => n.id === d.target)?.level || 0;
+                        const sourceLevel = typeof d.source === 'object' ? d.source.level :
+                            graphData.nodes.find(n => n.id === d.source)?.level || 0;
+                        const targetLevel = typeof d.target === 'object' ? d.target.level :
+                            graphData.nodes.find(n => n.id === d.target)?.level || 0;
                         return (sourceLevel <= selectedMaxLevel && targetLevel <= selectedMaxLevel) ? 'block' : 'none';
                     });
-                    
+
                     linkLabel.style('display', d => {
-                        const sourceLevel = typeof d.source === 'object' ? d.source.level : 
-                                          graphData.nodes.find(n => n.id === d.source)?.level || 0;
-                        const targetLevel = typeof d.target === 'object' ? d.target.level : 
-                                          graphData.nodes.find(n => n.id === d.target)?.level || 0;
+                        const sourceLevel = typeof d.source === 'object' ? d.source.level :
+                            graphData.nodes.find(n => n.id === d.source)?.level || 0;
+                        const targetLevel = typeof d.target === 'object' ? d.target.level :
+                            graphData.nodes.find(n => n.id === d.target)?.level || 0;
                         return (sourceLevel <= selectedMaxLevel && targetLevel <= selectedMaxLevel) ? 'block' : 'none';
                     });
                 });
             });
-            
+
             const width = Math.max(1200, container.node().getBoundingClientRect().width);
             const height = 600; // Optimized height for screen fit
-            
+
             const svg = container.append('svg')
                 .attr('width', '100%')
                 .attr('height', height)
                 .attr('viewBox', [0, 0, width, height])
                 .attr('style', 'max-width: 100%; height: auto; background: #ffffff; border: 1px solid #e5e7eb;');
-            
+
             const g = svg.append('g');
-            
+
             svg.call(d3.zoom().scaleExtent([0.1, 4]).on('zoom', e => g.attr('transform', e.transform)));
-            
+
             const maxCapital = d3.max(graphData.nodes, d => d.capital) || 1;
             const nodeScale = d3.scaleSqrt().domain([0, maxCapital]).range([10, 45]);
             // More pronounced line thickness difference: 10% = 2.5px, 20% = 5px, 50% = 12.5px
             const linkWidthScale = d3.scaleLinear().domain([0, 100]).range([1.5, 18]);
-            
+
             // Low gravity forces for maximum node freedom and distribution
             const simulation = d3.forceSimulation(graphData.nodes)
                 .force('link', d3.forceLink(graphData.edges).id(d => d.id)
@@ -1280,27 +1865,27 @@
                 .force('radial', d3.forceRadial(d => d.level * 220, width / 2, height / 2).strength(d => d.level === 0 ? 0 : 0.15)) // Weaker radial distribution
                 .alphaDecay(0.02) // Slower cooling for better settling
                 .velocityDecay(0.2); // Less friction for smoother movement
-            
+
             // Fixed-size arrow marker (doesn't scale with line thickness)
             svg.append('defs').selectAll('marker').data(['arrow']).join('marker')
                 .attr('id', 'arrow').attr('viewBox', '0 -4 10 8').attr('refX', 28).attr('refY', 0)
                 .attr('markerWidth', 4).attr('markerHeight', 4).attr('orient', 'auto')
                 .attr('markerUnits', 'userSpaceOnUse') // Fixed size regardless of stroke width
                 .append('path').attr('d', 'M0,-3L10,0L0,3').attr('fill', '#6b7280');
-            
+
             // Identify UBO nodes
             const uboNodeIds = new Set(graphData.nodes.filter(n => n.is_ubo).map(n => n.id));
-            
+
             // Identify investigation nodes (companies with NO shareholders AND >= 15% shareholding)
             const investigationNodeIds = new Set();
-            
+
             // First, calculate effective percentage for each node from hierarchy data
             const nodeEffectivePercent = new Map();
             Object.entries(hierarchyData).forEach(([compId, compData]) => {
                 const effectivePercent = parseFloat(compData.parent_percentage || 0);
                 nodeEffectivePercent.set(compId, effectivePercent);
             });
-            
+
             graphData.nodes.forEach(node => {
                 if (node.type === 'company' && node.level > 0 && node.level <= 2) {
                     // Check if this node has ANY outgoing edges at all (to anyone - company or individual)
@@ -1308,26 +1893,26 @@
                         const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
                         return sourceId === node.id;
                     });
-                    
+
                     // Get effective percentage from hierarchy or node data
-                    const effectivePercent = nodeEffectivePercent.get(node.id) || 
-                                           nodeEffectivePercent.get(node.regis_id) || 0;
-                    
+                    const effectivePercent = nodeEffectivePercent.get(node.id) ||
+                        nodeEffectivePercent.get(node.regis_id) || 0;
+
                     // If NO children AND >= 15%, it means API couldn't find shareholder data for important company
                     if (!hasAnyChildren && effectivePercent >= 15.0) {
                         investigationNodeIds.add(node.id);
                     }
                 }
             });
-            
+
             // Mark edges that lead to UBO nodes (recursively find all paths to UBOs)
             const uboPathEdges = new Set();
             function markUBOPaths(nodeId, visited = new Set()) {
                 if (visited.has(nodeId)) return false;
                 visited.add(nodeId);
-                
+
                 if (uboNodeIds.has(nodeId)) return true;
-                
+
                 const outgoingEdges = graphData.edges.filter(e => e.target === nodeId || e.target.id === nodeId);
                 for (const edge of outgoingEdges) {
                     const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
@@ -1338,25 +1923,25 @@
                 }
                 return false;
             }
-            
+
             // Mark all UBO paths
             uboNodeIds.forEach(uboId => markUBOPaths(uboId));
-            
+
             // Store link and node references globally for highlighting
             window.networkGraphElements = window.networkGraphElements || {};
-            
+
             const link = g.append('g').selectAll('line').data(graphData.edges).join('line')
                 .attr('stroke', d => uboPathEdges.has(d) ? '#DC2626' : '#6b7280') // Red for UBO paths
                 .attr('stroke-opacity', d => uboPathEdges.has(d) ? 0.9 : 0.7)
                 .attr('marker-end', 'url(#arrow)').attr('stroke-width', d => linkWidthScale(d.percent))
                 .attr('class', 'graph-link');
-            
+
             const linkLabel = g.append('g').selectAll('text').data(graphData.edges).join('text')
                 .attr('fill', '#374151').attr('font-size', '10px').attr('font-weight', '600')
                 .attr('text-anchor', 'middle').attr('dy', -5)
                 .text(d => `${d.percent.toFixed(1)}%`)
                 .attr('class', 'graph-link-label');
-            
+
             const node = g.append('g').selectAll('circle').data(graphData.nodes).join('circle')
                 .attr('r', d => nodeScale(d.capital))
                 .attr('fill', d => {
@@ -1383,12 +1968,12 @@
                     .on('start', e => { if (!e.active) simulation.alphaTarget(0.3).restart(); e.subject.fx = e.subject.x; e.subject.fy = e.subject.y; })
                     .on('drag', e => { e.subject.fx = e.x; e.subject.fy = e.y; })
                     .on('end', e => { if (!e.active) simulation.alphaTarget(0); e.subject.fx = null; e.subject.fy = null; }));
-            
+
             const nodeLabel = g.append('g').selectAll('text').data(graphData.nodes).join('text')
                 .attr('fill', '#1f2937').attr('font-size', '11px').attr('font-weight', '600')
                 .attr('text-anchor', 'middle').attr('dy', d => nodeScale(d.capital) + 18).text(d => d.name)
                 .attr('class', 'graph-node-label');
-            
+
             // Store references for highlighting
             window.networkGraphElements = {
                 nodes: node,
@@ -1402,22 +1987,22 @@
                 nodeScale: nodeScale,
                 linkWidthScale: linkWidthScale
             };
-            
+
             const tooltip = d3.select('body').append('div').style('position', 'absolute').style('background', 'rgba(255,255,255,0.98)')
                 .style('border', '2px solid #3b82f6').style('border-radius', '8px').style('padding', '12px')
                 .style('color', '#1f2937').style('font-size', '13px').style('pointer-events', 'none')
                 .style('opacity', 0).style('max-width', '320px').style('box-shadow', '0 4px 12px rgba(0,0,0,0.15)').style('z-index', 10000);
-            
+
             node.on('mouseover', (e, d) => {
                 const isInvestigation = investigationNodeIds.has(d.id);
                 tooltip.html(`<div style="font-weight:600;color:#60a5fa;margin-bottom:8px;font-size:14px;">${d.full_name}</div>
-                    <div><strong>Type:</strong> ${d.type === 'personal' ? 'Individual' : 'Company'}</div>
-                    ${d.regis_id ? `<div><strong>ID:</strong> ${d.regis_id}</div>` : ''}
-                    ${d.capital > 0 ? `<div><strong>Capital:</strong> ฿${d.capital.toLocaleString()}</div>` : ''}
-                    ${d.is_ubo ? '<div style="color:#ef4444;"><strong>✅ UBO (≥15%)</strong></div>' : ''}
-                    ${isInvestigation ? '<div style="color:#1e40af;"><strong>⚠️ Requires Investigation</strong></div>' : ''}
-                    <div><strong>Level:</strong> ${d.level}</div>`)
-                .style('left', (e.pageX + 15) + 'px').style('top', (e.pageY + 15) + 'px').style('opacity', 1);
+                    <div><strong>${t('tooltip.type')}</strong> ${d.type === 'personal' ? t('table.individual') : t('table.company')}</div>
+                    ${d.regis_id ? `<div><strong>${t('tooltip.id')}</strong> ${d.regis_id}</div>` : ''}
+                    ${d.capital > 0 ? `<div><strong>${t('tooltip.capital')}</strong> ฿${d.capital.toLocaleString()}</div>` : ''}
+                    ${d.is_ubo ? `<div style="color:#ef4444;"><strong>✅ ${t('legend.ubo15')}</strong></div>` : ''}
+                    ${isInvestigation ? `<div style="color:#1e40af;"><strong>${t('tooltip.requiresInvestigation')}</strong></div>` : ''}
+                    <div><strong>${t('tooltip.level')}</strong> ${d.level}</div>`)
+                    .style('left', (e.pageX + 15) + 'px').style('top', (e.pageY + 15) + 'px').style('opacity', 1);
                 d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', 5).attr('r', d => nodeScale(d.capital) * 1.2);
             }).on('mouseout', (e, d) => {
                 tooltip.style('opacity', 0);
@@ -1425,73 +2010,73 @@
                 const strokeWidth = d.level === 0 ? 4 : (d.is_ubo || isInvestigation ? 3 : 2);
                 d3.select(e.currentTarget).transition().duration(200).attr('stroke-width', strokeWidth).attr('r', d => nodeScale(d.capital));
             });
-            
+
             simulation.on('tick', () => {
                 link.attr('x1', d => d.source.x).attr('y1', d => d.source.y).attr('x2', d => d.target.x).attr('y2', d => d.target.y);
                 linkLabel.attr('x', d => (d.source.x + d.target.x) / 2).attr('y', d => (d.source.y + d.target.y) / 2);
                 node.attr('cx', d => d.x).attr('cy', d => d.y);
                 nodeLabel.attr('x', d => d.x).attr('y', d => d.y);
             });
-            
+
             // ✅ Add Legend to the container
             const legendHTML = `
                 <div class="tree-legend">
-                    <span><span class="legend-swatch" style="background: #1f2937;"></span> Main Company</span>
-                    <span><span class="legend-swatch" style="background: #3b82f6;"></span> Company</span>
-                    <span><span class="legend-swatch" style="background: #1e40af; border: 2px solid #f59e0b;"></span> Investigation Needed</span>
-                    <span><span class="legend-swatch" style="background: #10b981;"></span> Individual</span>
-                    <span><span class="legend-swatch" style="background: #EF4444;"></span> UBO ≥ 15%</span>
-                    <span><span class="legend-swatch" style="background: #DC2626; border: none; height: 3px; margin-top: 6px;"></span> UBO Path</span>
+                    <span><span class="legend-swatch" style="background: #1f2937;"></span> ${t('legend.mainCompany')}</span>
+                    <span><span class="legend-swatch" style="background: #3b82f6;"></span> ${t('legend.company')}</span>
+                    <span><span class="legend-swatch" style="background: #1e40af; border: 2px solid #f59e0b;"></span> ${t('legend.investigationNeeded')}</span>
+                    <span><span class="legend-swatch" style="background: #10b981;"></span> ${t('legend.individual')}</span>
+                    <span><span class="legend-swatch" style="background: #EF4444;"></span> ${t('legend.ubo15')}</span>
+                    <span><span class="legend-swatch" style="background: #DC2626; border: none; height: 3px; margin-top: 6px;"></span> ${t('legend.uboPath')}</span>
                 </div>
             `;
             document.getElementById('hierarchyTree').insertAdjacentHTML('beforeend', legendHTML);
         }
-        
+
         // Highlighting functions for entity filtering
         function highlightEntity(entityName) {
             if (!window.networkGraphElements) return;
-            
+
             const elements = window.networkGraphElements;
             const graphData = elements.graphData;
-            
+
             // Find ALL nodes with matching name (person may appear multiple times)
             const selectedNodes = graphData.nodes.filter(n => n.full_name === entityName);
             if (selectedNodes.length === 0) return;
-            
+
             currentSelectedEntity = entityName;
-            
+
             // Find ONLY paths from selected entity TO main company (root)
             const connectedNodes = new Set();
             const connectedEdges = new Set();
-            
+
             // Add all instances of the selected person/company
             selectedNodes.forEach(node => connectedNodes.add(node.id));
-            
+
             // Find the main company (level 0)
             const mainCompany = graphData.nodes.find(n => n.level === 0);
             if (!mainCompany) {
                 console.warn('Main company not found');
                 return;
             }
-            
+
             // Find all paths from selected node to main company
             // Direction: selected node -> ... -> main company
             function findPathsToMain(currentId, visited = new Set()) {
                 if (visited.has(currentId)) return false;
                 visited.add(currentId);
-                
+
                 // Reached main company
                 if (currentId === mainCompany.id) {
                     return true;
                 }
-                
+
                 let foundPath = false;
-                
+
                 // Find all edges where current node is SOURCE (going outward to main)
                 graphData.edges.forEach(edge => {
                     const sourceId = typeof edge.source === 'object' ? edge.source.id : edge.source;
                     const targetId = typeof edge.target === 'object' ? edge.target.id : edge.target;
-                    
+
                     // Only follow edges FROM current node (shareholder -> company direction)
                     if (sourceId === currentId) {
                         const newVisited = new Set(visited);
@@ -1504,21 +2089,21 @@
                         }
                     }
                 });
-                
+
                 return foundPath;
             }
-            
+
             // Find paths from ALL instances of the selected person/company
             selectedNodes.forEach(node => {
                 findPathsToMain(node.id);
             });
-            
+
             // Apply STRONG highlighting - connected elements very visible
             const investigationIds = elements.investigationNodeIds || new Set();
-            
+
             // Check if node is one of the selected nodes
             const isSelectedNode = (nodeId) => selectedNodes.some(n => n.id === nodeId);
-            
+
             elements.nodes
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
                 .attr('stroke-width', d => {
@@ -1545,7 +2130,7 @@
                     }
                     return 'none';
                 });
-            
+
             elements.nodeLabels
                 .style('opacity', d => connectedNodes.has(d.id) ? 1 : 0.1)
                 .attr('font-weight', d => {
@@ -1559,10 +2144,10 @@
                     return '11px';
                 })
                 .attr('fill', d => connectedNodes.has(d.id) ? '#111827' : '#d1d5db');
-            
+
             // Check if selected entity is a UBO
             const isSelectedUBO = selectedNodes.some(n => n.is_ubo === true);
-            
+
             // HIGHLIGHT connected paths with much more visibility
             elements.links
                 .style('opacity', d => connectedEdges.has(d) ? 1 : 0.03)
@@ -1585,21 +2170,21 @@
                     }
                     return '#3b82f6'; // Bright blue for regular paths
                 });
-            
+
             elements.linkLabels
                 .style('opacity', d => connectedEdges.has(d) ? 1 : 0)
                 .attr('font-weight', d => connectedEdges.has(d) ? '800' : '600')
                 .attr('font-size', d => connectedEdges.has(d) ? '12px' : '10px')
                 .attr('fill', d => connectedEdges.has(d) ? '#1f2937' : '#9ca3af');
         }
-        
+
         function clearHighlight() {
             if (!window.networkGraphElements) return;
-            
+
             currentSelectedEntity = null;
             const elements = window.networkGraphElements;
             const investigationIds = elements.investigationNodeIds || new Set();
-            
+
             // Reset all elements to default state
             elements.nodes
                 .style('opacity', 1)
@@ -1615,46 +2200,144 @@
                     return '#fff';
                 })
                 .attr('filter', 'none'); // Remove glow effect
-            
+
             elements.nodeLabels
                 .style('opacity', 1)
                 .attr('font-weight', '600')
                 .attr('font-size', '11px')
                 .attr('fill', '#1f2937');
-            
+
             elements.links
                 .style('opacity', d => elements.uboPathEdges && elements.uboPathEdges.has(d) ? 0.9 : 0.7)
                 .attr('stroke-width', d => elements.linkWidthScale ? elements.linkWidthScale(d.percent) : 2)
                 .attr('stroke', d => elements.uboPathEdges && elements.uboPathEdges.has(d) ? '#DC2626' : '#6b7280');
-            
+
             elements.linkLabels
                 .style('opacity', 1)
                 .attr('font-weight', '600')
                 .attr('font-size', '10px')
                 .attr('fill', '#374151');
         }
-        
+
         // Clear filter functions
         function clearIndividualFilter() {
-            const individualFilter = document.getElementById('individualFilter');
-            if (individualFilter) {
-                individualFilter.value = '';
-                clearHighlight();
+            if (window.individualChoices) {
+                window.individualChoices.setChoiceByValue('');
+            } else {
+                const individualFilter = document.getElementById('individualFilter');
+                if (individualFilter) {
+                    individualFilter.value = '';
+                }
             }
+            clearHighlight();
         }
-        
+
         function clearCompanyFilter() {
-            const companyFilter = document.getElementById('companyFilter');
-            if (companyFilter) {
-                companyFilter.value = '';
-                clearHighlight();
+            if (window.companyChoices) {
+                window.companyChoices.setChoiceByValue('');
+            } else {
+                const companyFilter = document.getElementById('companyFilter');
+                if (companyFilter) {
+                    companyFilter.value = '';
+                }
+            }
+            clearHighlight();
+        }
+
+        // Auto-focus on input
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('registrationId').focus();
+            // Initialize i18n on page load
+            initI18n();
+        });
+
+        // ========================================
+        // Internationalization (i18n) System
+        // ========================================
+
+        let currentLanguage = localStorage.getItem('ubo_language') || 'th';
+        let translations = {};
+
+        async function loadTranslations(lang) {
+            try {
+                const response = await fetch(`/static/locales/${lang}.json`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(`Failed to load ${lang} translations:`, error);
+                return {};
             }
         }
-        
-        // Auto-focus on input
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('registrationId').focus();
-        });
+
+        async function initI18n() {
+            // Load current language translations
+            translations = await loadTranslations(currentLanguage);
+            applyTranslations();
+            updateLanguageButton();
+        }
+
+        function applyTranslations() {
+            // Apply translations to elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translation = getNestedTranslation(key);
+                if (translation) {
+                    element.textContent = translation;
+                }
+            });
+
+            // Apply translations to placeholder attributes
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                const translation = getNestedTranslation(key);
+                if (translation) {
+                    element.placeholder = translation;
+                }
+            });
+        }
+
+        function getNestedTranslation(key) {
+            // Navigate nested JSON structure using dot notation
+            // e.g., "header.title" => translations.header.title
+            const keys = key.split('.');
+            let value = translations;
+            for (const k of keys) {
+                if (value && typeof value === 'object') {
+                    value = value[k];
+                } else {
+                    return null;
+                }
+            }
+            return value;
+        }
+
+        function t(key) {
+            return getNestedTranslation(key) || key;
+        }
+
+        async function toggleLanguage() {
+            // Toggle between 'en' and 'th'
+            currentLanguage = currentLanguage === 'en' ? 'th' : 'en';
+            localStorage.setItem('ubo_language', currentLanguage);
+
+            // Load new translations
+            translations = await loadTranslations(currentLanguage);
+            applyTranslations();
+            updateLanguageButton();
+
+            // Re-render results if available
+            if (lastAnalysisResult) {
+                displayResults(lastAnalysisResult);
+            }
+        }
+
+        function updateLanguageButton() {
+            const langBtn = document.getElementById('currentLang');
+            if (langBtn) {
+                langBtn.textContent = currentLanguage.toUpperCase();
+            }
+        }
     </script>
 </body>
+
 </html>

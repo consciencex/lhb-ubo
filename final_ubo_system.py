@@ -70,7 +70,7 @@ class UBOAnalysisResult:
 class FinalEnliteAPIClient:
     """Thin client for the Enlite SOAP API."""
     
-    def __init__(self, api_key: str, base_url: str = "https://xignal-uat.bol.co.th"):
+    def __init__(self, api_key: str, base_url: str = "https://enlite.lhb.co.th"):
         self.api_key = api_key
         self.base_url = base_url
         self.session = requests.Session()
@@ -86,7 +86,7 @@ class FinalEnliteAPIClient:
         self.cache = {}
         self.rate_limit_delay = 0.5
     
-    def get_company_data(self, registration_id: str) -> Optional[Dict[str, Any]]:
+    def get_company_data(self, registration_id: str, language: str = "EN") -> Optional[Dict[str, Any]]:
         """Fetch company data from the Enlite API."""
         if registration_id in self.cache:
             logger.info(f"Using cached data for {registration_id}")
@@ -100,7 +100,7 @@ class FinalEnliteAPIClient:
     <soapenv:Body>
         <view:getDataEnlite>
             <registrationId>{registration_id}</registrationId>
-            <language>EN</language>
+            <language>{language}</language>
         </view:getDataEnlite>
     </soapenv:Body>
 </soapenv:Envelope>"""
@@ -113,7 +113,9 @@ class FinalEnliteAPIClient:
             logger.info(f"Response status: {response.status_code}")
             
             if response.status_code == 200:
-                data = self._parse_company_data(response.text)
+                # Force UTF-8 encoding for Thai text
+                response_text = response.content.decode('utf-8')
+                data = self._parse_company_data(response_text)
                 self.cache[registration_id] = data
                 return data
             else:
@@ -162,6 +164,13 @@ class FinalEnliteAPIClient:
                     'set_symbol': self._get_text(profile, 'setSymbol'),
                     'address': self._parse_address(profile.find('.//address'))
                 }
+            
+            # Parse officialSignatory
+            official_signatory = return_data.find('.//officialSignatory')
+            if official_signatory is not None and official_signatory.text:
+                data['official_signatory'] = official_signatory.text.strip()
+            else:
+                data['official_signatory'] = ''
             
             # Parse directors
             directors = return_data.find('.//director')
@@ -350,6 +359,7 @@ class FinalUBOAnalyzer:
                 'parent_percentage': current_percentage,
                 'shareholders': [],
                 'directors': directors_data,
+                'official_signatory': company_data.get('official_signatory', ''),
                 'company_id': current_company_id,
                 'status': profile.get('company_status', 'Active'),
                 'capital': profile.get('capital', ''),
@@ -555,8 +565,9 @@ class FinalUBOAnalyzer:
             return 'HIGH', 'NON_COMPLIANT'
 
 # Global instances - Load from environment variables
-ENLITE_API_KEY = os.getenv('ENLITE_API_KEY', 'HHaUz9c32FK9IYSP8uOKpKoT4csC2HvSkzG3EQ0JM6pMmf0VGYAxcJPjrsY9lHsV')
-ENLITE_API_URL = os.getenv('ENLITE_API_URL', 'https://xignal-uat.bol.co.th')
+# Production API
+ENLITE_API_KEY = os.getenv('ENLITE_API_KEY', 'fVldOOnGL48NHuUYclP5kLKtZXoCZOr49DFtDqR5vLleuQJ1wQdMyLpY8P7g2ZtQ')
+ENLITE_API_URL = os.getenv('ENLITE_API_URL', 'https://enlite.lhb.co.th')
 ENLITE_API_TIMEOUT = int(os.getenv('ENLITE_API_TIMEOUT', '60'))
 
 api_client = FinalEnliteAPIClient(ENLITE_API_KEY, ENLITE_API_URL)

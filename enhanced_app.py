@@ -7,9 +7,10 @@ from flask_cors import CORS
 import json
 import os
 import sys
+import re
 from datetime import datetime
 import logging
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 import networkx as nx
 
 # Import Final UBO System
@@ -57,6 +58,118 @@ def _format_display_label(name: Optional[str], regis_id: Optional[str]) -> str:
             return label if regis in label else f"{label} ({regis})"
         return regis
     return label or 'Unknown'
+
+
+def extract_names_from_signatory(signatory_text: str) -> List[str]:
+    """Extract person names from officialSignatory text.
+    
+    Example input: 
+    "นางยุวดี จิราธิวัฒน์ นายสุทธิลักษณ์ จิราธิวัฒน์นายปริญญ์ จิราธิวัฒน์..."
+    
+    Returns: List of names like ["นางยุวดี จิราธิวัฒน์", "นายสุทธิลักษณ์ จิราธิวัฒน์", ...]
+    """
+    if not signatory_text:
+        return []
+    
+    names = []
+    
+    # Better pattern for Thai names - handles cases without spaces between names
+    # Pattern: คำนำหน้า + ชื่อ + นามสกุล (หรือตามด้วยคำนำหน้าอื่น หรือ 'กรรมการ')
+    # Uses lookahead to stop before the next title or keyword
+    name_pattern = r'(นาย|นาง(?:สาว)?)([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+?)(?=\s*(?:นาย|นาง|กรรมการ|ลงลายมือ|ข้อจำกัด|และ\s*$|$))'
+    
+    matches = re.finditer(name_pattern, signatory_text)
+    
+    for match in matches:
+        title = match.group(1)
+        firstname = match.group(2)
+        lastname = match.group(3)
+        full_name = f"{title}{firstname} {lastname}".strip()
+        
+        if full_name and len(full_name) > 4:  # Minimum reasonable name length
+            names.append(full_name)
+    
+    # Also try to extract names separated by comma or space with 'และ'
+    # Example: "นายนพร สุนทรจิตต์เจริญ ,นายวิเชียร อมรพูนชัย, และ นายฉี ชิง-ฟู่"
+    alt_pattern = r'(นาย|นาง(?:สาว)?|ดร\.|Mr\.|Mrs\.|Ms\.)\s*([\u0E00-\u0E7Fa-zA-Z\-]+)\s+([\u0E00-\u0E7Fa-zA-Z\-]+)'
+    
+    # Only use alternative pattern if we didn't find any names with main pattern
+    if not names:
+        alt_matches = re.finditer(alt_pattern, signatory_text)
+        for match in alt_matches:
+            title = match.group(1)
+            firstname = match.group(2)
+            lastname = match.group(3)
+            full_name = f"{title}{firstname} {lastname}".strip()
+            
+            # Clean up trailing keywords
+            full_name = re.sub(r'(กรรมการ|ลงลายมือชื่อ|ร่วมกัน|ประทับตรา|สำคัญ|ของบริษัท|ข้อจำกัด|อำนาจ|ไม่มี).*$', '', full_name).strip()
+            if full_name and len(full_name) > 4:
+                names.append(full_name)
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_names = []
+    for name in names:
+        if name not in seen:
+            seen.add(name)
+            unique_names.append(name)
+    
+    return unique_names
+
+
+def build_directors_signatories_table(directors: List[Dict], signatory_names: List[str]) -> List[Dict]:
+    """Build a combined table of directors and signatories with role classification.
+    
+    Returns list of dicts with: name, is_signatory, is_director
+    """
+    # Build director names list
+    director_names = []
+    for d in directors:
+        title = d.get('title', '').strip()
+        firstname = d.get('firstname', '').strip()
+        lastname = d.get('lastname', '').strip()
+        full_name = f"{title}{firstname} {lastname}".strip()
+        if full_name:
+            director_names.append(full_name)
+    
+    # Create combined list with role flags
+    combined = {}
+    
+    # Add signatories
+    for name in signatory_names:
+        if name not in combined:
+            combined[name] = {'name': name, 'is_signatory': True, 'is_director': False}
+        else:
+            combined[name]['is_signatory'] = True
+    
+    # Add directors
+    for name in director_names:
+        if name not in combined:
+            combined[name] = {'name': name, 'is_signatory': False, 'is_director': True}
+        else:
+            combined[name]['is_director'] = True
+    
+    # Try to match similar names (for production API where names might be slightly different)
+    # Simple matching: check if firstname matches
+    for sig_name in signatory_names:
+        sig_parts = sig_name.split()
+        if len(sig_parts) >= 2:
+            sig_firstname = sig_parts[1] if sig_parts[0] in ['นาย', 'นาง', 'นางสาว'] else sig_parts[0]
+            for dir_name in director_names:
+                dir_parts = dir_name.split()
+                if len(dir_parts) >= 2:
+                    dir_firstname = dir_parts[0].replace('นาย', '').replace('นาง', '').replace('นางสาว', '') or dir_parts[1]
+                    if sig_firstname == dir_firstname:
+                        # Found match - update the signatory entry to also be director
+                        if sig_name in combined:
+                            combined[sig_name]['is_director'] = True
+    
+    # Convert to list and sort
+    result = list(combined.values())
+    result.sort(key=lambda x: (-x['is_signatory'], -x['is_director'], x['name']))
+    
+    return result
 
 
 def build_network_graph(root_id: str, hierarchy: Dict[str, Any], ubo_names: set) -> Dict[str, Any]:
@@ -332,6 +445,12 @@ def analyze_company():
             or 'Unknown'
         )
 
+        # Extract officialSignatory and directors
+        official_signatory_text = main_company_data.get('official_signatory', '')
+        signatory_names = extract_names_from_signatory(official_signatory_text)
+        directors_list = main_company_data.get('directors', [])
+        directors_signatories = build_directors_signatories_table(directors_list, signatory_names)
+        
         report = {
             'company_info': {
                 'regis_id': registration_id,
@@ -344,7 +463,11 @@ def analyze_company():
                 'business_type': business_type,
                 'business_type_en': business_type,
                 'address': main_company_data.get('address', {}),
-                'check_date': result_dict.get('check_date', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                'check_date': result_dict.get('check_date', datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+                'official_signatory': official_signatory_text,
+                'signatory_names': signatory_names,
+                'directors': directors_list,
+                'directors_signatories': directors_signatories
             },
             'ubos': [],
             'checklist': result_dict.get('checklist', {}),
