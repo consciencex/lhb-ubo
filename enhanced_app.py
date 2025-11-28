@@ -558,6 +558,9 @@ def analyze_company():
                 'level_1_count': len([c for c in hierarchy.values() if c.get('level') == 1]),
                 'level_2_count': len([c for c in hierarchy.values() if c.get('level') == 2]),
                 'level_3_count': len([c for c in hierarchy.values() if c.get('level') == 3]),
+                'level_4_count': len([c for c in hierarchy.values() if c.get('level') == 4]),
+                'level_5_count': len([c for c in hierarchy.values() if c.get('level') == 5]),
+                'level_6_count': len([c for c in hierarchy.values() if c.get('level') == 6]),
                 'total_personal': sum(len([s for s in c.get('shareholders', []) if s.get('shareholder_type') == 'personal']) for c in hierarchy.values()),
                 'total_company': sum(len([s for s in c.get('shareholders', []) if s.get('shareholder_type') == 'company']) for c in hierarchy.values())
             }

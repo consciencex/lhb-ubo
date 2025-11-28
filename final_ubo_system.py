@@ -267,7 +267,7 @@ class FinalUBOAnalyzer:
     
     def __init__(self):
         self.threshold_15 = 15.0  # Method 1 threshold (>=15%)
-        self.max_levels = 4  # Traverse up to level 3 (0=main, 1=tier1, 2=tier2, 3=tier3)
+        self.max_levels = 7  # Traverse up to level 6 (0=main, 1=tier1, 2=tier2, 3=tier3, 4=tier4, 5=tier5, 6=tier6)
         self.ubo_results = {}  # Aggregated UBO candidates (PERSONAL ONLY)
         self.hierarchy = {}  # Shareholding hierarchy map
         self.visited_companies = set()  # Track visited companies to avoid loops

@@ -110,6 +110,9 @@
             "level1Tab": "ระดับ 1",
             "level2Tab": "ระดับ 2",
             "level3Tab": "ระดับ 3",
+            "level4Tab": "ระดับ 4",
+            "level5Tab": "ระดับ 5",
+            "level6Tab": "ระดับ 6",
             "noShareholders": "ไม่พบผู้ถือหุ้นในระดับนี้"
         }
     },

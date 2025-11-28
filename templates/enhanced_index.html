@@ -846,6 +846,30 @@
                                         3</span> <span class="badge bg-secondary ms-1" id="level3Count">0</span>
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="level4-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level4-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level4Tab">Level
+                                        4</span> <span class="badge bg-secondary ms-1" id="level4Count">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="level5-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level5-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level5Tab">Level
+                                        5</span> <span class="badge bg-secondary ms-1" id="level5Count">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="level6-tab" data-bs-toggle="tab"
+                                    data-bs-target="#level6-pane" type="button" role="tab">
+                                    <i class="fas fa-layer-group"></i> <span
+                                        data-i18n="shareholderDetails.levelDetails.level6Tab">Level
+                                        6</span> <span class="badge bg-secondary ms-1" id="level6Count">0</span>
+                                </button>
+                            </li>
                         </ul>
 
                         <!-- Tab Content -->
@@ -912,6 +936,72 @@
                                         </thead>
                                         <tbody id="level3TableBody">
                                             <!-- Level 3 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Level 4 Table -->
+                            <div class="tab-pane fade" id="level4-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level4TableBody">
+                                            <!-- Level 4 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Level 5 Table -->
+                            <div class="tab-pane fade" id="level5-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level5TableBody">
+                                            <!-- Level 5 rows -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Level 6 Table -->
+                            <div class="tab-pane fade" id="level6-pane" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
+                                    <table class="table table-sm table-hover shareholderLevelTable">
+                                        <thead
+                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <tr>
+                                                <th style="width: 30%;">Shareholder Name</th>
+                                                <th style="width: 12%;">Type</th>
+                                                <th style="width: 28%;">Held By Company</th>
+                                                <th style="width: 10%;">Direct %</th>
+                                                <th style="width: 10%;">UBO Effect %</th>
+                                                <th style="width: 10%;">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="level6TableBody">
+                                            <!-- Level 6 rows -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -1106,8 +1196,8 @@
         }
 
         function displayLevelDetails(hierarchyData) {
-            // Group by level
-            const levelData = { 1: [], 2: [], 3: [] };
+            // Group by level (6 Tiers)
+            const levelData = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
 
             Object.values(hierarchyData).forEach(company => {
                 const level = company.level || 0;
@@ -1116,9 +1206,10 @@
                 // Shareholders of level 0 company are Level 1
                 // Shareholders of level 1 companies are Level 2
                 // Shareholders of level 2 companies are Level 3
+                // ... up to Level 6
                 const displayLevel = level + 1;
 
-                if (displayLevel >= 1 && displayLevel <= 3) {
+                if (displayLevel >= 1 && displayLevel <= 6) {
                     // Use company name only (without ID) for cleaner display
                     const companyNameOnly = company.display_name || company.name_th_full || company.name_en || company.name_th || 'Not specified';
                     shareholders.forEach(sh => {
@@ -1131,8 +1222,8 @@
                 }
             });
 
-            // Populate each level table separately
-            for (let level = 1; level <= 3; level++) {
+            // Populate each level table separately (6 Tiers)
+            for (let level = 1; level <= 6; level++) {
                 const tableBody = document.getElementById(`level${level}TableBody`);
                 const countBadge = document.getElementById(`level${level}Count`);
 

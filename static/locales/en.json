@@ -102,6 +102,9 @@
             "level1Tab": "Level 1",
             "level2Tab": "Level 2",
             "level3Tab": "Level 3",
+            "level4Tab": "Level 4",
+            "level5Tab": "Level 5",
+            "level6Tab": "Level 6",
             "noShareholders": "No shareholders found at this level"
         },
         "table": {
