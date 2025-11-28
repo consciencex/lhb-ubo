@@ -242,28 +242,37 @@
         }
 
         .ubo-section {
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            color: white;
+            background: white;
+            color: #1e293b;
             border-radius: 12px;
-            padding: 20px;
+            padding: 0;
             margin-top: 28px;
             margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
         }
         
         .ubo-section h3 {
             font-size: 1.2em;
-            margin-bottom: 15px;
+            margin: 0;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            color: white;
         }
         
-        .ubo-section.no-ubo {
+        .ubo-section.no-ubo h3 {
             background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
         }
 
         .ubo-item {
-            background: rgba(255, 255, 255, 0.2);
+            background: #f8fafc;
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
+        }
+        
+        #uboResults {
+            padding: 20px;
         }
 
         .loading {
@@ -411,14 +420,13 @@
         }
         
         .ubo-table thead th {
-            background: rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
             color: white;
-            padding: 10px 8px;
+            padding: 12px 10px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.8em;
+            font-size: 0.85em;
             white-space: nowrap;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .ubo-table thead th:first-child {
@@ -430,31 +438,35 @@
         }
         
         .ubo-table tbody tr {
-            background: rgba(255, 255, 255, 0.15);
+            background: white;
             transition: background 0.2s;
         }
         
+        .ubo-table tbody tr:nth-child(odd) {
+            background: #fef2f2;
+        }
+        
         .ubo-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: #fee2e2;
         }
         
         .ubo-table td {
-            padding: 10px 8px;
+            padding: 12px 10px;
             vertical-align: middle;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            border-bottom: 1px solid #fecaca;
+            color: #1e293b;
         }
         
         .ubo-table .ubo-name {
             font-weight: 600;
             font-size: 0.9em;
+            color: #1e293b;
         }
         
         .ubo-table .ubo-percentage {
             font-weight: 700;
             font-size: 1.05em;
-            color: #fef9c3;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            color: #dc2626;
         }
         
         .ubo-table .badge-check {
@@ -468,21 +480,21 @@
         }
         
         .ubo-table .badge-check.yes {
-            background: rgba(34, 197, 94, 0.4);
-            color: #bbf7d0;
-            border: 2px solid rgba(34, 197, 94, 0.6);
+            background: #dcfce7;
+            color: #16a34a;
+            border: 2px solid #86efac;
         }
         
         .ubo-table .badge-check.no {
-            background: rgba(156, 163, 175, 0.3);
-            color: #d1d5db;
-            border: 2px solid rgba(156, 163, 175, 0.4);
+            background: #f3f4f6;
+            color: #9ca3af;
+            border: 2px solid #d1d5db;
         }
         
         .ubo-table .btn-view-relation {
-            background: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
             padding: 5px 10px;
             border-radius: 6px;
             font-size: 0.75em;
@@ -492,7 +504,8 @@
         }
         
         .ubo-table .btn-view-relation:hover {
-            background: rgba(255, 255, 255, 0.35);
+            background: #e2e8f0;
+            border-color: #cbd5e1;
         }
         
         /* Company Info Compact Grid */
@@ -541,13 +554,13 @@
             transform: translateY(-1px);
         }
         
-        /* Choices.js Custom Styles - Compact */
+        /* Choices.js Custom Styles - Larger Font */
         .choices__inner {
             border-radius: 6px !important;
             border: 1px solid #d1d5db !important;
-            min-height: 30px !important;
-            padding: 2px 5px !important;
-            font-size: 0.72em !important;
+            min-height: 40px !important;
+            padding: 6px 10px !important;
+            font-size: 0.95em !important;
         }
         
         .choices__inner:focus-within {
@@ -556,23 +569,23 @@
         }
         
         .choices__list--single .choices__item {
-            font-size: 0.72em !important;
+            font-size: 0.95em !important;
         }
         
         .choices__list--dropdown {
             border-radius: 6px !important;
             border: 1px solid #d1d5db !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-            font-size: 0.72em !important;
-            max-width: 350px !important;
+            font-size: 0.95em !important;
+            max-width: 450px !important;
         }
         
         .choices__list--dropdown .choices__item {
-            padding: 5px 8px !important;
+            padding: 8px 12px !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 0.72em !important;
+            font-size: 0.95em !important;
         }
         
         .choices__list--dropdown .choices__item--selectable.is-highlighted {
@@ -581,19 +594,20 @@
         
         .choices__group .choices__heading {
             background: #f1f5f9;
-            padding: 5px 8px;
+            padding: 8px 12px;
             font-weight: 600;
-            font-size: 0.68em;
+            font-size: 0.9em;
             color: #475569;
             border-bottom: 1px solid #e2e8f0;
         }
         
         .choices__input {
-            font-size: 0.72em !important;
+            font-size: 0.95em !important;
         }
         
         .choices__placeholder {
-            font-size: 0.72em !important;
+            font-size: 0.95em !important;
+            color: #6b7280 !important;
         }
         
         /* Section Spacing */
@@ -1137,9 +1151,28 @@
                     const directShare = parseFloat(sh.direct || 0).toFixed(2);
                     const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
                     const type = sh.type || 'personal';
-                    const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
-                    const typeText = type === 'personal' ? t('table.individual') : t('table.company');
-                    const typeBadge = type === 'personal' ? 'success' : 'primary';
+                    const isUBO = parseFloat(effectiveShare) >= 15.0 && type === 'personal';
+                    const isForeignCompany = type === 'company' && sh.regisId && !sh.regisId.match(/^[0-9]{13}$/);
+                    
+                    // Determine type icon, text, and badge based on 4 categories (only for this table)
+                    let typeIcon, typeText, typeBadge;
+                    if (isUBO) {
+                        typeIcon = 'fas fa-crown';
+                        typeText = 'UBO';
+                        typeBadge = 'danger';
+                    } else if (type === 'personal') {
+                        typeIcon = 'fas fa-user';
+                        typeText = t('table.individual');
+                        typeBadge = 'success';
+                    } else if (isForeignCompany) {
+                        typeIcon = 'fas fa-globe';
+                        typeText = 'บริษัทต่างประเทศ';
+                        typeBadge = 'warning';
+                    } else {
+                        typeIcon = 'fas fa-building';
+                        typeText = t('table.company');
+                        typeBadge = 'primary';
+                    }
                     const detailId = `shareholderDetail-L${level}-${idx}`;
 
                     // Build detail content
@@ -1340,14 +1373,14 @@
                         `;
                     });
                     const pathSums = pathDetails.map(d => `${d.result.toFixed(3)}%`).join(' + ');
-                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(0,0,0,0.1); border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong>${percentage}%</strong></div>`;
+                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: #fecaca; border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong style="color: #dc2626;">${percentage}%</strong></div>`;
                 }
                 
                 html += `
                     <tr>
                         <td style="text-align: center; font-weight: 600;">${index + 1}</td>
-                        <td class="ubo-name"><i class="fas fa-crown me-2" style="color: #fef08a;"></i>${uboName}</td>
-                        <td><i class="fas fa-globe me-1" style="opacity: 0.7;"></i>${nationality}</td>
+                        <td class="ubo-name"><i class="fas fa-crown me-2" style="color: #f59e0b;"></i>${uboName}</td>
+                        <td><i class="fas fa-globe me-1" style="color: #64748b;"></i>${nationality}</td>
                         <td class="ubo-percentage" style="text-align: center;">${percentage}%</td>
                         <td style="text-align: center;">
                             <span class="badge-check ${signatoryStatus ? 'yes' : 'no'}">
@@ -1372,8 +1405,8 @@
                     </tr>
                     ${pathDetails.length > 0 ? `
                     <tr class="collapse" id="${detailId}">
-                        <td colspan="7" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 0;">
-                            <div style="color: white;">
+                        <td colspan="7" style="background: #fef2f2; padding: 12px; border-radius: 0;">
+                            <div style="color: #1e293b;">
                                 <strong><i class="fas fa-calculator me-2"></i>${t('ubo.calcDetails')}</strong>
                                 ${pathDetailsHtml}
                             </div>

@@ -71,106 +71,191 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
     """Extract person names from officialSignatory text.
     
     Example input: 
-    "นางยุวดี จิราธิวัฒน์ นายสุทธิลักษณ์ จิราธิวัฒน์นายปริญญ์ จิราธิวัฒน์..."
+    "นายปราโมทย์ ปาทาน ลงลายมือชื่อร่วมกับนายชลากรณ์ ปัญญาโฉม หรือ นายสุรการ ศิริโมทย์ รวมเป็นสองคน..."
     
-    Returns: List of names like ["นางยุวดี จิราธิวัฒน์", "นายสุทธิลักษณ์ จิราธิวัฒน์", ...]
+    Returns: List of names like ["นายปราโมทย์ ปาทาน", "นายชลากรณ์ ปัญญาโฉม", "นายสุรการ ศิริโมทย์"]
     """
     if not signatory_text:
         return []
     
     names = []
     
-    # Better pattern for Thai names - handles cases without spaces between names
-    # Pattern: คำนำหน้า + ชื่อ + นามสกุล (หรือตามด้วยคำนำหน้าอื่น หรือ 'กรรมการ')
-    # Uses lookahead to stop before the next title or keyword
-    name_pattern = r'(นาย|นาง(?:สาว)?)([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+?)(?=\s*(?:นาย|นาง|กรรมการ|ลงลายมือ|ข้อจำกัด|และ\s*$|$))'
+    # Thai titles to look for
+    titles = ['นาย', 'นาง', 'นางสาว', 'ดร.', 'ศ.', 'รศ.', 'ผศ.']
+    
+    # Keywords that typically follow a lastname (to stop extraction)
+    stop_keywords = [
+        'ลงลายมือ', 'ร่วมกัน', 'ร่วมกับ', 'หรือ', 'และ', 'กรรมการ', 
+        'ประทับตรา', 'สำคัญ', 'ของบริษัท', 'ข้อจำกัด', 'อำนาจ', 
+        'รวมเป็น', 'คนใดคนหนึ่ง', 'สองคน', 'สามคน', 'ไม่มี',
+        'ผู้มีอำนาจ', 'ลงนาม', 'แทน'
+    ]
+    
+    # Build regex pattern dynamically
+    # Match: title + firstname (Thai chars) + space + lastname (Thai chars)
+    # Stop at: another title, stop keyword, or end of text
+    
+    # First, find all positions of titles in the text
+    title_pattern = '(' + '|'.join(re.escape(t) for t in titles) + ')'
+    
+    # Main pattern: title + firstname + space + lastname
+    # Lastname ends when we hit another title, a stop keyword, or punctuation
+    stop_pattern = '|'.join(re.escape(k) for k in stop_keywords)
+    name_pattern = rf'({title_pattern})([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+?)(?=\s*(?:{title_pattern}|{stop_pattern}|[,\.\(\)]|\s*$))'
     
     matches = re.finditer(name_pattern, signatory_text)
     
     for match in matches:
         title = match.group(1)
-        firstname = match.group(2)
-        lastname = match.group(3)
+        firstname = match.group(3)  # group(2) is the inner title capture
+        lastname = match.group(4)
         full_name = f"{title}{firstname} {lastname}".strip()
         
-        if full_name and len(full_name) > 4:  # Minimum reasonable name length
+        # Clean up any remaining keywords at the end
+        for kw in stop_keywords:
+            if full_name.endswith(kw):
+                full_name = full_name[:-len(kw)].strip()
+        
+        if full_name and len(full_name) > 5:  # Minimum reasonable name length
             names.append(full_name)
     
-    # Also try to extract names separated by comma or space with 'และ'
-    # Example: "นายนพร สุนทรจิตต์เจริญ ,นายวิเชียร อมรพูนชัย, และ นายฉี ชิง-ฟู่"
-    alt_pattern = r'(นาย|นาง(?:สาว)?|ดร\.|Mr\.|Mrs\.|Ms\.)\s*([\u0E00-\u0E7Fa-zA-Z\-]+)\s+([\u0E00-\u0E7Fa-zA-Z\-]+)'
-    
-    # Only use alternative pattern if we didn't find any names with main pattern
+    # Fallback: simple pattern if main pattern fails
+    # Pattern: title + any Thai text until next title or keyword
     if not names:
-        alt_matches = re.finditer(alt_pattern, signatory_text)
-        for match in alt_matches:
+        simple_pattern = rf'({title_pattern})([\u0E00-\u0E7F]+\s+[\u0E00-\u0E7F]+)'
+        simple_matches = re.finditer(simple_pattern, signatory_text)
+        
+        for match in simple_matches:
             title = match.group(1)
-            firstname = match.group(2)
-            lastname = match.group(3)
-            full_name = f"{title}{firstname} {lastname}".strip()
+            name_part = match.group(3)
             
-            # Clean up trailing keywords
-            full_name = re.sub(r'(กรรมการ|ลงลายมือชื่อ|ร่วมกัน|ประทับตรา|สำคัญ|ของบริษัท|ข้อจำกัด|อำนาจ|ไม่มี).*$', '', full_name).strip()
-            if full_name and len(full_name) > 4:
+            # Clean up: remove any keywords from the name
+            for kw in stop_keywords:
+                name_part = re.sub(rf'\s*{re.escape(kw)}.*$', '', name_part)
+            
+            full_name = f"{title}{name_part}".strip()
+            
+            if full_name and len(full_name) > 5:
                 names.append(full_name)
     
     # Remove duplicates while preserving order
     seen = set()
     unique_names = []
     for name in names:
-        if name not in seen:
-            seen.add(name)
-            unique_names.append(name)
+        normalized = name.strip()
+        if normalized and normalized not in seen:
+            seen.add(normalized)
+            unique_names.append(normalized)
     
     return unique_names
+
+
+def normalize_thai_name(name: str) -> str:
+    """Normalize Thai name for comparison by removing title and extra spaces."""
+    if not name:
+        return ''
+    # Remove common Thai titles
+    titles = ['นาย', 'นาง', 'นางสาว', 'ดร.', 'ศ.', 'รศ.', 'ผศ.', 'Mr.', 'Mrs.', 'Ms.', 'Miss']
+    normalized = name.strip()
+    for title in titles:
+        if normalized.startswith(title):
+            normalized = normalized[len(title):].strip()
+            break
+    return normalized.strip()
 
 
 def build_directors_signatories_table(directors: List[Dict], signatory_names: List[str]) -> List[Dict]:
     """Build a combined table of directors and signatories with role classification.
     
+    Properly combines title+firstname+lastname for directors to match with signatory names.
     Returns list of dicts with: name, is_signatory, is_director
     """
-    # Build director names list
-    director_names = []
+    # Build director entries with proper title+firstname+lastname format
+    director_entries = []
     for d in directors:
         title = d.get('title', '').strip()
         firstname = d.get('firstname', '').strip()
         lastname = d.get('lastname', '').strip()
-        full_name = f"{title}{firstname} {lastname}".strip()
+        
+        # Build full name with proper spacing
+        if title and firstname:
+            full_name = f"{title}{firstname} {lastname}".strip()
+        elif firstname and lastname:
+            full_name = f"{firstname} {lastname}".strip()
+        elif firstname:
+            full_name = firstname
+        else:
+            continue
+            
         if full_name:
-            director_names.append(full_name)
+            director_entries.append({
+                'full_name': full_name,
+                'normalized': normalize_thai_name(full_name),
+                'firstname': firstname,
+                'lastname': lastname
+            })
     
-    # Create combined list with role flags
-    combined = {}
-    
-    # Add signatories
+    # Normalize signatory names for matching
+    signatory_entries = []
     for name in signatory_names:
-        if name not in combined:
-            combined[name] = {'name': name, 'is_signatory': True, 'is_director': False}
-        else:
-            combined[name]['is_signatory'] = True
+        signatory_entries.append({
+            'full_name': name,
+            'normalized': normalize_thai_name(name)
+        })
     
-    # Add directors
-    for name in director_names:
-        if name not in combined:
-            combined[name] = {'name': name, 'is_signatory': False, 'is_director': True}
-        else:
-            combined[name]['is_director'] = True
+    # Create combined list - use normalized names for matching
+    combined = {}
+    matched_directors = set()
     
-    # Try to match similar names (for production API where names might be slightly different)
-    # Simple matching: check if firstname matches
-    for sig_name in signatory_names:
-        sig_parts = sig_name.split()
-        if len(sig_parts) >= 2:
-            sig_firstname = sig_parts[1] if sig_parts[0] in ['นาย', 'นาง', 'นางสาว'] else sig_parts[0]
-            for dir_name in director_names:
-                dir_parts = dir_name.split()
-                if len(dir_parts) >= 2:
-                    dir_firstname = dir_parts[0].replace('นาย', '').replace('นาง', '').replace('นางสาว', '') or dir_parts[1]
-                    if sig_firstname == dir_firstname:
-                        # Found match - update the signatory entry to also be director
-                        if sig_name in combined:
-                            combined[sig_name]['is_director'] = True
+    # First, add signatories and try to match with directors
+    for sig in signatory_entries:
+        sig_name = sig['full_name']
+        sig_normalized = sig['normalized']
+        
+        # Check for matching director
+        is_director = False
+        for i, dir_entry in enumerate(director_entries):
+            if i in matched_directors:
+                continue
+            
+            # Match by normalized name (without title)
+            if sig_normalized == dir_entry['normalized']:
+                is_director = True
+                matched_directors.add(i)
+                break
+            
+            # Match by firstname + lastname
+            sig_parts = sig_normalized.split()
+            if len(sig_parts) >= 2:
+                sig_firstname = sig_parts[0]
+                sig_lastname = sig_parts[-1]
+                if (sig_firstname == dir_entry['firstname'] and sig_lastname == dir_entry['lastname']):
+                    is_director = True
+                    matched_directors.add(i)
+                    break
+                # Also try matching if firstname or lastname is contained
+                if dir_entry['firstname'] and dir_entry['lastname']:
+                    if (dir_entry['firstname'] in sig_normalized and dir_entry['lastname'] in sig_normalized):
+                        is_director = True
+                        matched_directors.add(i)
+                        break
+        
+        combined[sig_name] = {
+            'name': sig_name,
+            'is_signatory': True,
+            'is_director': is_director
+        }
+    
+    # Add remaining directors that weren't matched
+    for i, dir_entry in enumerate(director_entries):
+        if i not in matched_directors:
+            dir_name = dir_entry['full_name']
+            if dir_name not in combined:
+                combined[dir_name] = {
+                    'name': dir_name,
+                    'is_signatory': False,
+                    'is_director': True
+                }
     
     # Convert to list and sort
     result = list(combined.values())
