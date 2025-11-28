@@ -1465,7 +1465,7 @@
                         `;
                     });
                     const pathSums = pathDetails.map(d => `${d.result.toFixed(3)}%`).join(' + ');
-                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(0,0,0,0.1); border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong>${percentage}%</strong></div>`;
+                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: #e9ecef; border-radius: 6px; font-size: 0.85em; color: #333;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong>${percentage}%</strong></div>`;
                 }
                 
                 html += `
@@ -1497,8 +1497,8 @@
                     </tr>
                     ${pathDetails.length > 0 ? `
                     <tr class="collapse" id="${detailId}">
-                        <td colspan="7" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 0;">
-                            <div style="color: white;">
+                        <td colspan="7" style="background: #f8f9fa; padding: 12px; border-radius: 0;">
+                            <div style="color: #333;">
                                 <strong><i class="fas fa-calculator me-2"></i>${t('ubo.calcDetails')}</strong>
                                 ${pathDetailsHtml}
                             </div>
