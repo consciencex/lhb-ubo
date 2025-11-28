@@ -1138,7 +1138,7 @@
 
                 if (!tableBody) continue;
 
-                const aggregated = aggregateShareholders(levelData[level]);
+                const aggregated = aggregateShareholders(levelData[level], hierarchyData);
 
                 // Update count badge
                 if (countBadge) {
@@ -1211,13 +1211,29 @@
             }
         }
 
-        function aggregateShareholders(shareholders) {
+        function aggregateShareholders(shareholders, hierarchyData = {}) {
             const itemMap = new Map();
 
             shareholders.forEach(sh => {
                 const regis = (sh.regis_id || sh.regis_id_held_by || '').trim();
-                const baseName = sh.display_name || `${(sh.firstname || '')} ${(sh.lastname || '')}`.trim() || 'Unknown';
-                const label = formatNameWithId(baseName, regis);
+                const isCompany = sh.shareholder_type === 'company';
+                
+                // Try to get company name from hierarchyData if it's a company
+                let baseName = sh.display_name || `${(sh.firstname || '')} ${(sh.lastname || '')}`.trim() || '';
+                
+                if (isCompany && regis && hierarchyData[regis]) {
+                    // Lookup company name from hierarchyData
+                    const companyData = hierarchyData[regis];
+                    baseName = companyData.display_name || companyData.name_th_full || companyData.name_en || companyData.name_th || baseName;
+                }
+                
+                // If still no name, use ID or Unknown
+                if (!baseName || baseName === 'Unknown') {
+                    baseName = regis || 'Unknown';
+                }
+                
+                // For company type, don't append ID to name (cleaner display)
+                const label = isCompany ? baseName : formatNameWithId(baseName, regis);
                 const key = regis ? `regis:${regis}` : `name:${label.toUpperCase()}`;
 
                 if (!itemMap.has(key)) {
