@@ -34,14 +34,14 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
         },
         'analysis_summary': {
             'method_used': 'Method 1 (Shareholding ≥15%)',
-            'max_level_reached': 5,
-            'total_companies_checked': 26,
+            'max_level_reached': 3,
+            'total_companies_checked': 20,
             'risk_level': 'Low',
             'compliance_status': 'Compliant'
         },
         'ubo_results': {
-            'total_candidates': 15,
-            'final_ubos': 3,  # 3 UBOs including level 5 UBO
+            'total_candidates': 12,
+            'final_ubos': 2,  # Only 2 UBOs
             'ubo_details': [
                 {
                     'name': 'WILLIAM ANDERSON',
@@ -58,15 +58,6 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                     'total_percentage': 22.18,
                     'paths': 5,
                     'nationality': 'Singaporean',
-                    'is_director': False,
-                    'ubo_status': 'YES'
-                },
-                {
-                    'name': 'RICHARD ZHANG',
-                    'method': 'Method 1',
-                    'total_percentage': 15.45,
-                    'paths': 3,
-                    'nationality': 'Chinese',
                     'is_director': False,
                     'ubo_status': 'YES'
                 }
@@ -156,42 +147,6 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'names': ['MIDDLE EAST INVESTMENT GROUP', 'INTERNATIONAL EQUITY FUND', 'SOPHIA CHEN'],
                         'result': 3.755,
                         'calculation': '92.1% × 64.2% × 6.35% = 3.755%'
-                    }
-                ]
-            },
-            # UBO from Level 5 - RICHARD ZHANG
-            {
-                'name': 'RICHARD ZHANG',
-                'total_percentage': 15.45,
-                'paths': [
-                    ['XXXXXXXX', 'COMP_A', 'COMP_G', 'COMP_M', 'COMP_N', 'COMP_O'],
-                    ['XXXXXXXX', 'COMP_B', 'COMP_H', 'COMP_P', 'COMP_Q'],
-                    ['XXXXXXXX', 'COMP_E', 'COMP_K', 'COMP_R']
-                ],
-                'method': 1,
-                'nationality': 'Chinese',
-                'is_director': False,
-                'identification_method': 'Method 1',
-                'ubo_status': 'YES',
-                'paths_count': 3,
-                'path_details': [
-                    {
-                        'factors': [22.5, 18.5, 55.0, 70.0, 85.0, 95.0],
-                        'names': ['GLOBAL INVESTMENT CORPORATION', 'VENTURE CAPITAL PARTNERS', 'ALPHA HOLDINGS LTD', 'BETA INVESTMENT CO', 'GAMMA CAPITAL', 'RICHARD ZHANG'],
-                        'result': 7.89,
-                        'calculation': '95% × 85% × 70% × 55% × 18.5% × 22.5% = 7.89%'
-                    },
-                    {
-                        'factors': [18.75, 14.2, 48.0, 65.0, 80.0],
-                        'names': ['ASIA PACIFIC HOLDINGS LTD', 'STRATEGIC HOLDINGS INC', 'DELTA HOLDINGS', 'EPSILON FUND', 'RICHARD ZHANG'],
-                        'result': 5.26,
-                        'calculation': '80% × 65% × 48% × 14.2% × 18.75% = 5.26%'
-                    },
-                    {
-                        'factors': [12.8, 52.3, 35.0, 100.0],
-                        'names': ['SOUTHEAST ASIA CAPITAL', 'EMERGING MARKETS FUND', 'ZETA CAPITAL', 'RICHARD ZHANG'],
-                        'result': 2.30,
-                        'calculation': '100% × 35% × 52.3% × 12.8% = 2.30%'
                     }
                 ]
             },
@@ -714,7 +669,7 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'business_type_en': 'Investment Services'
             },
             
-            # Level 2: COMP_G - 5 shareholders (added ALPHA HOLDINGS for Level 5 path)
+            # Level 2: COMP_G - 4 shareholders
             'COMP_G': {
                 'name_en': 'VENTURE CAPITAL PARTNERS',
                 'display_name': 'VENTURE CAPITAL PARTNERS',
@@ -722,24 +677,12 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'parent_percentage': 4.16,
                 'shareholders': [
                     {
-                        'name': 'ALPHA HOLDINGS LTD',
-                        'display_name': 'ALPHA HOLDINGS LTD',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_M',
-                        'regis_id_held_by': 'COMP_M',
-                        'percent': 55.0,
-                        'direct_percent': 55.0,
-                        'effective_percentage': 2.29,
-                        'type_label': 'Company',
-                        'company_name': 'VENTURE CAPITAL PARTNERS'
-                    },
-                    {
                         'name': 'WILLIAM ANDERSON',
                         'display_name': 'WILLIAM ANDERSON',
                         'shareholder_type': 'personal',
-                        'percent': 25.20,
-                        'direct_percent': 25.20,
-                        'effective_percentage': 1.048,
+                        'percent': 76.20,
+                        'direct_percent': 76.20,
+                        'effective_percentage': 3.170,
                         'nationality': 'American',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
@@ -748,9 +691,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'ALEXANDER NOVAK',
                         'display_name': 'ALEXANDER NOVAK',
                         'shareholder_type': 'personal',
-                        'percent': 12.30,
-                        'direct_percent': 12.30,
-                        'effective_percentage': 0.512,
+                        'percent': 15.30,
+                        'direct_percent': 15.30,
+                        'effective_percentage': 0.636,
                         'nationality': 'Russian',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
@@ -759,9 +702,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'THOMAS ANDERSON',
                         'display_name': 'THOMAS ANDERSON',
                         'shareholder_type': 'personal',
-                        'percent': 5.00,
-                        'direct_percent': 5.00,
-                        'effective_percentage': 0.208,
+                        'percent': 5.90,
+                        'direct_percent': 5.90,
+                        'effective_percentage': 0.245,
                         'nationality': 'Swedish',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
@@ -770,9 +713,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'LISA MULLER',
                         'display_name': 'LISA MULLER',
                         'shareholder_type': 'personal',
-                        'percent': 2.50,
-                        'direct_percent': 2.50,
-                        'effective_percentage': 0.104,
+                        'percent': 2.60,
+                        'direct_percent': 2.60,
+                        'effective_percentage': 0.108,
                         'nationality': 'German',
                         'type_label': 'Individual',
                         'company_name': 'VENTURE CAPITAL PARTNERS'
@@ -783,7 +726,7 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'business_type_en': 'Venture Capital'
             },
             
-            # Level 2: COMP_H - 4 shareholders (added DELTA HOLDINGS for Level 5 path)
+            # Level 2: COMP_H - 3 shareholders
             'COMP_H': {
                 'name_en': 'STRATEGIC HOLDINGS INC',
                 'display_name': 'STRATEGIC HOLDINGS INC',
@@ -791,24 +734,12 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'parent_percentage': 2.66,
                 'shareholders': [
                     {
-                        'name': 'DELTA HOLDINGS',
-                        'display_name': 'DELTA HOLDINGS',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_P',
-                        'regis_id_held_by': 'COMP_P',
-                        'percent': 48.0,
-                        'direct_percent': 48.0,
-                        'effective_percentage': 1.28,
-                        'type_label': 'Company',
-                        'company_name': 'STRATEGIC HOLDINGS INC'
-                    },
-                    {
                         'name': 'SOPHIA CHEN',
                         'display_name': 'SOPHIA CHEN',
                         'shareholder_type': 'personal',
-                        'percent': 32.40,
-                        'direct_percent': 32.40,
-                        'effective_percentage': 0.862,
+                        'percent': 68.40,
+                        'direct_percent': 68.40,
+                        'effective_percentage': 1.819,
                         'nationality': 'Singaporean',
                         'type_label': 'Individual',
                         'company_name': 'STRATEGIC HOLDINGS INC'
@@ -817,9 +748,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'KEVIN WONG',
                         'display_name': 'KEVIN WONG',
                         'shareholder_type': 'personal',
-                        'percent': 12.30,
-                        'direct_percent': 12.30,
-                        'effective_percentage': 0.327,
+                        'percent': 21.30,
+                        'direct_percent': 21.30,
+                        'effective_percentage': 0.567,
                         'nationality': 'Hong Kong',
                         'type_label': 'Individual',
                         'company_name': 'STRATEGIC HOLDINGS INC'
@@ -828,9 +759,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'YUKI YAMAMOTO',
                         'display_name': 'YUKI YAMAMOTO',
                         'shareholder_type': 'personal',
-                        'percent': 7.30,
-                        'direct_percent': 7.30,
-                        'effective_percentage': 0.194,
+                        'percent': 10.30,
+                        'direct_percent': 10.30,
+                        'effective_percentage': 0.274,
                         'nationality': 'Japanese',
                         'type_label': 'Individual',
                         'company_name': 'STRATEGIC HOLDINGS INC'
@@ -887,7 +818,7 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'business_type_en': 'Private Equity'
             },
             
-            # Level 2: COMP_K - 5 shareholders (added ZETA CAPITAL for Level 3 path)
+            # Level 2: COMP_K - 4 shareholders
             'COMP_K': {
                 'name_en': 'EMERGING MARKETS FUND',
                 'display_name': 'EMERGING MARKETS FUND',
@@ -895,24 +826,12 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'parent_percentage': 6.694,
                 'shareholders': [
                     {
-                        'name': 'ZETA CAPITAL',
-                        'display_name': 'ZETA CAPITAL',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_R',
-                        'regis_id_held_by': 'COMP_R',
-                        'percent': 35.0,
-                        'direct_percent': 35.0,
-                        'effective_percentage': 2.34,
-                        'type_label': 'Company',
-                        'company_name': 'EMERGING MARKETS FUND'
-                    },
-                    {
                         'name': 'SOPHIA CHEN',
                         'display_name': 'SOPHIA CHEN',
                         'shareholder_type': 'personal',
-                        'percent': 35.70,
-                        'direct_percent': 35.70,
-                        'effective_percentage': 2.390,
+                        'percent': 58.70,
+                        'direct_percent': 58.70,
+                        'effective_percentage': 3.929,
                         'nationality': 'Singaporean',
                         'type_label': 'Individual',
                         'company_name': 'EMERGING MARKETS FUND'
@@ -921,9 +840,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'EMILY RODRIGUEZ',
                         'display_name': 'EMILY RODRIGUEZ',
                         'shareholder_type': 'personal',
-                        'percent': 18.80,
-                        'direct_percent': 18.80,
-                        'effective_percentage': 1.258,
+                        'percent': 25.80,
+                        'direct_percent': 25.80,
+                        'effective_percentage': 1.727,
                         'nationality': 'Spanish',
                         'type_label': 'Individual',
                         'company_name': 'EMERGING MARKETS FUND'
@@ -932,9 +851,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'RAJESH KUMAR',
                         'display_name': 'RAJESH KUMAR',
                         'shareholder_type': 'personal',
-                        'percent': 6.20,
-                        'direct_percent': 6.20,
-                        'effective_percentage': 0.415,
+                        'percent': 10.20,
+                        'direct_percent': 10.20,
+                        'effective_percentage': 0.683,
                         'nationality': 'Indian',
                         'type_label': 'Individual',
                         'company_name': 'EMERGING MARKETS FUND'
@@ -943,9 +862,9 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                         'name': 'CARLOS SILVA',
                         'display_name': 'CARLOS SILVA',
                         'shareholder_type': 'personal',
-                        'percent': 4.30,
-                        'direct_percent': 4.30,
-                        'effective_percentage': 0.288,
+                        'percent': 5.30,
+                        'direct_percent': 5.30,
+                        'effective_percentage': 0.355,
                         'nationality': 'Brazilian',
                         'type_label': 'Individual',
                         'company_name': 'EMERGING MARKETS FUND'
@@ -1011,216 +930,14 @@ def generate_mock_ubo_data() -> Dict[str, Any]:
                 'company_id': 'COMP_L',
                 'capital': '3,900,000,000',
                 'business_type_en': 'Investment Fund'
-            },
-            
-            # Level 3: COMP_M - For RICHARD ZHANG path (Level 5 UBO)
-            'COMP_M': {
-                'name_en': 'ALPHA HOLDINGS LTD',
-                'display_name': 'ALPHA HOLDINGS LTD',
-                'level': 3,
-                'parent_percentage': 2.29,
-                'shareholders': [
-                    {
-                        'name': 'BETA INVESTMENT CO',
-                        'display_name': 'BETA INVESTMENT CO',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_N',
-                        'regis_id_held_by': 'COMP_N',
-                        'percent': 70.0,
-                        'direct_percent': 70.0,
-                        'effective_percentage': 1.60,
-                        'type_label': 'Company',
-                        'company_name': 'ALPHA HOLDINGS LTD'
-                    },
-                    {
-                        'name': 'HENRY CLARK',
-                        'display_name': 'HENRY CLARK',
-                        'shareholder_type': 'personal',
-                        'percent': 30.0,
-                        'direct_percent': 30.0,
-                        'effective_percentage': 0.69,
-                        'nationality': 'British',
-                        'type_label': 'Individual',
-                        'company_name': 'ALPHA HOLDINGS LTD'
-                    }
-                ],
-                'company_id': 'COMP_M',
-                'capital': '2,100,000,000',
-                'business_type_en': 'Investment Holdings'
-            },
-            
-            # Level 4: COMP_N
-            'COMP_N': {
-                'name_en': 'BETA INVESTMENT CO',
-                'display_name': 'BETA INVESTMENT CO',
-                'level': 4,
-                'parent_percentage': 1.60,
-                'shareholders': [
-                    {
-                        'name': 'GAMMA CAPITAL',
-                        'display_name': 'GAMMA CAPITAL',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_O',
-                        'regis_id_held_by': 'COMP_O',
-                        'percent': 85.0,
-                        'direct_percent': 85.0,
-                        'effective_percentage': 1.36,
-                        'type_label': 'Company',
-                        'company_name': 'BETA INVESTMENT CO'
-                    },
-                    {
-                        'name': 'JACK MORRISON',
-                        'display_name': 'JACK MORRISON',
-                        'shareholder_type': 'personal',
-                        'percent': 15.0,
-                        'direct_percent': 15.0,
-                        'effective_percentage': 0.24,
-                        'nationality': 'American',
-                        'type_label': 'Individual',
-                        'company_name': 'BETA INVESTMENT CO'
-                    }
-                ],
-                'company_id': 'COMP_N',
-                'capital': '1,800,000,000',
-                'business_type_en': 'Investment Company'
-            },
-            
-            # Level 5: COMP_O - Final tier with RICHARD ZHANG as UBO
-            'COMP_O': {
-                'name_en': 'GAMMA CAPITAL',
-                'display_name': 'GAMMA CAPITAL',
-                'level': 5,
-                'parent_percentage': 1.36,
-                'shareholders': [
-                    {
-                        'name': 'RICHARD ZHANG',
-                        'display_name': 'RICHARD ZHANG',
-                        'shareholder_type': 'personal',
-                        'percent': 95.0,
-                        'direct_percent': 95.0,
-                        'effective_percentage': 7.89,
-                        'nationality': 'Chinese',
-                        'type_label': 'Individual',
-                        'company_name': 'GAMMA CAPITAL'
-                    },
-                    {
-                        'name': 'NANCY WHITE',
-                        'display_name': 'NANCY WHITE',
-                        'shareholder_type': 'personal',
-                        'percent': 5.0,
-                        'direct_percent': 5.0,
-                        'effective_percentage': 0.07,
-                        'nationality': 'Canadian',
-                        'type_label': 'Individual',
-                        'company_name': 'GAMMA CAPITAL'
-                    }
-                ],
-                'company_id': 'COMP_O',
-                'capital': '1,500,000,000',
-                'business_type_en': 'Capital Investment'
-            },
-            
-            # Level 3: COMP_P - Second path for RICHARD ZHANG
-            'COMP_P': {
-                'name_en': 'DELTA HOLDINGS',
-                'display_name': 'DELTA HOLDINGS',
-                'level': 3,
-                'parent_percentage': 1.28,
-                'shareholders': [
-                    {
-                        'name': 'EPSILON FUND',
-                        'display_name': 'EPSILON FUND',
-                        'shareholder_type': 'company',
-                        'regis_id': 'COMP_Q',
-                        'regis_id_held_by': 'COMP_Q',
-                        'percent': 65.0,
-                        'direct_percent': 65.0,
-                        'effective_percentage': 0.83,
-                        'type_label': 'Company',
-                        'company_name': 'DELTA HOLDINGS'
-                    },
-                    {
-                        'name': 'PAUL TAYLOR',
-                        'display_name': 'PAUL TAYLOR',
-                        'shareholder_type': 'personal',
-                        'percent': 35.0,
-                        'direct_percent': 35.0,
-                        'effective_percentage': 0.45,
-                        'nationality': 'Australian',
-                        'type_label': 'Individual',
-                        'company_name': 'DELTA HOLDINGS'
-                    }
-                ],
-                'company_id': 'COMP_P',
-                'capital': '1,200,000,000',
-                'business_type_en': 'Holdings Company'
-            },
-            
-            # Level 4: COMP_Q - Second path final tier
-            'COMP_Q': {
-                'name_en': 'EPSILON FUND',
-                'display_name': 'EPSILON FUND',
-                'level': 4,
-                'parent_percentage': 0.83,
-                'shareholders': [
-                    {
-                        'name': 'RICHARD ZHANG',
-                        'display_name': 'RICHARD ZHANG',
-                        'shareholder_type': 'personal',
-                        'percent': 80.0,
-                        'direct_percent': 80.0,
-                        'effective_percentage': 5.26,
-                        'nationality': 'Chinese',
-                        'type_label': 'Individual',
-                        'company_name': 'EPSILON FUND'
-                    },
-                    {
-                        'name': 'SAMANTHA JONES',
-                        'display_name': 'SAMANTHA JONES',
-                        'shareholder_type': 'personal',
-                        'percent': 20.0,
-                        'direct_percent': 20.0,
-                        'effective_percentage': 0.17,
-                        'nationality': 'Irish',
-                        'type_label': 'Individual',
-                        'company_name': 'EPSILON FUND'
-                    }
-                ],
-                'company_id': 'COMP_Q',
-                'capital': '900,000,000',
-                'business_type_en': 'Investment Fund'
-            },
-            
-            # Level 3: COMP_R - Third path for RICHARD ZHANG
-            'COMP_R': {
-                'name_en': 'ZETA CAPITAL',
-                'display_name': 'ZETA CAPITAL',
-                'level': 3,
-                'parent_percentage': 2.30,
-                'shareholders': [
-                    {
-                        'name': 'RICHARD ZHANG',
-                        'display_name': 'RICHARD ZHANG',
-                        'shareholder_type': 'personal',
-                        'percent': 100.0,
-                        'direct_percent': 100.0,
-                        'effective_percentage': 2.30,
-                        'nationality': 'Chinese',
-                        'type_label': 'Individual',
-                        'company_name': 'ZETA CAPITAL'
-                    }
-                ],
-                'company_id': 'COMP_R',
-                'capital': '750,000,000',
-                'business_type_en': 'Capital Management'
             }
         },
         'checklist': {
             'method_1_check': {
                 'checked': True,
                 'found_ubo': True,
-                'companies_checked': 26,
-                'max_level_reached': 5
+                'companies_checked': 20,
+                'max_level_reached': 3
             },
             'method_2_check': {
                 'checked': True,

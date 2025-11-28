@@ -242,37 +242,28 @@
         }
 
         .ubo-section {
-            background: white;
-            color: #1e293b;
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            color: white;
             border-radius: 12px;
-            padding: 0;
+            padding: 20px;
             margin-top: 28px;
             margin-bottom: 28px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
         }
         
         .ubo-section h3 {
             font-size: 1.2em;
-            margin: 0;
-            padding: 16px 20px;
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            color: white;
+            margin-bottom: 15px;
         }
         
-        .ubo-section.no-ubo h3 {
+        .ubo-section.no-ubo {
             background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
         }
 
         .ubo-item {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 15px;
-        }
-        
-        #uboResults {
-            padding: 20px;
         }
 
         .loading {
@@ -420,13 +411,14 @@
         }
         
         .ubo-table thead th {
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            background: rgba(0, 0, 0, 0.15);
             color: white;
-            padding: 12px 10px;
+            padding: 10px 8px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.85em;
+            font-size: 0.8em;
             white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
         
         .ubo-table thead th:first-child {
@@ -438,35 +430,31 @@
         }
         
         .ubo-table tbody tr {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
             transition: background 0.2s;
         }
         
-        .ubo-table tbody tr:nth-child(odd) {
-            background: #fef2f2;
-        }
-        
         .ubo-table tbody tr:hover {
-            background: #fee2e2;
+            background: rgba(255, 255, 255, 0.25);
         }
         
         .ubo-table td {
-            padding: 12px 10px;
+            padding: 10px 8px;
             vertical-align: middle;
-            border-bottom: 1px solid #fecaca;
-            color: #1e293b;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
         
         .ubo-table .ubo-name {
             font-weight: 600;
             font-size: 0.9em;
-            color: #1e293b;
         }
         
         .ubo-table .ubo-percentage {
             font-weight: 700;
             font-size: 1.05em;
-            color: #dc2626;
+            color: #fef9c3;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
         
         .ubo-table .badge-check {
@@ -480,21 +468,21 @@
         }
         
         .ubo-table .badge-check.yes {
-            background: #dcfce7;
-            color: #16a34a;
-            border: 2px solid #86efac;
+            background: rgba(34, 197, 94, 0.4);
+            color: #bbf7d0;
+            border: 2px solid rgba(34, 197, 94, 0.6);
         }
         
         .ubo-table .badge-check.no {
-            background: #f3f4f6;
-            color: #9ca3af;
-            border: 2px solid #d1d5db;
+            background: rgba(156, 163, 175, 0.3);
+            color: #d1d5db;
+            border: 2px solid rgba(156, 163, 175, 0.4);
         }
         
         .ubo-table .btn-view-relation {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #475569;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
             padding: 5px 10px;
             border-radius: 6px;
             font-size: 0.75em;
@@ -504,8 +492,7 @@
         }
         
         .ubo-table .btn-view-relation:hover {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
+            background: rgba(255, 255, 255, 0.35);
         }
         
         /* Company Info Compact Grid */
@@ -554,13 +541,13 @@
             transform: translateY(-1px);
         }
         
-        /* Choices.js Custom Styles - Larger Font */
+        /* Choices.js Custom Styles - Compact */
         .choices__inner {
             border-radius: 6px !important;
             border: 1px solid #d1d5db !important;
-            min-height: 40px !important;
-            padding: 6px 10px !important;
-            font-size: 0.95em !important;
+            min-height: 30px !important;
+            padding: 2px 5px !important;
+            font-size: 0.72em !important;
         }
         
         .choices__inner:focus-within {
@@ -569,23 +556,23 @@
         }
         
         .choices__list--single .choices__item {
-            font-size: 0.95em !important;
+            font-size: 0.72em !important;
         }
         
         .choices__list--dropdown {
             border-radius: 6px !important;
             border: 1px solid #d1d5db !important;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-            font-size: 0.95em !important;
-            max-width: 450px !important;
+            font-size: 0.72em !important;
+            max-width: 350px !important;
         }
         
         .choices__list--dropdown .choices__item {
-            padding: 8px 12px !important;
+            padding: 5px 8px !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 0.95em !important;
+            font-size: 0.72em !important;
         }
         
         .choices__list--dropdown .choices__item--selectable.is-highlighted {
@@ -594,20 +581,19 @@
         
         .choices__group .choices__heading {
             background: #f1f5f9;
-            padding: 8px 12px;
+            padding: 5px 8px;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.68em;
             color: #475569;
             border-bottom: 1px solid #e2e8f0;
         }
         
         .choices__input {
-            font-size: 0.95em !important;
+            font-size: 0.72em !important;
         }
         
         .choices__placeholder {
-            font-size: 0.95em !important;
-            color: #6b7280 !important;
+            font-size: 0.72em !important;
         }
         
         /* Section Spacing */
@@ -761,29 +747,29 @@
                         <!-- Compact Filter Row -->
                         <div class="row align-items-center mb-2 g-2">
                             <div class="col-auto">
-                                <label class="form-label mb-0 me-1" style="font-size: 1em;"><i
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i
                                         class="fas fa-user"></i></label>
                             </div>
-                            <div class="col" style="max-width: 320px;">
-                                <select id="individualFilter" class="form-select"
-                                    style="font-size: 1em; padding: 8px 12px;">
-                                    <option value="">-- บุคคลทั้งหมด --</option>
+                            <div class="col" style="max-width: 240px;">
+                                <select id="individualFilter" class="form-select form-select-sm"
+                                    style="font-size: 0.85em;">
+                                    <option value="">-- All Individuals --</option>
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-outline-secondary" type="button"
+                                <button class="btn btn-sm btn-outline-secondary" type="button"
                                     onclick="clearIndividualFilter()" title="Clear">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
                             <div class="col-auto">
-                                <label class="form-label mb-0 me-1" style="font-size: 1em;"><i
+                                <label class="form-label mb-0 me-1" style="font-size: 0.85em;"><i
                                         class="fas fa-building"></i></label>
                             </div>
-                            <div class="col" style="max-width: 320px;">
-                                <select id="companyFilter" class="form-select"
-                                    style="font-size: 1em; padding: 8px 12px;">
-                                    <option value="">-- บริษัททั้งหมด --</option>
+                            <div class="col" style="max-width: 240px;">
+                                <select id="companyFilter" class="form-select form-select-sm"
+                                    style="font-size: 0.85em;">
+                                    <option value="">-- All Companies --</option>
                                 </select>
                             </div>
                             <div class="col-auto">
@@ -838,20 +824,6 @@
                                     <i class="fas fa-layer-group"></i> <span
                                         data-i18n="shareholderDetails.levelDetails.level3Tab">Level
                                         3</span> <span class="badge bg-secondary ms-1" id="level3Count">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="level4-tab" data-bs-toggle="tab"
-                                    data-bs-target="#level4-pane" type="button" role="tab">
-                                    <i class="fas fa-layer-group"></i> <span>ระดับ 4</span> 
-                                    <span class="badge bg-secondary ms-1" id="level4Count">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="level5-tab" data-bs-toggle="tab"
-                                    data-bs-target="#level5-pane" type="button" role="tab">
-                                    <i class="fas fa-layer-group"></i> <span>ระดับ 5</span> 
-                                    <span class="badge bg-secondary ms-1" id="level5Count">0</span>
                                 </button>
                             </li>
                         </ul>
@@ -920,50 +892,6 @@
                                         </thead>
                                         <tbody id="level3TableBody">
                                             <!-- Level 3 rows -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Level 4 Table -->
-                            <div class="tab-pane fade" id="level4-pane" role="tabpanel">
-                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
-                                    <table class="table table-sm table-hover shareholderLevelTable">
-                                        <thead
-                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                            <tr>
-                                                <th style="width: 30%;">Shareholder Name</th>
-                                                <th style="width: 12%;">Type</th>
-                                                <th style="width: 28%;">Held By Company</th>
-                                                <th style="width: 10%;">Direct %</th>
-                                                <th style="width: 10%;">UBO Effect %</th>
-                                                <th style="width: 10%;">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="level4TableBody">
-                                            <!-- Level 4 rows -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <!-- Level 5 Table -->
-                            <div class="tab-pane fade" id="level5-pane" role="tabpanel">
-                                <div style="max-height: 400px; overflow-y: auto; overflow-x: auto;">
-                                    <table class="table table-sm table-hover shareholderLevelTable">
-                                        <thead
-                                            style="position: sticky; top: 0; background: white; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                            <tr>
-                                                <th style="width: 30%;">Shareholder Name</th>
-                                                <th style="width: 12%;">Type</th>
-                                                <th style="width: 28%;">Held By Company</th>
-                                                <th style="width: 10%;">Direct %</th>
-                                                <th style="width: 10%;">UBO Effect %</th>
-                                                <th style="width: 10%;">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="level5TableBody">
-                                            <!-- Level 5 rows -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -1158,8 +1086,8 @@
         }
 
         function displayLevelDetails(hierarchyData) {
-            // Group by level - support up to 5 levels
-            const levelData = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+            // Group by level
+            const levelData = { 1: [], 2: [], 3: [] };
 
             Object.values(hierarchyData).forEach(company => {
                 const level = company.level || 0;
@@ -1167,10 +1095,10 @@
 
                 // Shareholders of level 0 company are Level 1
                 // Shareholders of level 1 companies are Level 2
-                // Shareholders of level 2 companies are Level 3, etc.
+                // Shareholders of level 2 companies are Level 3
                 const displayLevel = level + 1;
 
-                if (displayLevel >= 1 && displayLevel <= 5) {
+                if (displayLevel >= 1 && displayLevel <= 3) {
                     const companyLabel = formatNameWithId(
                         company.display_name || company.name_en || company.name_th || 'Not specified',
                         company.company_id || ''
@@ -1185,8 +1113,8 @@
                 }
             });
 
-            // Populate each level table separately (up to 5 levels)
-            for (let level = 1; level <= 5; level++) {
+            // Populate each level table separately
+            for (let level = 1; level <= 3; level++) {
                 const tableBody = document.getElementById(`level${level}TableBody`);
                 const countBadge = document.getElementById(`level${level}Count`);
 
@@ -1209,28 +1137,9 @@
                     const directShare = parseFloat(sh.direct || 0).toFixed(2);
                     const effectiveShare = parseFloat(sh.effective || sh.direct || 0).toFixed(2);
                     const type = sh.type || 'personal';
-                    const isUBO = parseFloat(effectiveShare) >= 15.0 && type === 'personal';
-                    const isForeignCompany = type === 'company' && sh.regisId && !sh.regisId.match(/^[0-9]{13}$/);
-                    
-                    // Determine type icon, text, and badge based on 4 categories
-                    let typeIcon, typeText, typeBadge;
-                    if (isUBO) {
-                        typeIcon = 'fas fa-crown';
-                        typeText = t('table.ubo');
-                        typeBadge = 'danger';
-                    } else if (type === 'personal') {
-                        typeIcon = 'fas fa-user';
-                        typeText = t('table.individual');
-                        typeBadge = 'success';
-                    } else if (isForeignCompany) {
-                        typeIcon = 'fas fa-globe';
-                        typeText = t('table.foreignCompany');
-                        typeBadge = 'warning';
-                    } else {
-                        typeIcon = 'fas fa-building';
-                        typeText = t('table.company');
-                        typeBadge = 'primary';
-                    }
+                    const typeIcon = type === 'personal' ? 'fas fa-user' : 'fas fa-building';
+                    const typeText = type === 'personal' ? t('table.individual') : t('table.company');
+                    const typeBadge = type === 'personal' ? 'success' : 'primary';
                     const detailId = `shareholderDetail-L${level}-${idx}`;
 
                     // Build detail content
@@ -1431,14 +1340,14 @@
                         `;
                     });
                     const pathSums = pathDetails.map(d => `${d.result.toFixed(3)}%`).join(' + ');
-                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: #fecaca; border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong style="color: #dc2626;">${percentage}%</strong></div>`;
+                    pathDetailsHtml += `</ol><div class="mt-2 p-2" style="background: rgba(0,0,0,0.1); border-radius: 6px; font-size: 0.85em;"><strong>${t('ubo.totalEffect')}</strong> ${pathSums} = <strong>${percentage}%</strong></div>`;
                 }
                 
                 html += `
                     <tr>
                         <td style="text-align: center; font-weight: 600;">${index + 1}</td>
-                        <td class="ubo-name"><i class="fas fa-crown me-2" style="color: #f59e0b;"></i>${uboName}</td>
-                        <td><i class="fas fa-globe me-1" style="color: #64748b;"></i>${nationality}</td>
+                        <td class="ubo-name"><i class="fas fa-crown me-2" style="color: #fef08a;"></i>${uboName}</td>
+                        <td><i class="fas fa-globe me-1" style="opacity: 0.7;"></i>${nationality}</td>
                         <td class="ubo-percentage" style="text-align: center;">${percentage}%</td>
                         <td style="text-align: center;">
                             <span class="badge-check ${signatoryStatus ? 'yes' : 'no'}">
@@ -1463,8 +1372,8 @@
                     </tr>
                     ${pathDetails.length > 0 ? `
                     <tr class="collapse" id="${detailId}">
-                        <td colspan="7" style="background: #fef2f2; padding: 12px; border-radius: 0;">
-                            <div style="color: #1e293b;">
+                        <td colspan="7" style="background: rgba(255,255,255,0.15); padding: 12px; border-radius: 0;">
+                            <div style="color: white;">
                                 <strong><i class="fas fa-calculator me-2"></i>${t('ubo.calcDetails')}</strong>
                                 ${pathDetailsHtml}
                             </div>
