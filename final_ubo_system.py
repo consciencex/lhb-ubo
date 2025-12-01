@@ -100,7 +100,7 @@ class FinalEnliteAPIClient:
     <soapenv:Body>
         <view:getDataEnlite>
             <registrationId>{registration_id}</registrationId>
-            <language>TH</language>
+            <language>EN</language>
         </view:getDataEnlite>
     </soapenv:Body>
 </soapenv:Envelope>"""
