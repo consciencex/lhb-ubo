@@ -100,7 +100,7 @@ class FinalEnliteAPIClient:
     <soapenv:Body>
         <view:getDataEnlite>
             <registrationId>{registration_id}</registrationId>
-            <language>EN</language>
+            <language>TH</language>
         </view:getDataEnlite>
     </soapenv:Body>
 </soapenv:Envelope>"""
@@ -275,12 +275,13 @@ class FinalUBOAnalyzer:
         self.max_level_reached = 0
     
     def _sanitize_label(self, text: Optional[str], fallback: str = "") -> str:
-        """Return an ASCII-safe label, falling back when necessary."""
+        """Return a clean label, supporting Thai and other Unicode characters."""
         if not text:
             return fallback
+        # Remove only control characters, keep all printable Unicode (including Thai)
         cleaned = ''.join(
             ch for ch in str(text)
-            if ch.isascii() and ch not in {'\n', '\r', '\t'}
+            if ch.isprintable() or ch == ' '
         ).strip()
         return cleaned if cleaned else fallback
 
