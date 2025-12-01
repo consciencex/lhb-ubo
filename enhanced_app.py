@@ -70,8 +70,9 @@ def _format_display_label(name: Optional[str], regis_id: Optional[str]) -> str:
 def extract_names_from_signatory(signatory_text: str) -> List[str]:
     """Extract person names from officialSignatory text.
     
-    Example input: 
+    Example inputs: 
     "นายปราโมทย์ ปาทาน ลงลายมือชื่อร่วมกับนายชลากรณ์ ปัญญาโฉม หรือ นายสุรการ ศิริโมทย์..."
+    "พลเอกสมชาย ธนะรัชต์นายสมพร สืบถวิลกุล นางสาวจรูญศรี วันเกิดผล..." - titles stuck together
     "นายชุมพล ณ ลำเลียง" - names with "ณ" prefix in surname
     
     Returns: List of names like ["นายปราโมทย์ ปาทาน", "นายชลากรณ์ ปัญญาโฉม", ...]
@@ -80,98 +81,96 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
         return []
     
     names = []
-    
-    # Clean up the text first - add space after keywords for better parsing
     text = signatory_text.strip()
-    text = re.sub(r'(หรือ|และ|กับ)(\s*)(นาย|นาง)', r'\1 \3', text)  # Ensure space after หรือ/และ/กับ
     
-    # Titles pattern
-    title_pattern = r'(?:นาย|นาง(?:สาว)?|ดร\.?|ศ\.?|รศ\.?|ผศ\.?|ม\.ล\.?|ม\.ร\.ว\.?|พล\.?(?:อ\.?|ท\.?|ต\.?)?)'
+    # ========== COMPREHENSIVE TITLE PATTERNS ==========
+    # Thai military ranks and honorific titles
+    military_titles = r'(?:พลเอก|พลโท|พลตรี|พลตำรวจ(?:เอก|โท|ตรี)?|พล\.?(?:อ\.?|ท\.?|ต\.?)?)'
+    academic_titles = r'(?:ดร\.?|ศ\.?(?:ดร\.?)?|รศ\.?(?:ดร\.?)?|ผศ\.?(?:ดร\.?)?)'
+    noble_titles = r'(?:ม\.ล\.?|ม\.ร\.ว\.?|หม่อม(?:ราชวงศ์|หลวง)?)'
+    common_titles = r'(?:นาย|นาง(?:สาว)?|คุณ)'
     
-    # Invalid/keyword patterns that should not be in names
-    invalid_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'กรรมการ', 'ประทับ', 'ตรา', 'สำคัญ', 'ของบริษัท', 'อำนาจ', 'ไม่มี']
+    # Combined title pattern - military first (longer), then academic, noble, common
+    title_pattern = rf'(?:{military_titles}|{academic_titles}|{noble_titles}|{common_titles})'
+    
+    # ========== PREPROCESSING: Insert spaces before titles ==========
+    # This handles cases like "ธนะรัชต์นายสมพร" -> "ธนะรัชต์ นายสมพร"
+    processed_text = text
+    # Insert space before any title that's stuck to preceding Thai text
+    processed_text = re.sub(rf'([\u0E00-\u0E7F])({title_pattern})', r'\1 \2', processed_text)
+    
+    # ========== KEYWORDS AND VALIDATION ==========
+    # Keywords that indicate text is NOT a name
+    invalid_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'กรรมการ', 'ประทับ', 'ตรา', 'สำคัญ', 
+                       'ของบริษัท', 'อำนาจ', 'ไม่มี', 'รวมเป็น', 'คน', 'หนึ่ง', 'สอง', 'สาม', 
+                       'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า', 'สิบ']
+    
+    # Trailing keywords that should be removed from lastname
+    trailing_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'กรรมการ', 'ประทับ', 'รวมเป็น',
+                        'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'ใน']
     
     def is_valid_name(name: str) -> bool:
-        """Check if extracted name is valid (not containing keywords)."""
+        """Check if extracted name is valid."""
         if not name or len(name) < 5:
             return False
         for keyword in invalid_keywords:
             if keyword in name:
                 return False
-        # Check if name has proper structure (title + at least 2 Thai chars for firstname + 2 for lastname)
         return True
     
-    # Strategy: Split by separators first, then extract names from each part
-    # This is more reliable than trying to match across the whole text
+    def clean_lastname(lastname: str) -> str:
+        """Remove trailing keywords from lastname."""
+        result = lastname
+        for keyword in trailing_keywords:
+            idx = result.find(keyword)
+            if idx > 0:
+                result = result[:idx].strip()
+        return result
     
-    # Split by common separators: หรือ, และ, กับ, comma
-    parts = re.split(r'\s+หรือ\s*|\s*หรือ\s+|,\s*|\s+และ\s+|\s+กับ\s+', text)
+    # ========== EXTRACT NAMES FROM PREPROCESSED TEXT ==========
     
-    for part in parts:
-        part = part.strip()
-        if not part:
+    # Pattern for names with "ณ" in surname (e.g., นายชุมพล ณ ลำเลียง)
+    pattern_na = rf'({title_pattern})([\u0E00-\u0E7F\-]+)\s+(ณ\s+[\u0E00-\u0E7F\-]+)'
+    for match in re.finditer(pattern_na, processed_text):
+        title = match.group(1)
+        firstname = match.group(2)
+        lastname = clean_lastname(match.group(3))
+        full_name = f"{title}{firstname} {lastname}".strip()
+        if is_valid_name(full_name):
+            names.append(full_name)
+    
+    # Pattern for standard names (title + firstname + lastname)
+    pattern_std = rf'({title_pattern})([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+)'
+    for match in re.finditer(pattern_std, processed_text):
+        title = match.group(1)
+        firstname = match.group(2)
+        lastname = match.group(3)
+        
+        # Skip if lastname starts with ณ (already captured above)
+        if lastname.startswith('ณ'):
+            continue
+        
+        # Clean lastname - remove trailing keywords
+        lastname = clean_lastname(lastname)
+        
+        # Skip very short lastnames (probably captured wrong)
+        if len(lastname) < 2:
+            continue
+        
+        # Skip if firstname contains another title (indicates wrong parsing)
+        if re.search(title_pattern, firstname):
             continue
             
-        # Pattern A: Name with "ณ" in surname (e.g., นายชุมพล ณ ลำเลียง)
-        match_na = re.search(r'(' + title_pattern + r')([\u0E00-\u0E7F\-]+)\s+(ณ\s+[\u0E00-\u0E7F\-]+)', part)
-        if match_na:
-            title = match_na.group(1)
-            firstname = match_na.group(2)
-            lastname = match_na.group(3)
-            full_name = f"{title}{firstname} {lastname}".strip()
-            if is_valid_name(full_name):
-                names.append(full_name)
-            continue
-        
-        # Pattern B: Standard name (title + firstname + lastname)
-        match_std = re.search(r'(' + title_pattern + r')([\u0E00-\u0E7F\-]+)\s+([\u0E00-\u0E7F\-]+)', part)
-        if match_std:
-            title = match_std.group(1)
-            firstname = match_std.group(2)
-            lastname = match_std.group(3)
-            # Clean lastname - remove trailing keywords
-            lastname = re.sub(r'(ลงลายมือ|ร่วมกัน|ข้อจำกัด|กรรมการ|ประทับ).*$', '', lastname).strip()
-            full_name = f"{title}{firstname} {lastname}".strip()
-            if is_valid_name(full_name):
-                names.append(full_name)
-            continue
-        
-        # Pattern C: Name directly attached to keyword (e.g., คือนายเกษม)
-        match_attached = re.search(r'(?:คือ|เป็น)(' + title_pattern + r')([\u0E00-\u0E7F\-]+)\s+([\u0E00-\u0E7F\-]+)', part)
-        if match_attached:
-            title = match_attached.group(1)
-            firstname = match_attached.group(2)
-            lastname = match_attached.group(3)
-            full_name = f"{title}{firstname} {lastname}".strip()
-            if is_valid_name(full_name):
-                names.append(full_name)
+        full_name = f"{title}{firstname} {lastname}".strip()
+        if is_valid_name(full_name):
+            names.append(full_name)
     
-    # Fallback: If splitting didn't work well, try pattern matching on full text
-    if len(names) < 2:
-        # Pattern for names with ณ
-        pattern_na = r'(' + title_pattern + r')([\u0E00-\u0E7F\-]+)\s+(ณ\s+[\u0E00-\u0E7F\-]+?)(?=\s*(?:หรือ|และ|กับ|,|ลงลายมือ|ข้อจำกัด|กรรมการ|' + title_pattern + r'|$))'
-        for match in re.finditer(pattern_na, text):
-            full_name = f"{match.group(1)}{match.group(2)} {match.group(3)}".strip()
-            if is_valid_name(full_name) and full_name not in names:
-                names.append(full_name)
-        
-        # Pattern for standard names
-        pattern_std = r'(' + title_pattern + r')([\u0E00-\u0E7F\-]+)\s+([\u0E00-\u0E7F\-]+?)(?=\s*(?:หรือ|และ|กับ|,|ลงลายมือ|ข้อจำกัด|กรรมการ|' + title_pattern + r'|$))'
-        for match in re.finditer(pattern_std, text):
-            lastname = match.group(3)
-            # Skip if this is a ณ name (already captured)
-            if 'ณ' in lastname:
-                continue
-            full_name = f"{match.group(1)}{match.group(2)} {lastname}".strip()
-            if is_valid_name(full_name) and full_name not in names:
-                names.append(full_name)
-    
-    # Remove duplicates while preserving order
+    # ========== Remove duplicates while preserving order ==========
     seen = set()
     unique_names = []
     for name in names:
-        # Normalize name for comparison (remove spaces, lowercase)
-        normalized = name.replace(' ', '').lower()
+        # Normalize: remove spaces and Thai tone marks for comparison
+        normalized = re.sub(r'[\s\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]', '', name).lower()
         if normalized not in seen:
             seen.add(normalized)
             unique_names.append(name)
