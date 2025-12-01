@@ -74,6 +74,7 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
     "นายปราโมทย์ ปาทาน ลงลายมือชื่อร่วมกับนายชลากรณ์ ปัญญาโฉม หรือ นายสุรการ ศิริโมทย์..."
     "พลเอกสมชาย ธนะรัชต์นายสมพร สืบถวิลกุล นางสาวจรูญศรี วันเกิดผล..." - titles stuck together
     "นายชุมพล ณ ลำเลียง" - names with "ณ" prefix in surname
+    "นายทศ จิราธิวัฒน์" - short firstname (2 chars)
     
     Returns: List of names like ["นายปราโมทย์ ปาทาน", "นายชลากรณ์ ปัญญาโฉม", ...]
     """
@@ -100,19 +101,22 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
     processed_text = re.sub(rf'([\u0E00-\u0E7F])({title_pattern})', r'\1 \2', processed_text)
     
     # ========== KEYWORDS AND VALIDATION ==========
-    # Keywords that indicate text is NOT a name
-    invalid_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'กรรมการ', 'ประทับ', 'ตรา', 'สำคัญ', 
-                       'ของบริษัท', 'อำนาจ', 'ไม่มี', 'รวมเป็น', 'คน', 'หนึ่ง', 'สอง', 'สาม', 
-                       'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า', 'สิบ']
+    # Keywords that indicate text is NOT a name (full word only)
+    invalid_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'ประทับ', 'ตรา', 'สำคัญ', 
+                       'ของบริษัท', 'ไม่มี', 'รวมเป็น']
     
-    # Trailing keywords that should be removed from lastname
+    # Trailing keywords that should be removed from lastname  
     trailing_keywords = ['ลงลายมือ', 'ร่วมกัน', 'ข้อจำกัด', 'กรรมการ', 'ประทับ', 'รวมเป็น',
-                        'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'ใน']
+                        'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า', 'สิบ', 'ใน']
     
-    def is_valid_name(name: str) -> bool:
+    def is_valid_name(name: str, title: str, firstname: str, lastname: str) -> bool:
         """Check if extracted name is valid."""
-        if not name or len(name) < 5:
+        if not name:
             return False
+        # Minimum length check - title + at least 1 char firstname + 2 char lastname
+        if len(firstname) < 1 or len(lastname) < 2:
+            return False
+        # Check for invalid keywords in the full name
         for keyword in invalid_keywords:
             if keyword in name:
                 return False
@@ -136,10 +140,11 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
         firstname = match.group(2)
         lastname = clean_lastname(match.group(3))
         full_name = f"{title}{firstname} {lastname}".strip()
-        if is_valid_name(full_name):
+        if is_valid_name(full_name, title, firstname, lastname):
             names.append(full_name)
     
     # Pattern for standard names (title + firstname + lastname)
+    # Allow short firstnames (1+ chars) like "ทศ"
     pattern_std = rf'({title_pattern})([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+)'
     for match in re.finditer(pattern_std, processed_text):
         title = match.group(1)
@@ -162,8 +167,43 @@ def extract_names_from_signatory(signatory_text: str) -> List[str]:
             continue
             
         full_name = f"{title}{firstname} {lastname}".strip()
-        if is_valid_name(full_name):
+        if is_valid_name(full_name, title, firstname, lastname):
             names.append(full_name)
+    
+    # ========== STRATEGY 2: Find names that might be missed ==========
+    # Look for pattern where lastname from previous name might have eaten the next firstname
+    # e.g., "จิราธิวัฒน์นายทศ" after preprocessing becomes "จิราธิวัฒน์ นายทศ"
+    # But "นายทศ" alone doesn't have lastname yet
+    
+    # Find all title positions
+    title_positions = [(m.start(), m.end(), m.group()) for m in re.finditer(title_pattern, processed_text)]
+    
+    for i, (start, end, title) in enumerate(title_positions):
+        # Get text after this title until next title or end
+        if i + 1 < len(title_positions):
+            next_title_start = title_positions[i + 1][0]
+            segment = processed_text[end:next_title_start].strip()
+        else:
+            segment = processed_text[end:].strip()
+        
+        # Try to extract firstname and lastname from segment
+        # Pattern: firstname (space) lastname (possibly followed by other text)
+        name_match = re.match(r'^([\u0E00-\u0E7F]+)\s+([\u0E00-\u0E7F]+)', segment)
+        if name_match:
+            firstname = name_match.group(1)
+            lastname = name_match.group(2)
+            
+            # Skip if firstname contains title (wrong parsing)
+            if re.search(title_pattern, firstname):
+                continue
+                
+            # Clean lastname
+            lastname = clean_lastname(lastname)
+            
+            if len(lastname) >= 2:
+                full_name = f"{title}{firstname} {lastname}".strip()
+                if is_valid_name(full_name, title, firstname, lastname):
+                    names.append(full_name)
     
     # ========== Remove duplicates while preserving order ==========
     seen = set()
